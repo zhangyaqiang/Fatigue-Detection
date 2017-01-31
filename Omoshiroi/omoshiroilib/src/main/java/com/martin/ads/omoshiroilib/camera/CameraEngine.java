@@ -30,15 +30,25 @@ public class CameraEngine
     private boolean cameraOpened;
 
     private byte[]              mBuffer;
-    private byte[]              mFrame;
 
     //frameWidth=size.height
     private int frameWidth;
     private int frameHeight;
 
+    private FakeMat[] mFrameChain;
+    private int mChainIdx;
+    private Thread mWorkerThread;
+    private boolean mStopThread;
+    private boolean mCameraFrameReady;
+
     public CameraEngine() {
         frameWidth=720; frameHeight=1280;
         cameraOpened=false;
+
+        mChainIdx = 0;
+        mFrameChain=new FakeMat[2];
+        mFrameChain[0]=new FakeMat();
+        mFrameChain[1]=new FakeMat();
     }
 
     public void setTexture(int mTextureID){
@@ -66,7 +76,8 @@ public class CameraEngine
                 int size = frameWidth*frameHeight;
                 size = size * ImageFormat.getBitsPerPixel(mParams.getPreviewFormat()) / 8;
                 if (mBuffer==null) mBuffer = new byte[size];
-                if (mFrame==null) mFrame = new byte [size];
+                mFrameChain[0].init(size);
+                mFrameChain[1].init(size);
                 camera.addCallbackBuffer(mBuffer);
                 camera.setParameters(mParams);
                 cameraOpened=true;
@@ -82,27 +93,39 @@ public class CameraEngine
                 e.printStackTrace();
             }
             camera.startPreview();
+
+            mCameraFrameReady = false;
+            mStopThread = false;
+            mWorkerThread = new Thread(new CameraWorker());
+            mWorkerThread.start();
         }
     }
 
     public void stopPreview(){
         synchronized (this) {
             if(camera!=null){
+                mStopThread = true;
+                synchronized (this) {
+                    this.notify();
+                }
+                mWorkerThread =  null;
                 camera.stopPreview();
             }
         }
     }
 
-    public void releaseCamera(){
+    public void releaseCamera() {
         synchronized (this) {
             if (camera != null) {
                 camera.setPreviewCallback(null);
                 camera.release();
                 camera = null;
             }
-            cameraOpened=false;
+            cameraOpened = false;
         }
     }
+
+
 
     @Override
     public void onAutoFocus(boolean success, Camera camera) {
@@ -130,9 +153,43 @@ public class CameraEngine
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        System.arraycopy(data, 0, mFrame, 0, data.length);
-        camera.addCallbackBuffer(mBuffer);
+        synchronized (this) {
+            mFrameChain[mChainIdx].putData(data);
+            mCameraFrameReady = true;
+            camera.addCallbackBuffer(mBuffer);
+            this.notify();
+        }
     }
+
+
+    private class CameraWorker implements Runnable {
+        @Override
+        public void run() {
+            do {
+                boolean hasFrame = false;
+                synchronized (CameraEngine.this) {
+                    try {
+                        while (!mCameraFrameReady && !mStopThread) {
+                            CameraEngine.this.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (mCameraFrameReady) {
+                        mChainIdx = 1 - mChainIdx;
+                        mCameraFrameReady = false;
+                        hasFrame = true;
+                    }
+                }
+
+                if (!mStopThread && hasFrame) {
+                   //processCameraFrame(frameHeight,frameWidth,mFrameChain[1 - mChainIdx].getFrame());
+                }
+            } while (!mStopThread);
+            Log.d(TAG, "Finish processing thread");
+        }
+    }
+
 
     public void setRenderCallback(CameraView.RenderCallback renderCallback) {
         this.renderCallback = renderCallback;

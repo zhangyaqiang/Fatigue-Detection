@@ -8,7 +8,9 @@ import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
 import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
+import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.filter.effect.GrayScaleFilter;
+import com.martin.ads.omoshiroilib.filter.effect.SphereReflector;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestLeftFilter;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestRightFilter;
 
@@ -34,8 +36,10 @@ public class GLRender implements GLSurfaceView.Renderer {
         orthoFilter=new OrthoFilter(context);
         filterGroup.addFilter(oesFilter);
         filterGroup.addFilter(orthoFilter);
-        filterGroup.addFilter(new GrayScaleFilter(context));
-        filterGroup.addFilter(new BraSizeTestRightFilter(context));
+
+        filterGroup.addFilter(new SphereReflector(context));
+        //filterGroup.addFilter(new BraSizeTestRightFilter(context));
+        //filterGroup.addFilter(new GrayScaleFilter(context));
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.martin.ads.omoshiroilib.glessential.program;
 import android.content.Context;
 import android.opengl.GLES20;
 
+import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
 /**
@@ -15,8 +16,8 @@ public class GLPassThroughProgram extends GLAbsProgram {
     private int uMVPMatrixHandle;
     private int uTextureSamplerHandle;
 
-    public GLPassThroughProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) {
-        super(context, vertexShaderResourceId, fragmentShaderResourceId);
+    public GLPassThroughProgram(Context context) {
+        super(context, R.raw.vertex_shader_pass_through, R.raw.fragment_shader_pass_through);
     }
 
     @Override
