@@ -5,11 +5,11 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
-import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
-import com.martin.ads.omoshiroilib.filter.base.OESFilter;
-import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.MxFaceBeautyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.MxProFilter;
+import com.martin.ads.omoshiroilib.filter.base.*;
+//import com.martin.ads.omoshiroilib.filter.effect.*;
+//import com.martin.ads.omoshiroilib.filter.effect.mx.*;
+//import com.martin.ads.omoshiroilib.filter.ext.*;
+//import com.martin.ads.omoshiroilib.filter.imgproc.*;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -39,23 +39,23 @@ public class GLRender implements GLSurfaceView.Renderer {
 //        filterGroup.addFilter(new BraSizeTestRightFilter(context));
 //        filterGroup.addFilter(new BraSizeTestLeftFilter(context));
 //        filterGroup.addFilter(new GrayScaleShaderFilter(context));
-
-        //filterGroup.addFilter(new FillLightFilter(context));
-        //filterGroup.addFilter(new GreenHouseFilter(context));
-        //filterGroup.addFilter(new BlackWhiteFilter(context));
-        //filterGroup.addFilter(new PastTimeFilter(context));
-        //filterGroup.addFilter(new MoonLightFilter(context));
-        //filterGroup.addFilter(new PrintingFilter(context));
-        //filterGroup.addFilter(new ToyFilter(context));
-        //filterGroup.addFilter(new BrightnessFilter(context));
-        //filterGroup.addFilter(new VignetteFilter(context));
-        //filterGroup.addFilter(new MultiplyFilter(context));
-        //filterGroup.addFilter(new ReminiscenceFilter(context));
-        //filterGroup.addFilter(new SunnyFilter(context));
-        //filterGroup.addFilter(new MxLomoFilter(context));
-        //filterGroup.addFilter(new ShiftColorFilter(context));
-        //filterGroup.addFilter(new MxFaceBeautyFilter(context));
-        //filterGroup.addFilter(new MxProFilter(context));
+//
+//        filterGroup.addFilter(new FillLightFilter(context));
+//        filterGroup.addFilter(new GreenHouseFilter(context));
+//        filterGroup.addFilter(new BlackWhiteFilter(context));
+//        filterGroup.addFilter(new PastTimeFilter(context));
+//        filterGroup.addFilter(new MoonLightFilter(context));
+//        filterGroup.addFilter(new PrintingFilter(context));
+//        filterGroup.addFilter(new ToyFilter(context));
+//        filterGroup.addFilter(new BrightnessFilter(context));
+//        filterGroup.addFilter(new VignetteFilter(context));
+//        filterGroup.addFilter(new MultiplyFilter(context));
+//        filterGroup.addFilter(new ReminiscenceFilter(context));
+//        filterGroup.addFilter(new SunnyFilter(context));
+//        filterGroup.addFilter(new MxLomoFilter(context));
+//        filterGroup.addFilter(new ShiftColorFilter(context));
+//        filterGroup.addFilter(new MxFaceBeautyFilter(context));
+//        filterGroup.addFilter(new MxProFilter(context));
     }
 
     @Override
