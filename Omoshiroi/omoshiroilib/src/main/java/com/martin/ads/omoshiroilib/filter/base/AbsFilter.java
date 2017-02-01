@@ -45,4 +45,9 @@ public abstract class AbsFilter {
             mPreDrawTaskList.addLast(runnable);
         }
     }
+
+    public void setUniform1f(final int programId, final String name , final float floatValue) {
+        int location=GLES20.glGetUniformLocation(programId,name);
+        GLES20.glUniform1f(location,floatValue);
+    }
 }

@@ -10,19 +10,18 @@ import com.martin.ads.omoshiroilib.util.ShaderUtils;
  */
 
 public abstract class GLAbsProgram {
-    //TODO:move all shader to assets
     private int mProgramId;
     private String mVertexShader;
     private String mFragmentShader;
 
     private int maPositionHandle;
-    private int maTextureHandle;
+    private int maTextureCoordinateHandle;
 
     public GLAbsProgram(Context context
-            , final int vertexShaderResourceId
-            , final int fragmentShaderResourceId){
-        mVertexShader = ShaderUtils.readRawTextFile(context, vertexShaderResourceId);
-        mFragmentShader= ShaderUtils.readRawTextFile(context, fragmentShaderResourceId);
+            , final String vertexShaderPath
+            , final String fragmentShaderPath){
+        mVertexShader = ShaderUtils.readAssetsTextFile(context,vertexShaderPath);
+        mFragmentShader= ShaderUtils.readAssetsTextFile(context,fragmentShaderPath);
     }
 
     public void create(){
@@ -36,9 +35,9 @@ public abstract class GLAbsProgram {
         if (maPositionHandle == -1) {
             throw new RuntimeException("Could not get attrib location for aPosition");
         }
-        maTextureHandle = GLES20.glGetAttribLocation(getProgramId(), "aTextureCoord");
+        maTextureCoordinateHandle = GLES20.glGetAttribLocation(getProgramId(), "aTextureCoord");
         ShaderUtils.checkGlError("glGetAttribLocation aTextureCoord");
-        if (maTextureHandle == -1) {
+        if (maTextureCoordinateHandle == -1) {
             throw new RuntimeException("Could not get attrib location for aTextureCoord");
         }
     }
@@ -57,11 +56,11 @@ public abstract class GLAbsProgram {
     }
 
 
-    public int getMaPositionHandle() {
+    public int getPositionHandle() {
         return maPositionHandle;
     }
 
-    public int getMaTextureHandle() {
-        return maTextureHandle;
+    public int getTextureCoordinateHandle() {
+        return maTextureCoordinateHandle;
     }
 }

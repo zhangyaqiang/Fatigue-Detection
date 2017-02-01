@@ -12,6 +12,7 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 /**
  * Created by Ads on 2016/11/19.
+ * SphereReflector (球面反射)
  */
 
 public class SphereReflector extends PassThroughFilter {
@@ -20,7 +21,6 @@ public class SphereReflector extends PassThroughFilter {
 
     private float[] modelMatrix = new float[16];
     private float[] viewMatrix = new float[16];
-    private float[] projectionMatrix = new float[16];
 
     private float[] modelViewMatrix = new float[16];
     private float[] mMVPMatrix = new float[16];
@@ -50,8 +50,8 @@ public class SphereReflector extends PassThroughFilter {
     public void onDrawFrame(int textureId) {
         super.onDrawFrame(textureId);
         glSphereProgram.use();
-        sphere.uploadTexCoordinateBuffer(glSphereProgram.getMaTextureHandle());
-        sphere.uploadVerticesBuffer(glSphereProgram.getMaPositionHandle());
+        sphere.uploadTexCoordinateBuffer(glSphereProgram.getTextureCoordinateHandle());
+        sphere.uploadVerticesBuffer(glSphereProgram.getPositionHandle());
 
         Matrix.perspectiveM(projectionMatrix, 0, 90, ratio, 1f, 500f);
 

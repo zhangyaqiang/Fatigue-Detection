@@ -1,25 +1,24 @@
-package com.martin.ads.omoshiroilib.filter.effect;
+package com.martin.ads.omoshiroilib.filter.base;
 
 import android.content.Context;
 import android.opengl.GLES20;
 
-import com.martin.ads.omoshiroilib.R;
-import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.glessential.object.Plain;
 import com.martin.ads.omoshiroilib.glessential.program.GLSimpleProgram;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 /**
- * Created by Ads on 2016/11/19.
+ * Created by Ads on 2017/1/31.
  */
 
-public class GrayScaleFilter extends AbsFilter {
+public class SimpleFragmentShaderFilter extends AbsFilter {
 
-    private GLSimpleProgram glSimpleProgram;
-    private Plain plain;
+    protected GLSimpleProgram glSimpleProgram;
+    protected Plain plain;
 
-    public GrayScaleFilter(Context context) {
-        glSimpleProgram=new GLSimpleProgram(context, R.raw.vertex_shader_simple,R.raw.fragment_shader_gray_scale);
+    public SimpleFragmentShaderFilter(Context context,
+                                      final String fragmentShaderPath) {
+        glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/simple.glsl",fragmentShaderPath);
         plain=new Plain(true);
     }
 
@@ -32,8 +31,8 @@ public class GrayScaleFilter extends AbsFilter {
     public void onPreDrawElements() {
         super.onPreDrawElements();
         glSimpleProgram.use();
-        plain.uploadTexCoordinateBuffer(glSimpleProgram.getMaTextureHandle());
-        plain.uploadVerticesBuffer(glSimpleProgram.getMaPositionHandle());
+        plain.uploadTexCoordinateBuffer(glSimpleProgram.getTextureCoordinateHandle());
+        plain.uploadVerticesBuffer(glSimpleProgram.getPositionHandle());
     }
 
     @Override

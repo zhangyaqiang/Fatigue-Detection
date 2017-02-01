@@ -14,8 +14,10 @@ public class GLSimpleProgram extends GLAbsProgram {
 
     private int uTextureSamplerHandle;
 
-    public GLSimpleProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) {
-        super(context, vertexShaderResourceId, fragmentShaderResourceId);
+    public GLSimpleProgram(Context context,
+                           final String vertexShaderPath,
+                           final String fragmentShaderPath) {
+        super(context, vertexShaderPath, fragmentShaderPath);
     }
 
     @Override

@@ -1,17 +1,14 @@
 package com.martin.ads.omoshiroilib.camera;
 
 import android.graphics.ImageFormat;
-import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.Surface;
 
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by Ads on 2017/1/26.
@@ -153,6 +150,7 @@ public class CameraEngine
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
+        //Log.d(TAG, "onPreviewFrame: ");
         synchronized (this) {
             mFrameChain[mChainIdx].putData(data);
             mCameraFrameReady = true;
@@ -200,8 +198,12 @@ public class CameraEngine
     }
 
     public void focusCamera(MotionEvent event){
-        camera.cancelAutoFocus();
-        camera.autoFocus(this);
+        synchronized (this) {
+            if (camera != null) {
+                camera.cancelAutoFocus();
+                camera.autoFocus(this);
+            }
+        }
     }
 
     public PreviewSize getPreviewSize(){

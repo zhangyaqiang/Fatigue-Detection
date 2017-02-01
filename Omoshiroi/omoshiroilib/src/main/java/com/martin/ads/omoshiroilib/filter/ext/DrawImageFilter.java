@@ -2,38 +2,35 @@ package com.martin.ads.omoshiroilib.filter.ext;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 
-import com.martin.ads.omoshiroilib.R;
-import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.glessential.object.Plain;
-import com.martin.ads.omoshiroilib.glessential.program.GLPassThroughProgram;
+import com.martin.ads.omoshiroilib.glessential.texture.BitmapTexture;
 import com.martin.ads.omoshiroilib.util.MatrixUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 /**
  * Created by Ads on 2017/1/27.
+ * Draw an image on the scene.
  */
 
 public class DrawImageFilter extends PassThroughFilter {
 
     private Plain imagePlain;
-    private int imageTextureId;
-    private int[] imgSize;
-    private int imageResourceId;
+    private BitmapTexture bitmapTexture;
+    private String imagePath;
 
-    public DrawImageFilter(Context context,int imageResourceId) {
+    public DrawImageFilter(Context context,String imagePath) {
         super(context);
-        imgSize=new int[2];
-        this.imageResourceId=imageResourceId;
+        bitmapTexture=new BitmapTexture();
+        this.imagePath=imagePath;
         imagePlain=new Plain(false);
     }
 
     @Override
     public void init() {
         super.init();
-        imageTextureId= TextureUtils.loadTexture(context, imageResourceId,imgSize);
+        bitmapTexture.load(context,imagePath);
     }
 
     @Override
@@ -42,10 +39,15 @@ public class DrawImageFilter extends PassThroughFilter {
 
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-        TextureUtils.bindTexture2D(imageTextureId, GLES20.GL_TEXTURE0,glPassThroughProgram.getTextureSamplerHandle(),0);
-        imagePlain.uploadTexCoordinateBuffer(glPassThroughProgram.getMaTextureHandle());
-        imagePlain.uploadVerticesBuffer(glPassThroughProgram.getMaPositionHandle());
-        MatrixUtils.updateProjection(imgSize[0],imgSize[1],surfaceWidth,surfaceHeight,projectionMatrix);
+        TextureUtils.bindTexture2D(bitmapTexture.getImageTextureId(), GLES20.GL_TEXTURE0,glPassThroughProgram.getTextureSamplerHandle(),0);
+        imagePlain.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
+        imagePlain.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
+        MatrixUtils.updateProjection(
+                bitmapTexture.getImageWidth(),
+                bitmapTexture.getImageHeight(),
+                surfaceWidth,
+                surfaceHeight,
+                projectionMatrix);
         GLES20.glUniformMatrix4fv(glPassThroughProgram.getMVPMatrixHandle(), 1, false, projectionMatrix, 0);
         imagePlain.draw();
         GLES20.glDisable(GLES20.GL_BLEND);

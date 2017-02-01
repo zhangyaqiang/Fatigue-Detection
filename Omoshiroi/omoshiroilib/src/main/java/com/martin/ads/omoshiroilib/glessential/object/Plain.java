@@ -2,7 +2,6 @@ package com.martin.ads.omoshiroilib.glessential.object;
 
 import android.opengl.GLES20;
 
-
 import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.util.BufferUtils;
 import com.martin.ads.omoshiroilib.util.PlainTextureRotationUtils;

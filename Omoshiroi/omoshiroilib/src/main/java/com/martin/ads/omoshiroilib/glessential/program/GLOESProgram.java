@@ -3,7 +3,6 @@ package com.martin.ads.omoshiroilib.glessential.program;
 import android.content.Context;
 import android.opengl.GLES20;
 
-import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
 
@@ -19,7 +18,7 @@ public class GLOESProgram extends GLAbsProgram{
     private int uTextureSamplerHandle;
 
     public GLOESProgram(Context context){
-        super(context, R.raw.vertex_shader_oes,R.raw.fragment_shader_oes);
+        super(context, "filter/vsh/oes.glsl","filter/fsh/oes.glsl");
     }
 
     @Override

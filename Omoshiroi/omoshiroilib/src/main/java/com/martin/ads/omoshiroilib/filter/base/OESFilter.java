@@ -49,8 +49,8 @@ public class OESFilter extends AbsFilter{
     public void onPreDrawElements() {
         super.onPreDrawElements();
         glOESProgram.use();
-        plain.uploadTexCoordinateBuffer(glOESProgram.getMaTextureHandle());
-        plain.uploadVerticesBuffer(glOESProgram.getMaPositionHandle());
+        plain.uploadTexCoordinateBuffer(glOESProgram.getTextureCoordinateHandle());
+        plain.uploadVerticesBuffer(glOESProgram.getPositionHandle());
         GLES20.glUniformMatrix4fv(glOESProgram.getMuSTMatrixHandle(), 1, false, mSTMatrix, 0);
     }
 

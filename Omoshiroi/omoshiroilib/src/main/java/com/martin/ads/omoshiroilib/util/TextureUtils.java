@@ -2,7 +2,6 @@ package com.martin.ads.omoshiroilib.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
@@ -32,8 +31,20 @@ public class TextureUtils{
         }
     }
 
-    public static int loadTexture(Context context, int resourceId,int imageSize[]){
+    public static int loadTextureFromResources(Context context, int resourceId,int imageSize[]){
+        return getTextureFromBitmap(
+                BitmapUtils.loadBitmapFromRaw(context,resourceId),
+                imageSize);
+    }
 
+    public static int loadTextureFromAssets(Context context, String filePath,int imageSize[]){
+        return getTextureFromBitmap(
+                BitmapUtils.loadBitmapFromAssets(context,filePath),
+                imageSize);
+    }
+
+    //bitmap will be recycled after calling this method
+    public static int getTextureFromBitmap(Bitmap bitmap,int imageSize[]){
         final int[] textureObjectIds=new int[1];
         GLES20.glGenTextures(1,textureObjectIds,0);
         if (textureObjectIds[0]==0){
@@ -41,19 +52,16 @@ public class TextureUtils{
             return 0;
         }
 
-        BitmapFactory.Options options=new BitmapFactory.Options();
-        options.inScaled=false;
-
-        Bitmap bitmap= BitmapFactory.decodeResource(context.getResources(),resourceId,options);
-
         if (bitmap==null){
             Log.d(TAG,"Failed at decoding bitmap");
             GLES20.glDeleteTextures(1,textureObjectIds,0);
             return 0;
         }
 
-        imageSize[0]=bitmap.getWidth();
-        imageSize[1]=bitmap.getHeight();
+        if(imageSize!=null && imageSize.length>=2){
+            imageSize[0]=bitmap.getWidth();
+            imageSize[1]=bitmap.getHeight();
+        }
 
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,textureObjectIds[0]);
 

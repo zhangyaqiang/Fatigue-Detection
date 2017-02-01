@@ -10,7 +10,7 @@ import com.martin.ads.omoshiroilib.util.ShaderUtils;
  */
 
 public class GLOESTexture {
-    public final static String TAG = "GL2DTexture";
+    public final static String TAG = "GLOESTexture";
 
     private int textureId;
 

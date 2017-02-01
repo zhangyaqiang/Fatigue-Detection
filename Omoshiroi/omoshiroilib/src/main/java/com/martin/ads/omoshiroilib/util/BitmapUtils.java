@@ -2,6 +2,7 @@ package com.martin.ads.omoshiroilib.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -12,6 +13,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -109,5 +111,26 @@ public class BitmapUtils {
                 }
             }
         }
+    }
+
+    public static Bitmap loadBitmapFromAssets(Context context,String filePath){
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getResources().getAssets().open(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(inputStream==null) return null;
+        BitmapFactory.Options options=new BitmapFactory.Options();
+        options.inScaled=false;
+        Bitmap bitmap= BitmapFactory.decodeStream(inputStream);
+        return bitmap;
+    }
+
+    public static Bitmap loadBitmapFromRaw(Context context, int resourceId){
+        BitmapFactory.Options options=new BitmapFactory.Options();
+        options.inScaled=false;
+        Bitmap bitmap= BitmapFactory.decodeResource(context.getResources(),resourceId,options);
+        return bitmap;
     }
 }

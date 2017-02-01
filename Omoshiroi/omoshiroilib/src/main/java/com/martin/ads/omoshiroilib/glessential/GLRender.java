@@ -8,11 +8,8 @@ import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
 import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
-import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
-import com.martin.ads.omoshiroilib.filter.effect.GrayScaleFilter;
-import com.martin.ads.omoshiroilib.filter.effect.SphereReflector;
-import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestLeftFilter;
-import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestRightFilter;
+import com.martin.ads.omoshiroilib.filter.effect.mx.MxFaceBeautyFilter;
+import com.martin.ads.omoshiroilib.filter.effect.mx.MxProFilter;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -37,9 +34,28 @@ public class GLRender implements GLSurfaceView.Renderer {
         filterGroup.addFilter(oesFilter);
         filterGroup.addFilter(orthoFilter);
 
-        filterGroup.addFilter(new SphereReflector(context));
-        //filterGroup.addFilter(new BraSizeTestRightFilter(context));
-        //filterGroup.addFilter(new GrayScaleFilter(context));
+//        filterGroup.addFilter(new SphereReflector(context));
+//        filterGroup.addFilter(new InvertColorFilter(context));
+//        filterGroup.addFilter(new BraSizeTestRightFilter(context));
+//        filterGroup.addFilter(new BraSizeTestLeftFilter(context));
+//        filterGroup.addFilter(new GrayScaleShaderFilter(context));
+
+        //filterGroup.addFilter(new FillLightFilter(context));
+        //filterGroup.addFilter(new GreenHouseFilter(context));
+        //filterGroup.addFilter(new BlackWhiteFilter(context));
+        //filterGroup.addFilter(new PastTimeFilter(context));
+        //filterGroup.addFilter(new MoonLightFilter(context));
+        //filterGroup.addFilter(new PrintingFilter(context));
+        //filterGroup.addFilter(new ToyFilter(context));
+        //filterGroup.addFilter(new BrightnessFilter(context));
+        //filterGroup.addFilter(new VignetteFilter(context));
+        //filterGroup.addFilter(new MultiplyFilter(context));
+        //filterGroup.addFilter(new ReminiscenceFilter(context));
+        //filterGroup.addFilter(new SunnyFilter(context));
+        //filterGroup.addFilter(new MxLomoFilter(context));
+        //filterGroup.addFilter(new ShiftColorFilter(context));
+        //filterGroup.addFilter(new MxFaceBeautyFilter(context));
+        //filterGroup.addFilter(new MxProFilter(context));
     }
 
     @Override

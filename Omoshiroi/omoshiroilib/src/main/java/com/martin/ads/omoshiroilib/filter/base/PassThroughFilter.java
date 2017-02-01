@@ -4,10 +4,8 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.glessential.object.Plain;
 import com.martin.ads.omoshiroilib.glessential.program.GLPassThroughProgram;
-import com.martin.ads.omoshiroilib.util.MatrixUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 /**
@@ -49,8 +47,8 @@ public class PassThroughFilter extends AbsFilter {
         onPreDrawElements();
         glPassThroughProgram.use();
         Matrix.setIdentityM(projectionMatrix,0);
-        plain.uploadTexCoordinateBuffer(glPassThroughProgram.getMaTextureHandle());
-        plain.uploadVerticesBuffer(glPassThroughProgram.getMaPositionHandle());
+        plain.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
+        plain.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
         GLES20.glUniformMatrix4fv(glPassThroughProgram.getMVPMatrixHandle(), 1, false, projectionMatrix, 0);
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glPassThroughProgram.getTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
