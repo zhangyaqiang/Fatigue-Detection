@@ -119,9 +119,9 @@ public class FilterGroup extends AbsFilter {
 
     public void addFilter(final AbsFilter filter){
         if (filter==null) return;
-        //if one filter is added multiple times
-        //it will executed the same times
-        //BTW: the order of execution matters
+        //If one filter is added multiple times,
+        //it will execute the same times
+        //BTW: Pay attention to the order of execution
         if (!isRunning){
             filters.add(filter);
         }
