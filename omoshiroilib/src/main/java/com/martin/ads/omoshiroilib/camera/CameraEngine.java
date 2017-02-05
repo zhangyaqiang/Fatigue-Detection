@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by Ads on 2017/1/26.
  */
-
+@SuppressWarnings("deprecation")
 public class CameraEngine
         implements SurfaceTexture.OnFrameAvailableListener,
         Camera.AutoFocusCallback, Camera.PreviewCallback {
