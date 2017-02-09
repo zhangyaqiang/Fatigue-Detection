@@ -2,6 +2,7 @@ package com.martin.ads.omoshiroilib.glessential.texture;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.opengl.GLES20;
 
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
@@ -37,5 +38,9 @@ public class BitmapTexture {
 
     public int getImageHeight(){
         return imageSize[1];
+    }
+
+    public void destroy() {
+        GLES20.glDeleteTextures(1, new int[]{imageTextureId}, 0);
     }
 }

@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
@@ -40,7 +41,10 @@ public class TestCamera extends AppCompatActivity {
                     Log.d(TAG, i+" "+info.getName());
                 }
                 //MediaCodec mediaCodec=MediaCodec.createEncoderByType("video/mp4v-es");
-                MediaCodec mediaCodec=MediaCodec.createEncoderByType("video/avc");
+                //MediaCodec mediaCodec=MediaCodec.createEncoderByType("video/avc");
+                MediaCodec mediaCodec=MediaCodec.createDecoderByType("video/avc");
+                //MediaCodec mediaCodec=MediaCodec.createByCodecName("AVCEncoder");
+                //MediaCodec.createEncoderByType("video/avc");
                 //Log.d(TAG, "onCreate: "+mediaCodec.toString());
             } catch (IOException e) {
                 e.printStackTrace();
