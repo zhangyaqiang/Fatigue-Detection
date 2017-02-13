@@ -19,7 +19,6 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
 public class OrthoFilter extends AbsFilter{
 
     private GLPassThroughProgram glPassThroughProgram;
-    private Plain plain;
 
     private float[] projectionMatrix = new float[16];
 

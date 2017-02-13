@@ -14,6 +14,7 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
  * Draw an image on the scene.
  */
 
+//TODO:update it
 public class DrawImageFilter extends PassThroughFilter {
 
     private Plain imagePlain;

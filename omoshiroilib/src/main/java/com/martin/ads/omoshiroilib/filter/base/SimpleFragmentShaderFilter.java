@@ -2,6 +2,7 @@ package com.martin.ads.omoshiroilib.filter.base;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.martin.ads.omoshiroilib.glessential.object.Plain;
 import com.martin.ads.omoshiroilib.glessential.program.GLSimpleProgram;
@@ -14,7 +15,6 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
 public class SimpleFragmentShaderFilter extends AbsFilter {
 
     protected GLSimpleProgram glSimpleProgram;
-    protected Plain plain;
 
     public SimpleFragmentShaderFilter(Context context,
                                       final String fragmentShaderPath) {
@@ -45,6 +45,7 @@ public class SimpleFragmentShaderFilter extends AbsFilter {
         onPreDrawElements();
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glSimpleProgram.getTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
+        Log.d(TAG, "onDrawFrame: "+surfaceWidth+" "+surfaceHeight);
         plain.draw();
     }
 }

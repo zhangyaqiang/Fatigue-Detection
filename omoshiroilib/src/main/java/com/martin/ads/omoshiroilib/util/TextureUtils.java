@@ -43,7 +43,6 @@ public class TextureUtils{
                 imageSize);
     }
 
-    //bitmap will be recycled after calling this method
     public static int getTextureFromBitmap(Bitmap bitmap,int imageSize[]){
         final int[] textureObjectIds=new int[1];
         GLES20.glGenTextures(1,textureObjectIds,0);

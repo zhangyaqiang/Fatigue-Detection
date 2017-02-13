@@ -10,6 +10,7 @@ import android.view.View;
 public class Logger {
     public static String TAG = "Logger";
 
+    private static long currentTime;
     /**
      * Matrices are 4 x 4 column-vector matrices stored in column-major order:
      * @param matrix length=16
@@ -42,5 +43,15 @@ public class Logger {
         result.append(event.getEventTime() - event.getDownTime());
         result.append(" ms\n");
         Log.d(TAG,result.toString());
+    }
+
+    public static void updateCurrentTime(){
+        currentTime=System.currentTimeMillis();
+    }
+
+    public static long logPassedTime(String name){
+        long ret=System.currentTimeMillis()-currentTime;
+        Log.d(TAG, name+" is finished, timePassed: "+ret);
+        return ret;
     }
 }

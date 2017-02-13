@@ -9,10 +9,15 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.R;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
+import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
+import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 
 public class CameraPreviewActivity extends AppCompatActivity {
@@ -47,9 +52,11 @@ public class CameraPreviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if(checkPermission(Manifest.permission.CAMERA,REQUEST_PERMISSION))
             init();
     }
+
 
     private void init(){
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -63,16 +70,20 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
         glSurfaceView= (GLSurfaceView) findViewById(R.id.camera_view);
         cameraView=new CameraView(this,glSurfaceView);
+        GlobalContext.context=this;
 
-//        captureAnimation= (CaptureAnimation) findViewById(R.id.capture_animation_view);
-//        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        //captureAnimation= (CaptureAnimation) findViewById(R.id.capture_animation_view);
+        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                captureAnimation.setVisibility(View.VISIBLE);
 //                captureAnimation.startAnimation();
-//            }
-//        });
+                cameraView.getCameraEngine().takePhoto();
+            }
+        });
+
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {

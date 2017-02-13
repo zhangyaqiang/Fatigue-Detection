@@ -72,6 +72,13 @@ public class Plain {
         this.mVerticesBuffer = mVerticesBuffer;
     }
 
+    public void resetTextureCoordinateBuffer(boolean isInGroup) {
+        mTexCoordinateBuffer=null;
+        if (isInGroup)
+            mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.getRotation(Rotation.NORMAL, false, true), 0);
+        else mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.TEXTURE_NO_ROTATION,0);
+    }
+
     public void draw() {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
     }

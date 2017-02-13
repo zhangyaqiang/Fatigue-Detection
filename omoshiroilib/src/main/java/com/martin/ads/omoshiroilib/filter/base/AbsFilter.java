@@ -2,6 +2,8 @@ package com.martin.ads.omoshiroilib.filter.base;
 
 import android.opengl.GLES20;
 
+import com.martin.ads.omoshiroilib.glessential.object.Plain;
+
 import java.util.LinkedList;
 
 /**
@@ -12,6 +14,8 @@ public abstract class AbsFilter {
     protected static final String TAG = "AbsFilter";
     private final LinkedList<Runnable> mPreDrawTaskList;
     protected int surfaceWidth,surfaceHeight;
+
+    protected Plain plain;
 
     public AbsFilter() {
         mPreDrawTaskList = new LinkedList<Runnable>();
@@ -49,5 +53,11 @@ public abstract class AbsFilter {
     public void setUniform1f(final int programId, final String name , final float floatValue) {
         int location=GLES20.glGetUniformLocation(programId,name);
         GLES20.glUniform1f(location,floatValue);
+    }
+
+    //TODO:remove it
+    public AbsFilter resetPlane(boolean inGroup){
+        plain.resetTextureCoordinateBuffer(inGroup);
+        return this;
     }
 }

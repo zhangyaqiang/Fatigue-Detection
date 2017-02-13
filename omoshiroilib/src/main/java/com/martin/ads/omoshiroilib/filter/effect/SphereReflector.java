@@ -29,7 +29,7 @@ public class SphereReflector extends PassThroughFilter {
 
     public SphereReflector(Context context) {
         super(context);
-        sphere=new Sphere(5,75,150);
+        sphere=new Sphere(8,75,150);
         glSphereProgram =new GLPassThroughProgram(context);
         initMatrix();
     }

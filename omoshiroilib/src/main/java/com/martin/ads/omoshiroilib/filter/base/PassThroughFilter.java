@@ -15,7 +15,6 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
 public class PassThroughFilter extends AbsFilter {
 
     protected GLPassThroughProgram glPassThroughProgram;
-    private Plain plain;
 
     protected Context context;
     protected float[] projectionMatrix = new float[16];

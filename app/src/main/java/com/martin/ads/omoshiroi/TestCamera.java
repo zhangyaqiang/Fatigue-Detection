@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.martin.ads.omoshiroilib.debug.lab.FilterThumbActivity;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.ui.CameraPreviewActivity;
 
@@ -32,26 +33,7 @@ public class TestCamera extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            try {
-                int len=MediaCodecList.getCodecCount();
-                Log.d(TAG, "onCreate: MediaCodecList size :"+len);
-                for(int i=0;i<len;i++){
-                    MediaCodecInfo info=MediaCodecList.getCodecInfoAt(i);
-                    Log.d(TAG, i+" "+info.getName());
-                }
-                //MediaCodec mediaCodec=MediaCodec.createEncoderByType("video/mp4v-es");
-                //MediaCodec mediaCodec=MediaCodec.createEncoderByType("video/avc");
-                MediaCodec mediaCodec=MediaCodec.createDecoderByType("video/avc");
-                //MediaCodec mediaCodec=MediaCodec.createByCodecName("AVCEncoder");
-                //MediaCodec.createEncoderByType("video/avc");
-                //Log.d(TAG, "onCreate: "+mediaCodec.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Intent intent=new Intent(TestCamera.this,CameraPreviewActivity.class);
+        Intent intent=new Intent(TestCamera.this,FilterThumbActivity.class);
         startActivity(intent);
         finish();
     }

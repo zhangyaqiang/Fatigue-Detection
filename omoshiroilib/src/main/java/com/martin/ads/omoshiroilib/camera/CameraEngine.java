@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.martin.ads.omoshiroilib.glessential.CameraView;
+import com.martin.ads.omoshiroilib.glessential.GLRender;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
 
 import java.io.IOException;
 
@@ -37,6 +39,8 @@ public class CameraEngine
     private Thread mWorkerThread;
     private boolean mStopThread;
     private boolean mCameraFrameReady;
+
+    private GLRender.PictureTakenCallBack pictureTakenCallBack;
 
     public CameraEngine() {
         frameWidth=720; frameHeight=1280;
@@ -206,6 +210,22 @@ public class CameraEngine
         }
     }
 
+    public void takePhoto(){
+        Camera.ShutterCallback shutterCallback = new Camera.ShutterCallback() {
+            public void onShutter() {
+                Log.d(TAG, "onShutter: ");
+            }
+        };
+
+        Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
+            public void onPictureTaken(final byte[] data, final Camera camera) {
+                camera.startPreview();
+                pictureTakenCallBack.saveAsBitmap(data);
+            }
+        };
+        camera.takePicture(shutterCallback, null, jpegCallback);
+    }
+
     public PreviewSize getPreviewSize(){
         return new PreviewSize(frameWidth,frameHeight);
     }
@@ -230,5 +250,10 @@ public class CameraEngine
         public int getHeight() {
             return height;
         }
+    }
+
+
+    public void setPictureTakenCallBack(GLRender.PictureTakenCallBack pictureTakenCallBack) {
+        this.pictureTakenCallBack = pictureTakenCallBack;
     }
 }

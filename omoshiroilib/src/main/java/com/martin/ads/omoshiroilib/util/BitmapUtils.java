@@ -6,8 +6,14 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
+import com.martin.ads.omoshiroilib.filter.helper.FilterType;
+import com.martin.ads.omoshiroilib.glessential.GLImageRender;
+import com.martin.ads.omoshiroilib.debug.removeit.PixelBuffer;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -23,6 +29,7 @@ import java.util.Date;
  */
 public class BitmapUtils {
     private static final String TAG = "BitmapUtils";
+
     public static void sendImage(int width, int height, Context context) {
         final IntBuffer pixelBuffer = IntBuffer.allocate(width * height);
 
@@ -40,7 +47,7 @@ public class BitmapUtils {
         new SaveBitmapTask(pixelBuffer,width,height,context).execute();
     }
 
-    static class SaveBitmapTask extends AsyncTask<Void, Integer, Boolean> {
+    private static class SaveBitmapTask extends AsyncTask<Void, Integer, Boolean> {
         long start;
 
         IntBuffer rgbaBuf;
@@ -72,7 +79,7 @@ public class BitmapUtils {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            saveRgb2Bitmap(rgbaBuf, filePath , width, height);
+            saveIntBufferAsBitmap(rgbaBuf, filePath , width, height);
             return true;
         }
 
@@ -83,7 +90,8 @@ public class BitmapUtils {
             super.onPostExecute(aBoolean);
         }
     }
-    public static void saveRgb2Bitmap(IntBuffer buf, String filePath, int width, int height) {
+
+    private static void saveIntBufferAsBitmap(IntBuffer buf, String filePath, int width, int height) {
         final int[] pixelMirroredArray = new int[width * height];
         Log.d(TAG, "Creating " + filePath);
         BufferedOutputStream bos = null;
@@ -113,6 +121,91 @@ public class BitmapUtils {
         }
     }
 
+    private static void saveBitmap(final Bitmap bitmap, final String outputFilePath,final IWorkerCallback workerCallback) {
+        try {
+            BufferedOutputStream bos = null;
+            try {
+                bos = new BufferedOutputStream(new FileOutputStream(outputFilePath));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (bos != null) {
+                    try {
+                        bos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if(workerCallback!=null)
+                workerCallback.onPostExecute(null);
+        } catch (final Exception e) {
+                if(workerCallback!=null)
+                    workerCallback.onPostExecute(e);
+        }
+    }
+
+    public static void saveByteArray(final byte[] input, final String outputFilePath, final IWorkerCallback workerCallback,final Handler handler) {
+        FakeThreadUtils.postTask(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileOutputStream outputStream = new FileOutputStream(outputFilePath);
+                    outputStream.write(input);
+                    outputStream.flush();
+                    outputStream.close();
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(workerCallback!=null)
+                                workerCallback.onPostExecute(null);
+                        }
+                    });
+                } catch (final Exception e) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(workerCallback!=null)
+                                workerCallback.onPostExecute(e);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+    public static void saveBitmapWithFilterApplied(final Context context, final FilterType filterType,final Bitmap bitmap, final String outputFilePath, final IWorkerCallback workerCallback){
+        FakeThreadUtils.postTask(new Runnable() {
+            @Override
+            public void run() {
+                Logger.updateCurrentTime();
+                GLImageRender imageRender=new GLImageRender(context,bitmap,filterType);
+                PixelBuffer buffer = new PixelBuffer(bitmap.getWidth(), bitmap.getHeight());
+                Logger.logPassedTime("new PixelBuffer");
+                buffer.setRenderer(imageRender);
+                Bitmap result = buffer.getBitmap();
+                bitmap.recycle();
+                Logger.logPassedTime("getBitmap");
+                buffer.destroy();
+                saveBitmap(result,outputFilePath,workerCallback);
+                result.recycle();
+                //FIXME: this sucks
+                System.gc();
+            }
+        });
+
+    }
+
+    public static Bitmap loadBitmapFromFile(String filePath){
+        BitmapFactory.Options options=new BitmapFactory.Options();
+        options.inScaled=false;
+        Bitmap bitmap= BitmapFactory.decodeFile(filePath);
+        return bitmap;
+    }
+
     public static Bitmap loadBitmapFromAssets(Context context,String filePath){
         InputStream inputStream = null;
         try {
@@ -133,4 +226,5 @@ public class BitmapUtils {
         Bitmap bitmap= BitmapFactory.decodeResource(context.getResources(),resourceId,options);
         return bitmap;
     }
+
 }

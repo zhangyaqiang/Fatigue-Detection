@@ -3,6 +3,7 @@ package com.martin.ads.omoshiroilib.glessential;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,6 +14,7 @@ import com.martin.ads.omoshiroilib.camera.CameraEngine;
  */
 
 public class CameraView{
+    private static final String TAG = "CameraView";
     private GLRender glRender;
     private CameraEngine cameraEngine;
     private Context context;
@@ -33,7 +35,6 @@ public class CameraView{
             }
         });
         glRender=new GLRender(context,cameraEngine);
-
         glSurfaceView.setRenderer(glRender);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         glSurfaceView.setClickable(true);
@@ -46,6 +47,7 @@ public class CameraView{
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction()==MotionEvent.ACTION_UP)
                     cameraEngine.focusCamera(event);
+                Log.d(TAG, "onTouch: "+glSurfaceView.getWidth()+" "+glSurfaceView.getHeight());
                 return true;
             }
         });
@@ -67,5 +69,9 @@ public class CameraView{
 
     public interface RenderCallback{
         void renderImmediately();
+    }
+
+    public CameraEngine getCameraEngine() {
+        return cameraEngine;
     }
 }
