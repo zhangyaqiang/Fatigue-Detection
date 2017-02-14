@@ -15,7 +15,7 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
  * let the image pass through
  * and simply fit the image to the screen
  */
-
+@Deprecated
 public class OrthoFilter extends AbsFilter{
 
     private GLPassThroughProgram glPassThroughProgram;

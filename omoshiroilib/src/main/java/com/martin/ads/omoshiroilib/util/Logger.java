@@ -1,8 +1,11 @@
 package com.martin.ads.omoshiroilib.util;
 
+import android.hardware.Camera;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.List;
 
 /**
  * Created by Ads on 2016/11/5.
@@ -53,5 +56,15 @@ public class Logger {
         long ret=System.currentTimeMillis()-currentTime;
         Log.d(TAG, name+" is finished, timePassed: "+ret);
         return ret;
+    }
+
+    public static void logCameraSizes(List<Camera.Size> list){
+        if(list==null) {
+            Log.d(TAG, "logCameraSizes: list is null");
+            return;
+        }
+        for(Camera.Size size:list){
+            Log.d(TAG, "logCameraSizes: "+size.width+" x "+size.height);
+        }
     }
 }

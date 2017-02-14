@@ -33,7 +33,7 @@ public class TestCamera extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent=new Intent(TestCamera.this,FilterThumbActivity.class);
+        Intent intent=new Intent(TestCamera.this,CameraPreviewActivity.class);
         startActivity(intent);
         finish();
     }

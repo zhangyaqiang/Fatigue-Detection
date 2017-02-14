@@ -3,14 +3,20 @@ package com.martin.ads.omoshiroilib.camera;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.os.Build;
 import android.util.Log;
 import android.view.MotionEvent;
 
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRender;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
+import com.martin.ads.omoshiroilib.util.Logger;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by Ads on 2017/1/26.
@@ -21,6 +27,8 @@ public class CameraEngine
         Camera.AutoFocusCallback, Camera.PreviewCallback {
 
     private static final String TAG = "CameraEngine";
+    //this should be adjustable
+    private static final double preferredRatio=4.0/3.0;
     private SurfaceTexture mSurfaceTexture;
     private CameraView.RenderCallback renderCallback;
 
@@ -41,9 +49,10 @@ public class CameraEngine
     private boolean mCameraFrameReady;
 
     private GLRender.PictureTakenCallBack pictureTakenCallBack;
+    private CameraView.PreviewSizeChangedCallback previewSizeChangedCallback;
 
     public CameraEngine() {
-        frameWidth=720; frameHeight=1280;
+        frameWidth=480; frameHeight=640;
         cameraOpened=false;
 
         mChainIdx = 0;
@@ -68,11 +77,24 @@ public class CameraEngine
             camera.setPreviewCallbackWithBuffer(this);
             if (camera != null) {
                 mParams = camera.getParameters();
-//                List<Camera.Size> list=mParams.getSupportedPreviewSizes();
-//                for(Camera.Size i:list){
-//                    Log.d(TAG, "openCamera: "+i.width+" "+i.height);
-//                }
+                List<Camera.Size> supportedPictureSizesList=mParams.getSupportedPictureSizes();
+                List<Camera.Size> supportedVideoSizesList=mParams.getSupportedVideoSizes();
+                List<Camera.Size> supportedPreviewSizesList=mParams.getSupportedPreviewSizes();
+                Logger.logCameraSizes(supportedPictureSizesList);
+                Logger.logCameraSizes(supportedVideoSizesList);
+                Logger.logCameraSizes(supportedPreviewSizesList);
+
+                Camera.Size previewSize=choosePreferredSize(supportedPreviewSizesList,preferredRatio);
+                Camera.Size photoSize=choosePreferredSize(supportedPictureSizesList,preferredRatio);
+
+                frameHeight=previewSize.width;
+                frameWidth=previewSize.height;
+                Log.d(TAG, "openCamera: choose preview size"+previewSize.height+"x"+previewSize.width);
                 mParams.setPreviewSize(frameHeight,frameWidth);
+
+                mParams.setPictureSize(photoSize.width,photoSize.height);
+                Log.d(TAG, "openCamera: choose photo size"+photoSize.height+"x"+photoSize.width);
+
                 //mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                 int size = frameWidth*frameHeight;
                 size = size * ImageFormat.getBitsPerPixel(mParams.getPreviewFormat()) / 8;
@@ -93,6 +115,7 @@ public class CameraEngine
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            previewSizeChangedCallback.updatePreviewSize(frameWidth,frameHeight);
             camera.startPreview();
 
             mCameraFrameReady = false;
@@ -223,6 +246,11 @@ public class CameraEngine
                 pictureTakenCallBack.saveAsBitmap(data);
             }
         };
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//            camera.enableShutterSound(false);
+//        }
+
         camera.takePicture(shutterCallback, null, jpegCallback);
     }
 
@@ -256,4 +284,32 @@ public class CameraEngine
     public void setPictureTakenCallBack(GLRender.PictureTakenCallBack pictureTakenCallBack) {
         this.pictureTakenCallBack = pictureTakenCallBack;
     }
+
+    public void setPreviewSizeChangedCallback(CameraView.PreviewSizeChangedCallback previewSizeChangedCallback) {
+        this.previewSizeChangedCallback = previewSizeChangedCallback;
+    }
+
+    private static Camera.Size choosePreferredSize(List<Camera.Size> sizes,double aspectRatio) {
+        List<Camera.Size> options = new ArrayList<>();
+        for (Camera.Size option : sizes) {
+            if (Math.abs((int)(option.height * aspectRatio)-option.width)<10) {
+                options.add(option);
+            }
+        }
+        if (options.size() > 0) {
+            return Collections.max(options, new CompareSizesByArea());
+        } else {
+            return options.get(options.size()-1);
+        }
+    }
+
+    static class CompareSizesByArea implements Comparator<Camera.Size> {
+        @Override
+        public int compare(Camera.Size lhs, Camera.Size rhs) {
+            // We cast here to ensure the multiplications won't overflow
+            return Long.signum((long) lhs.width * lhs.height -
+                    (long) rhs.width * rhs.height);
+        }
+    }
+
 }

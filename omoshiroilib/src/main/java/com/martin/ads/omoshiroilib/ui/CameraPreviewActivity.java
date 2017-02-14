@@ -1,9 +1,9 @@
 package com.martin.ads.omoshiroilib.ui;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,23 +11,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.R;
+import com.martin.ads.omoshiroilib.debug.lab.FilterThumbActivity;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
-import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
-import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
+import com.martin.ads.omoshiroilib.glessential.GLRootView;
 
 public class CameraPreviewActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraPreviewActivity";
     private static final int REQUEST_PERMISSION = 233;
-    private GLSurfaceView glSurfaceView;
     private CameraView cameraView;
 
-//    private CaptureAnimation captureAnimation;
+    private CaptureAnimation captureAnimation;
 
     private boolean checkPermission(String permission,int requestCode){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -68,17 +66,25 @@ public class CameraPreviewActivity extends AppCompatActivity {
         params.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
         getWindow().setAttributes(params);
 
-        glSurfaceView= (GLSurfaceView) findViewById(R.id.camera_view);
-        cameraView=new CameraView(this,glSurfaceView);
+        GLRootView glRootView= (GLRootView) findViewById(R.id.camera_view);
+        cameraView=new CameraView(this,glRootView);
         GlobalContext.context=this;
 
-        //captureAnimation= (CaptureAnimation) findViewById(R.id.capture_animation_view);
-        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+        captureAnimation= (CaptureAnimation) findViewById(R.id.capture_animation_view);
+        findViewById(R.id.tmp_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                captureAnimation.setVisibility(View.VISIBLE);
-//                captureAnimation.startAnimation();
+                captureAnimation.setVisibility(View.VISIBLE);
+                captureAnimation.startAnimation();
                 cameraView.getCameraEngine().takePhoto();
+            }
+        });
+
+        findViewById(R.id.debug_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(CameraPreviewActivity.this,FilterThumbActivity.class);
+                startActivity(intent);
             }
         });
 

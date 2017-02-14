@@ -10,12 +10,11 @@ import android.util.Log;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
-import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
-import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
 
 import java.io.File;
@@ -41,7 +40,6 @@ public class GLRender implements GLSurfaceView.Renderer {
     private CameraEngine cameraEngine;
     private FilterGroup filterGroup;
     private OESFilter oesFilter;
-    private OrthoFilter orthoFilter;
     private Context context;
 
     private FilterType currentFilterType=FilterType.PAST_TIME_FILTER;
@@ -50,9 +48,7 @@ public class GLRender implements GLSurfaceView.Renderer {
         this.cameraEngine=cameraEngine;
         filterGroup=new FilterGroup();
         oesFilter=new OESFilter(context);
-        orthoFilter=new OrthoFilter(context);
         filterGroup.addFilter(oesFilter);
-        filterGroup.addFilter(orthoFilter);
 
         filterGroup.addFilter(
                 FilterFactory.createFilter(currentFilterType,context)
@@ -122,6 +118,7 @@ public class GLRender implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
+        Log.d(TAG, "onSurfaceChanged: "+width+" "+height);
         GLES20.glViewport(0,0,width,height);
         filterGroup.onFilterChanged(width,height);
         if(cameraEngine.isCameraOpened()){
@@ -130,7 +127,6 @@ public class GLRender implements GLSurfaceView.Renderer {
         }
         cameraEngine.setTexture(oesFilter.getGlOESTexture().getTextureId());
         cameraEngine.openCamera(false);
-        orthoFilter.updateProjection(cameraEngine.getPreviewSize());
         cameraEngine.startPreview();
     }
 

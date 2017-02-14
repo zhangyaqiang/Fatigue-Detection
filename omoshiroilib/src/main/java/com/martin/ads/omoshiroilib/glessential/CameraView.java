@@ -1,5 +1,6 @@
 package com.martin.ads.omoshiroilib.glessential;
 
+import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
@@ -18,48 +19,63 @@ public class CameraView{
     private GLRender glRender;
     private CameraEngine cameraEngine;
     private Context context;
-    private GLSurfaceView glSurfaceView;
-    public CameraView(Context context,GLSurfaceView glSurfaceView) {
-        this.glSurfaceView=glSurfaceView;
+    private GLRootView glRootView;
+
+    public CameraView(Context context,GLRootView glRootView) {
+        this.glRootView=glRootView;
         this.context = context;
         init();
     }
 
     private void init(){
-        glSurfaceView.setEGLContextClientVersion(2);
+        glRootView.setEGLContextClientVersion(2);
         cameraEngine=new CameraEngine();
         cameraEngine.setRenderCallback(new RenderCallback() {
             @Override
             public void renderImmediately() {
-                glSurfaceView.requestRender();
+                glRootView.requestRender();
             }
         });
+
+        cameraEngine.setPreviewSizeChangedCallback(new PreviewSizeChangedCallback() {
+            @Override
+            public void updatePreviewSize(final int previewWidth, final int previewHeight) {
+                //heheda
+                ((Activity)context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        glRootView.setAspectRatio(previewWidth,previewHeight);
+                    }
+                });
+            }
+        });
+
         glRender=new GLRender(context,cameraEngine);
-        glSurfaceView.setRenderer(glRender);
-        glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-        glSurfaceView.setClickable(true);
+        glRootView.setRenderer(glRender);
+        glRootView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        glRootView.setClickable(true);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
-            glSurfaceView.setPreserveEGLContextOnPause(true);
+            glRootView.setPreserveEGLContextOnPause(true);
         }
 
-        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+        glRootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction()==MotionEvent.ACTION_UP)
                     cameraEngine.focusCamera(event);
-                Log.d(TAG, "onTouch: "+glSurfaceView.getWidth()+" "+glSurfaceView.getHeight());
+                Log.d(TAG, "onTouch: "+glRootView.getWidth()+" "+glRootView.getHeight());
                 return true;
             }
         });
     }
 
     public void onPause(){
-        glSurfaceView.onPause();
+        glRootView.onPause();
         glRender.onPause();
     }
 
     public void onResume(){
-        glSurfaceView.onResume();
+        glRootView.onResume();
         glRender.onResume();
     }
 
@@ -69,6 +85,10 @@ public class CameraView{
 
     public interface RenderCallback{
         void renderImmediately();
+    }
+
+    public interface PreviewSizeChangedCallback{
+        void updatePreviewSize(int previewWidth,int previewHeight);
     }
 
     public CameraEngine getCameraEngine() {

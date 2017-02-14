@@ -3,6 +3,7 @@ package com.martin.ads.omoshiroilib.filter.base;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.martin.ads.omoshiroilib.glessential.object.Plain;
 import com.martin.ads.omoshiroilib.glessential.program.GLOESProgram;
@@ -15,7 +16,7 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
  */
 
 public class OESFilter extends AbsFilter{
-
+    private static final String TAG = "OESFilter";
     private GLOESTexture glOESTexture;
     private GLOESProgram glOESProgram;
 
