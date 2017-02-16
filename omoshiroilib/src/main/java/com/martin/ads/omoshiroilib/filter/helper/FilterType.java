@@ -12,7 +12,13 @@ public enum FilterType {
     GRAY_SCALE,
     INVERT_COLOR,
 
-    //Effects : 17
+    //Effects : 23
+    SCALING,
+    BOX_BLUR,
+    GAUSSIAN_BLUR,
+    RANDOM_BLUR,
+    FAST_BLUR,
+    BLURRED_FRAME,
     SPHERE_REFLECTOR,
     FILL_LIGHT_FILTER,
     GREEN_HOUSE_FILTER,

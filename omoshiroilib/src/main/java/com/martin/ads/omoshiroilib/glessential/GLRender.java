@@ -13,14 +13,15 @@ import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
+import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.FastBlurFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
+import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
+import com.martin.ads.omoshiroilib.util.FileUtils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -43,6 +44,10 @@ public class GLRender implements GLSurfaceView.Renderer {
     private Context context;
 
     private FilterType currentFilterType=FilterType.PAST_TIME_FILTER;
+
+    private int surfaceWidth;
+    private int surfaceHeight;
+
     public GLRender(final Context context, CameraEngine cameraEngine) {
         this.context=context;
         this.cameraEngine=cameraEngine;
@@ -54,6 +59,8 @@ public class GLRender implements GLSurfaceView.Renderer {
                 FilterFactory.createFilter(currentFilterType,context)
         );
 
+        filterGroup.addFilter(new BlurredFrameEffect(context));
+
         cameraEngine.setPictureTakenCallBack(new PictureTakenCallBack() {
             @Override
             public void saveAsBitmap(final byte[] data) {
@@ -64,7 +71,7 @@ public class GLRender implements GLSurfaceView.Renderer {
                         Environment.getExternalStorageDirectory(), "/Omoshiroi/pictures");
                 if (!pictureFolderPath.exists())
                     pictureFolderPath.mkdirs();
-                File outputFile=makeTempFile(pictureFolderPath.getAbsolutePath(),"IMG_", ".jpg");
+                File outputFile= FileUtils.makeTempFile(pictureFolderPath.getAbsolutePath(),"IMG_", ".jpg");
                 IWorkerCallback workerCallback=new IWorkerCallback() {
                     @Override
                     public void onPostExecute(Exception exception) {
@@ -119,6 +126,8 @@ public class GLRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         Log.d(TAG, "onSurfaceChanged: "+width+" "+height);
+        this.surfaceWidth=width;
+        this.surfaceHeight=height;
         GLES20.glViewport(0,0,width,height);
         filterGroup.onFilterChanged(width,height);
         if(cameraEngine.isCameraOpened()){
@@ -150,10 +159,5 @@ public class GLRender implements GLSurfaceView.Renderer {
         void saveAsBitmap(final byte[] data);
     }
 
-    public static File makeTempFile(String saveDir, String prefix, String extension) {
-        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        final File dir = new File(saveDir);
-        dir.mkdirs();
-        return new File(dir, prefix + timeStamp + extension);
-    }
+
 }

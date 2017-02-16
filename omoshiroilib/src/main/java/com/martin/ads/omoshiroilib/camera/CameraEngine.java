@@ -1,17 +1,28 @@
 package com.martin.ads.omoshiroilib.camera;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRender;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
+import com.martin.ads.omoshiroilib.util.FileUtils;
 import com.martin.ads.omoshiroilib.util.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +39,7 @@ public class CameraEngine
 
     private static final String TAG = "CameraEngine";
     //this should be adjustable
-    private static final double preferredRatio=4.0/3.0;
+    private static final double preferredRatio=16.0/9;
     private SurfaceTexture mSurfaceTexture;
     private CameraView.RenderCallback renderCallback;
 
@@ -51,6 +62,9 @@ public class CameraEngine
     private GLRender.PictureTakenCallBack pictureTakenCallBack;
     private CameraView.PreviewSizeChangedCallback previewSizeChangedCallback;
 
+    private MediaRecorder mMediaRecorder;
+    private Camera.Size previewSize;
+    private int currentCameraId;
     public CameraEngine() {
         frameWidth=480; frameHeight=640;
         cameraOpened=false;
@@ -73,7 +87,8 @@ public class CameraEngine
     public void openCamera(boolean facingFront) {
         synchronized (this) {
             int facing=facingFront? Camera.CameraInfo.CAMERA_FACING_FRONT:Camera.CameraInfo.CAMERA_FACING_BACK;
-            camera = Camera.open(getCameraIdWithFacing(facing));
+            currentCameraId=getCameraIdWithFacing(facing);
+            camera = Camera.open(currentCameraId);
             camera.setPreviewCallbackWithBuffer(this);
             if (camera != null) {
                 mParams = camera.getParameters();
@@ -84,7 +99,7 @@ public class CameraEngine
                 Logger.logCameraSizes(supportedVideoSizesList);
                 Logger.logCameraSizes(supportedPreviewSizesList);
 
-                Camera.Size previewSize=choosePreferredSize(supportedPreviewSizesList,preferredRatio);
+                previewSize=choosePreferredSize(supportedPreviewSizesList,preferredRatio);
                 Camera.Size photoSize=choosePreferredSize(supportedPictureSizesList,preferredRatio);
 
                 frameHeight=previewSize.width;
@@ -243,13 +258,14 @@ public class CameraEngine
         Camera.PictureCallback jpegCallback = new Camera.PictureCallback() {
             public void onPictureTaken(final byte[] data, final Camera camera) {
                 camera.startPreview();
+                Log.d(TAG, "onPictureTaken: ");
                 pictureTakenCallBack.saveAsBitmap(data);
             }
         };
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-//            camera.enableShutterSound(false);
-//        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            camera.enableShutterSound(false);
+        }
 
         camera.takePicture(shutterCallback, null, jpegCallback);
     }
@@ -299,7 +315,7 @@ public class CameraEngine
         if (options.size() > 0) {
             return Collections.max(options, new CompareSizesByArea());
         } else {
-            return options.get(options.size()-1);
+            return sizes.get(sizes.size()-1);
         }
     }
 
@@ -309,6 +325,109 @@ public class CameraEngine
             // We cast here to ensure the multiplications won't overflow
             return Long.signum((long) lhs.width * lhs.height -
                     (long) rhs.width * rhs.height);
+        }
+    }
+
+    public boolean startRecordingVideo() {
+        if (prepareMediaRecorder()) {
+            try {
+                mMediaRecorder.start();
+
+                return true;
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    private boolean prepareMediaRecorder() {
+        try {
+           // final Activity activity = getActivity();
+            //if (null == activity) return false;
+            //final BaseCaptureInterface captureInterface = (BaseCaptureInterface) activity;
+
+           // setCameraDisplayOrientation(mCamera.getParameters());
+            mMediaRecorder = new MediaRecorder();
+            camera.stopPreview();
+            camera.unlock();
+            mMediaRecorder.setCamera(camera);
+
+  //          boolean canUseAudio = true;
+            //boolean audioEnabled = !mInterface.audioDisabled();
+            //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            //    canUseAudio = ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
+
+//            if (canUseAudio && audioEnabled) {
+                mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+//            } else if (audioEnabled) {
+//                Toast.makeText(getActivity(), R.string.mcam_no_audio_access, Toast.LENGTH_LONG).show();
+//            }
+            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+
+            final CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
+            mMediaRecorder.setOutputFormat(profile.fileFormat);
+            mMediaRecorder.setVideoFrameRate(profile.videoFrameRate);
+            mMediaRecorder.setVideoSize(previewSize.width, previewSize.height);
+            mMediaRecorder.setVideoEncodingBitRate(profile.videoBitRate);
+            mMediaRecorder.setVideoEncoder(profile.videoCodec);
+
+            mMediaRecorder.setAudioEncodingBitRate(profile.audioBitRate);
+            mMediaRecorder.setAudioChannels(profile.audioChannels);
+            mMediaRecorder.setAudioSamplingRate(profile.audioSampleRate);
+            mMediaRecorder.setAudioEncoder(profile.audioCodec);
+
+
+            Uri uri = Uri.fromFile(FileUtils.makeTempFile(
+                    new File(Environment.getExternalStorageDirectory(),
+                            "/Omoshiroi/videos").getAbsolutePath(),
+                    "VID_", ".mp4"));
+
+            mMediaRecorder.setOutputFile(uri.getPath());
+
+//            if (captureInterface.maxAllowedFileSize() > 0) {
+//                mMediaRecorder.setMaxFileSize(captureInterface.maxAllowedFileSize());
+//                mMediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+//                    @Override
+//                    public void onInfo(MediaRecorder mediaRecorder, int what, int extra) {
+//                        if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED) {
+//                            Toast.makeText(getActivity(), R.string.mcam_file_size_limit_reached, Toast.LENGTH_SHORT).show();
+//                            stopRecordingVideo(false);
+//                        }
+//                    }
+//                });
+//            }
+
+            mMediaRecorder.setOrientationHint(90);
+     //       mMediaRecorder.setPreviewDisplay(mPreviewView.getHolder().getSurface());
+
+            mMediaRecorder.prepare();
+            return true;
+
+        } catch (Exception e) {
+            camera.lock();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public final void releaseRecorder() {
+        if (mMediaRecorder != null) {
+            //if (mIsRecording) {
+                try {
+                    mMediaRecorder.stop();
+                } catch (Throwable t) {
+                    //noinspection ResultOfMethodCallIgnored
+                    //new File(mOutputUri).delete();
+                    t.printStackTrace();
+                }
+                //mIsRecording = false;
+            //}
+            mMediaRecorder.reset();
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+            camera.startPreview();
         }
     }
 

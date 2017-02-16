@@ -23,8 +23,8 @@ public class OrthoFilter extends AbsFilter{
     private float[] projectionMatrix = new float[16];
 
     public OrthoFilter(Context context) {
+        super("OrthoFilter");
         glPassThroughProgram=new GLPassThroughProgram(context);
-        plain=new Plain(true);
         Matrix.setIdentityM(projectionMatrix,0);
     }
 

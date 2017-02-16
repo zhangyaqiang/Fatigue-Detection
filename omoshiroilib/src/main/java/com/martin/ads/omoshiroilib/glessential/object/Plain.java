@@ -18,7 +18,7 @@ import java.nio.FloatBuffer;
 public class Plain {
     private FloatBuffer mVerticesBuffer;
     private FloatBuffer mTexCoordinateBuffer;
-    private static final float TRIANGLES_DATA[] = {
+    private final float TRIANGLES_DATA[] = {
             -1.0f, -1.0f, 0f,
             1.0f, -1.0f, 0f,
             -1.0f, 1.0f, 0f,
@@ -81,5 +81,13 @@ public class Plain {
 
     public void draw() {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
+    }
+
+    public Plain scale(float scalingFactor){
+        for(int i=0;i<TRIANGLES_DATA.length;i++){
+            TRIANGLES_DATA[i]*=scalingFactor;
+        }
+        mVerticesBuffer = BufferUtils.getFloatBuffer(TRIANGLES_DATA,0);
+        return this;
     }
 }

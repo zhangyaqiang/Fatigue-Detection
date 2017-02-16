@@ -17,8 +17,12 @@ public abstract class AbsFilter {
 
     protected Plain plain;
 
-    public AbsFilter() {
+    private String filterTag;
+
+    public AbsFilter(String filterTag) {
+        this.filterTag=filterTag;
         mPreDrawTaskList = new LinkedList<Runnable>();
+        plain=new Plain(true);
     }
 
     abstract public void init();
@@ -53,6 +57,14 @@ public abstract class AbsFilter {
     public void setUniform1f(final int programId, final String name , final float floatValue) {
         int location=GLES20.glGetUniformLocation(programId,name);
         GLES20.glUniform1f(location,floatValue);
+    }
+
+    public int getSurfaceWidth() {
+        return surfaceWidth;
+    }
+
+    public int getSurfaceHeight() {
+        return surfaceHeight;
     }
 
     //TODO:remove it

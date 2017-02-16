@@ -21,8 +21,13 @@ import com.martin.ads.omoshiroilib.filter.effect.mx.ShiftColorFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.SunnyFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.ToyFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.VignetteFilter;
+import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestLeftFilter;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestRightFilter;
+import com.martin.ads.omoshiroilib.filter.ext.ScalingFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.FastBlurFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.RandomBlurFilter;
+import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.GrayScaleShaderFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.InvertColorFilter;
 
@@ -41,6 +46,17 @@ public class FilterFactory {
                 return new InvertColorFilter(context);
 
             //Effects
+            case SCALING:
+                return new ScalingFilter(context);
+            case GAUSSIAN_BLUR:
+                return new GaussianBlurFilter(context);
+            case BLURRED_FRAME:
+                return new BlurredFrameEffect(context);
+            case BOX_BLUR:
+            case FAST_BLUR:
+                return new FastBlurFilter(context);
+            case RANDOM_BLUR:
+                return new RandomBlurFilter(context);
             case SPHERE_REFLECTOR:
                 return new SphereReflector(context);
             case FILL_LIGHT_FILTER:

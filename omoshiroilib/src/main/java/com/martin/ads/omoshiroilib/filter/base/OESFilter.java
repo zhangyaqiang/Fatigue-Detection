@@ -31,7 +31,7 @@ public class OESFilter extends AbsFilter{
     private float[] mSTMatrix = new float[16];
 
     public OESFilter(Context context) {
-        plain=new Plain(true);
+        super("OESFilter");
         plain.setVerticesBuffer(BufferUtils.getFloatBuffer(TRIANGLES_DATA_CAMERA,0));
         glOESProgram=new GLOESProgram(context);
         glOESTexture=new GLOESTexture();

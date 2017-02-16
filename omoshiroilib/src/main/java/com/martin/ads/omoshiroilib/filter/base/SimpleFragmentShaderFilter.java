@@ -18,8 +18,8 @@ public class SimpleFragmentShaderFilter extends AbsFilter {
 
     public SimpleFragmentShaderFilter(Context context,
                                       final String fragmentShaderPath) {
+        super("SimpleFragmentShaderFilter");
         glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/simple.glsl",fragmentShaderPath);
-        plain=new Plain(true);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SimpleFragmentShaderFilter extends AbsFilter {
         onPreDrawElements();
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glSimpleProgram.getTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-        Log.d(TAG, "onDrawFrame: "+surfaceWidth+" "+surfaceHeight);
+        //Log.d(TAG, "onDrawFrame: "+surfaceWidth+" "+surfaceHeight);
         plain.draw();
     }
 }

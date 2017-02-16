@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Ads on 2016/11/28.
@@ -38,4 +41,12 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
+
+    public static File makeTempFile(String saveDir, String prefix, String extension) {
+        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        final File dir = new File(saveDir);
+        dir.mkdirs();
+        return new File(dir, prefix + timeStamp + extension);
+    }
 }
+
