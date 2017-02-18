@@ -46,17 +46,6 @@ public class FilterFactory {
                 return new InvertColorFilter(context);
 
             //Effects
-            case SCALING:
-                return new ScalingFilter(context);
-            case GAUSSIAN_BLUR:
-                return new GaussianBlurFilter(context);
-            case BLURRED_FRAME:
-                return new BlurredFrameEffect(context);
-            case BOX_BLUR:
-            case FAST_BLUR:
-                return new FastBlurFilter(context);
-            case RANDOM_BLUR:
-                return new RandomBlurFilter(context);
             case SPHERE_REFLECTOR:
                 return new SphereReflector(context);
             case FILL_LIGHT_FILTER:
@@ -99,6 +88,25 @@ public class FilterFactory {
                 return new BraSizeTestRightFilter(context);
             default:
                 return new PassThroughFilter(context);
+        }
+    }
+
+    public static AbsFilter createFilterExt(FilterTypeExt filterTypeExt, Context context){
+        switch (filterTypeExt){
+            //Effects
+            case SCALING:
+                return new ScalingFilter(context);
+            case GAUSSIAN_BLUR:
+                return new GaussianBlurFilter(context);
+            case BLURRED_FRAME:
+                return new BlurredFrameEffect(context);
+            case BOX_BLUR:
+            case FAST_BLUR:
+                return new FastBlurFilter(context);
+            case RANDOM_BLUR:
+                return new RandomBlurFilter(context);
+            default:
+                return null;
         }
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
@@ -19,6 +20,8 @@ public class FilterThumbActivity extends AppCompatActivity {
     private int filterSize=filterTypes.length;
     private int currentPos=0;
     private ImageView imageView;
+    private TextView currentFilterText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,12 +46,14 @@ public class FilterThumbActivity extends AppCompatActivity {
                 });
             }
         });
+        currentFilterText= (TextView) findViewById(R.id.current_filter_text);
         imageView= (ImageView) findViewById(R.id.test_image);
     }
 
     private void updateThumb(){
         imageView.setImageBitmap(
                 FilterResourceHelper.getFilterThumbFromFiles(this,filterTypes[currentPos]));
+        currentFilterText.setText(filterTypes[currentPos].name().toLowerCase());
         currentPos=(currentPos+1)%filterSize;
     }
 }

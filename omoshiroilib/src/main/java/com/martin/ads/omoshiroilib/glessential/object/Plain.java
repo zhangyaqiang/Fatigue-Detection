@@ -84,10 +84,12 @@ public class Plain {
     }
 
     public Plain scale(float scalingFactor){
-        for(int i=0;i<TRIANGLES_DATA.length;i++){
-            TRIANGLES_DATA[i]*=scalingFactor;
+        float[] temp=new float[TRIANGLES_DATA.length];
+        System.arraycopy(TRIANGLES_DATA,0,temp,0,TRIANGLES_DATA.length);
+        for(int i=0;i<temp.length;i++){
+            temp[i]*=scalingFactor;
         }
-        mVerticesBuffer = BufferUtils.getFloatBuffer(TRIANGLES_DATA,0);
+        mVerticesBuffer = BufferUtils.getFloatBuffer(temp,0);
         return this;
     }
 }

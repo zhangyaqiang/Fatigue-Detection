@@ -12,15 +12,17 @@ import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 
 public class BlurredFrameEffect extends FilterGroup{
 
+    private static final int BLUR_RADIUS=6;
+    private static final float SCALING_FACTOR=0.6f;
     private ScalingFilter scalingFilter;
     public BlurredFrameEffect(Context context) {
         super();
         addFilter(new FastBlurFilter(context).setScale(true));
-        addFilter(new GaussianBlurFilter(context).setTexelHeightOffset(6).setScale(true));
-        addFilter(new GaussianBlurFilter(context).setTexelWidthOffset(6).setScale(true));
-        addFilter(new GaussianBlurFilter(context).setTexelHeightOffset(6));
-        addFilter(new GaussianBlurFilter(context).setTexelWidthOffset(6));
-        scalingFilter=new ScalingFilter(context).setScalingFactor(0.6f).setDrawOnTop(true);
+        addFilter(new GaussianBlurFilter(context).setTexelHeightOffset(BLUR_RADIUS).setScale(true));
+        addFilter(new GaussianBlurFilter(context).setTexelWidthOffset(BLUR_RADIUS).setScale(true));
+        addFilter(new GaussianBlurFilter(context).setTexelHeightOffset(BLUR_RADIUS));
+        addFilter(new GaussianBlurFilter(context).setTexelWidthOffset(BLUR_RADIUS));
+        scalingFilter=new ScalingFilter(context).setScalingFactor(SCALING_FACTOR).setDrawOnTop(true);
     }
 
     @Override

@@ -94,4 +94,8 @@ public class CameraView{
     public CameraEngine getCameraEngine() {
         return cameraEngine;
     }
+
+    public GLRender getGlRender() {
+        return glRender;
+    }
 }

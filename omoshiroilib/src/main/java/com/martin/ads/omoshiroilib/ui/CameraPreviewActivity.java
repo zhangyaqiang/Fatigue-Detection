@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,9 +19,16 @@ import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.debug.lab.FilterThumbActivity;
+import com.martin.ads.omoshiroilib.debug.removeit.FilterAdapter;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
+import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
+import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
+import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRootView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CameraPreviewActivity extends AppCompatActivity {
 
@@ -30,6 +39,8 @@ public class CameraPreviewActivity extends AppCompatActivity {
     private CaptureAnimation captureAnimation;
 
     private boolean isRecording=false;
+
+    private RecyclerView filterListView;
 
     private boolean checkPermission(String permission,int requestCode){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -61,6 +72,9 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
 
     private void init(){
+        //remove it
+        FilterResourceHelper.generateFilterThumbs(CameraPreviewActivity.this,false);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
@@ -110,6 +124,26 @@ public class CameraPreviewActivity extends AppCompatActivity {
             }
         });
 
+        filterListView= (RecyclerView) findViewById(R.id.filter_list);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        filterListView.setLayoutManager(linearLayoutManager);
+
+        List<FilterType> filterTypeList=new ArrayList<>();
+        for(FilterType filterType:FilterType.values()){
+            filterTypeList.add(filterType);
+        }
+        FilterAdapter filterAdapter=new FilterAdapter(this,filterTypeList);
+        filterListView.setAdapter(filterAdapter);
+        filterAdapter.setOnFilterChangeListener(new FilterAdapter.OnFilterChangeListener() {
+            @Override
+            public void onFilterChanged(FilterType filterType) {
+                cameraView.getGlRender().getFilterGroup().switchLastFilter(
+                        FilterFactory.createFilter(filterType,CameraPreviewActivity.this)
+                );
+            }
+        });
     }
 
 

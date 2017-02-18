@@ -3,6 +3,8 @@ package com.martin.ads.omoshiroilib.glessential;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Ads on 2017/2/14.
@@ -28,6 +30,13 @@ public class GLRootView extends GLSurfaceView {
         surfaceWidth = width;
         surfaceHeight = height;
         surfaceRatio=(double)surfaceWidth/surfaceHeight;
+        RelativeLayout.LayoutParams layoutParams =
+                new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        setLayoutParams(layoutParams);
         requestLayout();
     }
 

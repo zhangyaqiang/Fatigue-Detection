@@ -162,4 +162,31 @@ public class FilterGroup extends AbsFilter {
                 }
             });
     }
+
+    public void switchLastFilter(final AbsFilter filter){
+        if (filter==null) return;
+        if (!isRunning){
+            if(filters.size()>0) {
+                filters.remove(filters.size()-1)
+                        .destroy();
+            }
+            filters.add(filter);
+        }
+        else
+            addPreDrawTask(new Runnable() {
+                @Override
+                public void run() {
+                    //FIXME
+                    AbsFilter absFilter=filters.remove(filters.size()-1);
+                    if(filters.size()>0) {
+                        filters.remove(filters.size()-1)
+                                .destroy();
+                    }
+                    filter.init();
+                    filters.add(filter);
+                    filters.add(absFilter);
+                    onFilterChanged(surfaceWidth,surfaceHeight);
+                }
+            });
+    }
 }

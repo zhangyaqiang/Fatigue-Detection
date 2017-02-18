@@ -18,6 +18,8 @@ import com.martin.ads.omoshiroilib.filter.ext.shadertoy.FastBlurFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
+import com.martin.ads.omoshiroilib.filter.imgproc.GrayScaleShaderFilter;
+import com.martin.ads.omoshiroilib.filter.imgproc.InvertColorFilter;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 
@@ -43,7 +45,7 @@ public class GLRender implements GLSurfaceView.Renderer {
     private OESFilter oesFilter;
     private Context context;
 
-    private FilterType currentFilterType=FilterType.PAST_TIME_FILTER;
+    private FilterType currentFilterType=FilterType.NONE;
 
     private int surfaceWidth;
     private int surfaceHeight;
@@ -159,5 +161,7 @@ public class GLRender implements GLSurfaceView.Renderer {
         void saveAsBitmap(final byte[] data);
     }
 
-
+    public FilterGroup getFilterGroup() {
+        return filterGroup;
+    }
 }

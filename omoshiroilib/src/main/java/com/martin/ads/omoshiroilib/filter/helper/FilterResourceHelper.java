@@ -49,6 +49,13 @@ public class FilterResourceHelper {
         Toast.makeText(context,"Finished generating filter thumbs",Toast.LENGTH_LONG).show();
     }
 
+    public static String getSimpleName(FilterType filterType){
+        String ret= filterType.name().toLowerCase();
+        ret=ret.replaceAll("filter","");
+        if(ret.endsWith("_")) ret=ret.substring(0,ret.length()-1);
+        return ret;
+    }
+
     public static Bitmap getFilterThumbFromFiles(Context context,FilterType filterType){
         return BitmapUtils.loadBitmapFromFile(new File(context.getFilesDir().getAbsolutePath(),"thumbs").getAbsolutePath()+"/"+filterType.name().toLowerCase()+".jpg");
     }
