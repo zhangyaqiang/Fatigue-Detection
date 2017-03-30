@@ -90,13 +90,13 @@ public class ShaderUtils {
         if(inputStream==null) return null;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder sb = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
+                stringBuilder.append(line).append("\n");
             }
             reader.close();
-            return sb.toString();
+            return stringBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }

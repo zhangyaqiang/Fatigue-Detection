@@ -6,6 +6,6 @@ package com.martin.ads.omoshiroilib.debug.lab;
 
 public class GirlFriendNotFoundException extends IllegalStateException {
     public GirlFriendNotFoundException() {
-        super("I'm here, where are you ?  T T");
+        super("Miss YSJ,I want nothing but you.");
     }
 }
