@@ -24,6 +24,11 @@ public abstract class GLAbsProgram {
         mFragmentShader= ShaderUtils.readAssetsTextFile(context,fragmentShaderPath);
     }
 
+    public GLAbsProgram(String mVertexShader, String mFragmentShader) {
+        this.mVertexShader = mVertexShader;
+        this.mFragmentShader = mFragmentShader;
+    }
+
     public GLAbsProgram(Context context
             , final int vertexShaderResourceId
             , final int fragmentShaderResourceId){

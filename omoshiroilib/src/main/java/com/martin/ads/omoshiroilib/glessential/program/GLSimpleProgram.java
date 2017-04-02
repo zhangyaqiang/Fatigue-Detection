@@ -20,6 +20,10 @@ public class GLSimpleProgram extends GLAbsProgram {
         super(context, vertexShaderPath, fragmentShaderPath);
     }
 
+    public GLSimpleProgram(String mVertexShader, String mFragmentShader) {
+        super(mVertexShader, mFragmentShader);
+    }
+
     @Override
     public void create() {
         super.create();

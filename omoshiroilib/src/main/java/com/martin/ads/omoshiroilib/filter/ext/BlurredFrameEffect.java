@@ -3,7 +3,9 @@ package com.martin.ads.omoshiroilib.filter.ext;
 import android.content.Context;
 
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
+import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.filter.ext.shadertoy.FastBlurFilter;
+import com.martin.ads.omoshiroilib.filter.imgproc.CustomizedGaussianBlurFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 
 /**
@@ -12,17 +14,24 @@ import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 
 public class BlurredFrameEffect extends FilterGroup{
 
-    private static final int BLUR_RADIUS=6;
+    private static final int BLUR_STEP_LENGTH=2;
     private static final float SCALING_FACTOR=0.6f;
     private ScalingFilter scalingFilter;
     public BlurredFrameEffect(Context context) {
         super();
         addFilter(new FastBlurFilter(context).setScale(true));
-        addFilter(new GaussianBlurFilter(context).setTexelHeightOffset(BLUR_RADIUS).setScale(true));
-        addFilter(new GaussianBlurFilter(context).setTexelWidthOffset(BLUR_RADIUS).setScale(true));
-        addFilter(new GaussianBlurFilter(context).setTexelHeightOffset(BLUR_RADIUS));
-        addFilter(new GaussianBlurFilter(context).setTexelWidthOffset(BLUR_RADIUS));
-        scalingFilter=new ScalingFilter(context).setScalingFactor(SCALING_FACTOR).setDrawOnTop(true);
+        addFilter(CustomizedGaussianBlurFilter
+                .initWithBlurRadiusInPixels(4)
+                .setTexelHeightOffset(BLUR_STEP_LENGTH)
+                .setScale(true));
+        addFilter(CustomizedGaussianBlurFilter
+                .initWithBlurRadiusInPixels(4)
+                .setTexelWidthOffset(BLUR_STEP_LENGTH)
+                .setScale(true));
+        addFilter(new PassThroughFilter(context));
+        scalingFilter=new ScalingFilter(context)
+                .setScalingFactor(SCALING_FACTOR)
+                .setDrawOnTop(true);
     }
 
     @Override
