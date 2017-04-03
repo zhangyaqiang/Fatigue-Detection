@@ -1,1 +1,1 @@
-include ':app', ':omoshiroilib'
+include ':app', ':omoshiroilib', ':stmobile'

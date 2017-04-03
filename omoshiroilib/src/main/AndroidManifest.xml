@@ -7,6 +7,7 @@
 
         <!--Activities below is used for develop. Ignore them.-->
         <activity android:name=".debug.lab.FilterThumbActivity"/>
+        <activity android:name="com.martin.ads.teststmobile.MultitrackerActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.CAMERA" />

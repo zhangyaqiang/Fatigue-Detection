@@ -33,7 +33,6 @@ import java.util.List;
 public class CameraPreviewActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraPreviewActivity";
-    private static final int REQUEST_PERMISSION = 233;
     private CameraView cameraView;
 
     private CaptureAnimation captureAnimation;
@@ -42,34 +41,11 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
     private RecyclerView filterListView;
 
-    private boolean checkPermission(String permission,int requestCode){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, permission)
-                    != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                    showHint("Camera and SDCard access is required by Omoshiroi, please grant the permission in settings.");
-                    finish();
-                } else {
-                    ActivityCompat.requestPermissions(this,
-                            new String[]{
-                                    permission,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            },
-                            requestCode);
-                }
-                return false;
-            }else return true;
-        }
-        return true;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(checkPermission(Manifest.permission.CAMERA,REQUEST_PERMISSION))
-            init();
+        init();
     }
-
 
     private void init(){
         //remove it
@@ -95,14 +71,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 captureAnimation.setVisibility(View.VISIBLE);
                 captureAnimation.startAnimation();
                 cameraView.getCameraEngine().takePhoto();
-            }
-        });
-
-        findViewById(R.id.debug_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(CameraPreviewActivity.this,FilterThumbActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -144,24 +112,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 );
             }
         });
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_PERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    init();
-                }else {
-                    showHint("Camera and SDCard access is required by Omoshiroi, please grant the permission in settings.");
-                    finish();
-                }
-                break;
-            default:
-                finish();
-                break;
-        }
     }
 
     @Override
