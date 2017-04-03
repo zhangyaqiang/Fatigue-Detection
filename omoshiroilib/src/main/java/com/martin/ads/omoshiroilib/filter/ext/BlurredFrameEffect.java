@@ -14,6 +14,7 @@ import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 
 public class BlurredFrameEffect extends FilterGroup{
 
+    //in pixels
     private static final int BLUR_STEP_LENGTH=2;
     private static final float SCALING_FACTOR=0.6f;
     private ScalingFilter scalingFilter;

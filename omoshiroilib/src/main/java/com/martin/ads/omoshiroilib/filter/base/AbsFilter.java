@@ -4,6 +4,7 @@ import android.opengl.GLES20;
 
 import com.martin.ads.omoshiroilib.glessential.object.Plain;
 
+import java.nio.FloatBuffer;
 import java.util.LinkedList;
 
 /**
@@ -54,9 +55,14 @@ public abstract class AbsFilter {
         }
     }
 
-    public void setUniform1f(final int programId, final String name , final float floatValue) {
+    public void setUniform1f(final int programId, final String name, final float floatValue) {
         int location=GLES20.glGetUniformLocation(programId,name);
         GLES20.glUniform1f(location,floatValue);
+    }
+
+    public void setUniform2fv(final int programId, final String name,final float[] arrayValue) {
+        int location=GLES20.glGetUniformLocation(programId,name);
+        GLES20.glUniform2fv(location, 1, FloatBuffer.wrap(arrayValue));
     }
 
     public int getSurfaceWidth() {
