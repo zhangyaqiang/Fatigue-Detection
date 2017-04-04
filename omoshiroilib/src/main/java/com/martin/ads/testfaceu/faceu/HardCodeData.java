@@ -27,6 +27,8 @@ public class HardCodeData {
         new EffectItem("faceu_effects/170010_1.zip", 2, "mirrorface"),
         new EffectItem("faceu_effects/50109_2.zip", 1, "weisuo"),
         new EffectItem("faceu_effects/20088_1_b.zip", 3, "animal_catfoot_b"),
+        //new EffectItem("faceu_effects/10007_1_sb.zip", 0, "10007_1_sb"),
+        new EffectItem("faceu_effects/900317_1_tiger.zip", 3, "900317_1_tiger"),
     };
 
 }
