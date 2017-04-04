@@ -8,6 +8,12 @@
         <!--Activities below is used for develop. Ignore them.-->
         <activity android:name=".debug.lab.FilterThumbActivity"/>
         <activity android:name="com.martin.ads.teststmobile.MultitrackerActivity"/>
+        <activity
+            android:name="com.martin.ads.testfaceu.faceu.ui.TestFaceUActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
     </application>
 
     <uses-permission android:name="android.permission.CAMERA" />

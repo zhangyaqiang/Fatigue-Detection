@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/libopenglfilter" />
             <option value="$PROJECT_DIR$/omoshiroilib" />
             <option value="$PROJECT_DIR$/stmobile" />
           </set>

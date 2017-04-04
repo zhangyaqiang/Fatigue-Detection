@@ -7,13 +7,19 @@
         android:id="@+id/camera_view_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MainAPP"/>
+        android:text="Main_APP"/>
 
     <Button
         android:id="@+id/face_detect_test_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FaceDetect"/>
+        android:text="Face_Detect"/>
+
+    <Button
+        android:id="@+id/test_faceu_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test_FaceU"/>
 
     <Button
         android:id="@+id/debug_btn"

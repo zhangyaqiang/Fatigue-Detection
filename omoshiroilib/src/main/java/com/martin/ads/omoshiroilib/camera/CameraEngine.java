@@ -1,8 +1,5 @@
 package com.martin.ads.omoshiroilib.camera;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -11,14 +8,11 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRender;
-import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 import com.martin.ads.omoshiroilib.util.Logger;
 

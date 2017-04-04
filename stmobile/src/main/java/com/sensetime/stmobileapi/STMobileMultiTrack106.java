@@ -19,7 +19,7 @@ import com.sun.jna.ptr.PointerByReference;
 
 public class STMobileMultiTrack106 {
 	private Pointer trackHandle;
-    private static final int FACE_KEY_POINTS_COUNT = 106;
+    public static final int FACE_KEY_POINTS_COUNT = 106;
     static boolean DEBUG = true;// false;
     
     public static int ST_MOBILE_TRACKING_DEFAULT_CONFIG = 0x00000000;
@@ -242,7 +242,7 @@ public class STMobileMultiTrack106 {
         st_mobile_106_t arrayRef = new st_mobile_106_t(ptrToArray.getValue());
         arrayRef.read();
         st_mobile_106_t[] array = st_mobile_106_t.arrayCopy((st_mobile_106_t[]) arrayRef.toArray(ptrToSize.getValue()));
-        STMobileApiBridge.FACESDK_INSTANCE.st_mobile_tracker_106_release_result(ptrToArray.getValue(), ptrToSize.getValue());
+        //STMobileApiBridge.FACESDK_INSTANCE.st_mobile_tracker_106_release_result(ptrToArray.getValue(), ptrToSize.getValue());
         
         STMobile106[] ret = new STMobile106[array.length]; 
         for (int i = 0; i < array.length; i++) {

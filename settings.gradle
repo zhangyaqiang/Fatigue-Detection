@@ -1,1 +1,1 @@
-include ':app', ':omoshiroilib', ':stmobile'
+include ':app', ':omoshiroilib', ':stmobile', ':libopenglfilter'
