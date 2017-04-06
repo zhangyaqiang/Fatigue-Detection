@@ -5,6 +5,11 @@ import android.content.Context;
 import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterA;
+import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUB;
+import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUC;
+import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUD;
+import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUE;
+import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUF;
 import com.martin.ads.omoshiroilib.filter.effect.SphereReflector;
 import com.martin.ads.omoshiroilib.filter.effect.mx.BlackWhiteFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.BrightnessFilter;
@@ -22,6 +27,27 @@ import com.martin.ads.omoshiroilib.filter.effect.mx.ShiftColorFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.SunnyFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.ToyFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.VignetteFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.BeachFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.BrannanFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.CleanFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.CoralFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.CrispFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.FUOriginFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.FreshFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.GrassFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.InkwellFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.LolitaFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.NatureFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.PinkFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.RococoFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.RosyFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.SunsetFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.SweetyFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.UrbanFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.ValenciaFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.VintageFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.VividFilter;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.WaldenFilter;
 import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestLeftFilter;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestRightFilter;
@@ -150,9 +176,63 @@ public class FilterFactory {
             case FAST_BLUR_FILTER:
                 return new FastBlurFilter(context);
 
+            //XiuXiuXiu
+            case NATURE:
+                return new NatureFilter(context);
+            case CLEAN:
+                return new CleanFilter(context);
+            case VIVID:
+                return new VividFilter(context);
+            case FRESH:
+                return new FreshFilter(context);
+            case SWEETY:
+                return new SweetyFilter(context);
+            case ROSY:
+                return new RosyFilter(context);
+            case LOLITA:
+                return new LolitaFilter(context);
+            case SUNSET:
+                return new SunsetFilter(context);
+            case GRASS:
+                return new GrassFilter(context);
+            case CORAL:
+                return new CoralFilter(context);
+            case PINK:
+                return new PinkFilter(context);
+            case URBAN:
+                return new UrbanFilter(context);
+            case CRISP:
+                return new CrispFilter(context);
+            case VALENCIA:
+                return new ValenciaFilter(context);
+            case BEACH:
+                return new BeachFilter(context);
+            case VINTAGE:
+                return new VintageFilter(context);
+            case ROCOCO:
+                return new RococoFilter(context);
+            case WALDEN:
+                return new WaldenFilter(context);
+            case BRANNAN:
+                return new BrannanFilter(context);
+            case INKWELL:
+                return new InkwellFilter(context);
+            case FUORIGIN:
+                return new FUOriginFilter(context);
+
             //Beautify
             case BEAUTIFY_A:
                 return new BeautifyFilterA(context);
+            case BEAUTIFY_FU_B:
+                return new BeautifyFilterFUB(context);
+            case BEAUTIFY_FU_C:
+                return new BeautifyFilterFUC(context);
+            case BEAUTIFY_FU_D:
+                return new BeautifyFilterFUD(context);
+            case BEAUTIFY_FU_E:
+                return new BeautifyFilterFUE(context);
+            case BEAUTIFY_FU_F:
+                return new BeautifyFilterFUF(context);
             default:
                 return new PassThroughFilter(context);
         }

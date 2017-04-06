@@ -13,7 +13,6 @@ import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
-import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
@@ -57,8 +56,7 @@ public class GLRender implements GLSurfaceView.Renderer {
         customizedFilters=new FilterGroup();
         customizedFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
         filterGroup.addFilter(customizedFilters);
-
-        filterGroup.addFilter(new BlurredFrameEffect(context));
+        //filterGroup.addFilter(new BlurredFrameEffect(context));
 
         cameraEngine.setPictureTakenCallBack(new PictureTakenCallBack() {
             @Override

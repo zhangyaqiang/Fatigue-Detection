@@ -227,4 +227,26 @@ public class BitmapUtils {
         return bitmap;
     }
 
+    public static void savePNGBitmap(final Bitmap bitmap, final String outputFilePath) {
+        try {
+            BufferedOutputStream bos = null;
+            try {
+                bos = new BufferedOutputStream(new FileOutputStream(outputFilePath));
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (bos != null) {
+                    try {
+                        bos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

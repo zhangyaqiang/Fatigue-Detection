@@ -1,6 +1,7 @@
 package com.martin.ads.omoshiroilib.util;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,8 +17,10 @@ import java.util.Locale;
  */
 
 public class FileUtils {
+    private static final String TAG = "FileUtils";
     public static void copyFileFromAssets(Context context, String outputPath, String fileName, String inputPath){
         File file = new File(outputPath, fileName);
+        Log.d(TAG, "copyFileFromAssets: "+file.getAbsolutePath());
         try
         {
             if (!file.exists()) {

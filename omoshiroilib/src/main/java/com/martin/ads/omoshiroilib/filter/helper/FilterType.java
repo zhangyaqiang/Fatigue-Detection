@@ -11,6 +11,36 @@ public enum FilterType {
     //Beautify
     BEAUTIFY_A,
 
+    //XiuXiuXiu
+    NATURE,
+    CLEAN,
+    VIVID,
+    FRESH,
+    SWEETY,
+    ROSY,
+    LOLITA,
+    SUNSET,
+    GRASS,
+    CORAL,
+    PINK,
+    URBAN,
+    CRISP,
+    VALENCIA,
+    BEACH,
+    VINTAGE,
+    ROCOCO,
+    WALDEN,
+    BRANNAN,
+    INKWELL,
+    FUORIGIN,
+
+    //Beautify
+    BEAUTIFY_FU_B,
+    BEAUTIFY_FU_C,
+    BEAUTIFY_FU_D,
+    BEAUTIFY_FU_E,
+    BEAUTIFY_FU_F,
+
     //Effects
     GREEN_HOUSE_FILTER,
     BLACK_WHITE_FILTER,
