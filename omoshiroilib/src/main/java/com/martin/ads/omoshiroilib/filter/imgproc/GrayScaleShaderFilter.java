@@ -11,6 +11,6 @@ import com.martin.ads.omoshiroilib.filter.base.SimpleFragmentShaderFilter;
 
 public class GrayScaleShaderFilter extends SimpleFragmentShaderFilter {
     public GrayScaleShaderFilter(Context context) {
-        super(context,"filter/fsh/gray_scale.glsl");
+        super(context, "filter/fsh/imgproc/gray_scale.glsl");
     }
 }

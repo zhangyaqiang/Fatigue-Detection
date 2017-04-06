@@ -4,7 +4,6 @@ import android.content.Context;
 import android.opengl.GLES20;
 
 import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
-import com.martin.ads.omoshiroilib.glessential.object.Plain;
 import com.martin.ads.omoshiroilib.glessential.program.GLSimpleProgram;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
 
@@ -22,7 +21,7 @@ public class GaussianBlurFilter extends AbsFilter {
 
     public GaussianBlurFilter(Context context) {
         super("GaussianBlurFilter");
-        glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/gaussian_blur.glsl","filter/fsh/gaussian_blur.glsl");
+        glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/imgproc/gaussian_blur.glsl", "filter/fsh/imgproc/gaussian_blur.glsl");
         texelWidthOffset=texelHeightOffset=0;
         scale=false;
     }

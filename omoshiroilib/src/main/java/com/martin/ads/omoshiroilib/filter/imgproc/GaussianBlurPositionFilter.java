@@ -28,8 +28,8 @@ public class GaussianBlurPositionFilter extends AbsFilter {
     public GaussianBlurPositionFilter(Context context) {
         super("GaussianBlurFilter");
         glSimpleProgram=new GLSimpleProgram(context,
-                "filter/vsh/gaussian_blur_position.glsl",
-                "filter/fsh/gaussian_blur_position.glsl");
+                "filter/vsh/imgproc/gaussian_blur_position.glsl",
+                "filter/fsh/imgproc/gaussian_blur_position.glsl");
         texelWidthOffset=texelHeightOffset=0;
         scale=false;
         //an ellipse

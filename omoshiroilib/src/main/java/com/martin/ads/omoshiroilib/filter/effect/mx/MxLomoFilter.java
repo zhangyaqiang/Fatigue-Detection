@@ -13,7 +13,7 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 public class MxLomoFilter extends SimpleFragmentShaderFilter {
     public MxLomoFilter(Context context) {
-        super(context, "filter/fsh/mx_lomo.glsl");
+        super(context, "filter/fsh/mx/mx_lomo.glsl");
     }
 
     @Override

@@ -18,7 +18,7 @@ public class GLOESProgram extends GLAbsProgram{
     private int uTextureSamplerHandle;
 
     public GLOESProgram(Context context){
-        super(context, "filter/vsh/oes.glsl","filter/fsh/oes.glsl");
+        super(context, "filter/vsh/base/oes.glsl", "filter/fsh/base/oes.glsl");
     }
 
     @Override

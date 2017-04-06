@@ -11,6 +11,6 @@ import com.martin.ads.omoshiroilib.filter.base.SimpleFragmentShaderFilter;
 
 public class VignetteFilter extends SimpleFragmentShaderFilter {
     public VignetteFilter(Context context) {
-        super(context, "filter/fsh/mx_vignette.glsl");
+        super(context, "filter/fsh/mx/mx_vignette.glsl");
     }
 }

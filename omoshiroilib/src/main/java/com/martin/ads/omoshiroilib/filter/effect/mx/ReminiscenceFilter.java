@@ -11,6 +11,6 @@ import com.martin.ads.omoshiroilib.filter.base.SimpleFragmentShaderFilter;
 
 public class ReminiscenceFilter extends SimpleFragmentShaderFilter {
     public ReminiscenceFilter(Context context) {
-        super(context, "filter/fsh/mx_reminiscence.glsl");
+        super(context, "filter/fsh/mx/mx_reminiscence.glsl");
     }
 }

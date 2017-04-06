@@ -13,7 +13,7 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 public class MxFaceBeautyFilter extends SimpleFragmentShaderFilter {
     public MxFaceBeautyFilter(Context context) {
-        super(context, "filter/fsh/mx_face_beauty.glsl");
+        super(context, "filter/fsh/mx/mx_face_beauty.glsl");
     }
 
     @Override

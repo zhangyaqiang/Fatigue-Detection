@@ -11,6 +11,6 @@ import com.martin.ads.omoshiroilib.filter.base.SimpleFragmentShaderFilter;
 
 public class ShiftColorFilter extends SimpleFragmentShaderFilter {
     public ShiftColorFilter(Context context) {
-        super(context, "filter/fsh/mx_shift_color.glsl");
+        super(context, "filter/fsh/mx/mx_shift_color.glsl");
     }
 }

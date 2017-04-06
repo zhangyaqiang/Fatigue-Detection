@@ -11,6 +11,6 @@ import com.martin.ads.omoshiroilib.filter.base.SimpleFragmentShaderFilter;
 
 public class MoonLightFilter extends SimpleFragmentShaderFilter {
     public MoonLightFilter(Context context) {
-        super(context, "filter/fsh/mx_moon_light.glsl");
+        super(context, "filter/fsh/mx/mx_moon_light.glsl");
     }
 }

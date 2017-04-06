@@ -11,6 +11,6 @@ import com.martin.ads.omoshiroilib.filter.base.SimpleFragmentShaderFilter;
 
 public class InvertColorFilter extends SimpleFragmentShaderFilter {
     public InvertColorFilter(Context context) {
-        super(context,"filter/fsh/invert_color.glsl");
+        super(context, "filter/fsh/imgproc/invert_color.glsl");
     }
 }

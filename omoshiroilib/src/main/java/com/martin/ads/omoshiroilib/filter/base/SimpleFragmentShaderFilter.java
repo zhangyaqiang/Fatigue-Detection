@@ -2,9 +2,7 @@ package com.martin.ads.omoshiroilib.filter.base;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.util.Log;
 
-import com.martin.ads.omoshiroilib.glessential.object.Plain;
 import com.martin.ads.omoshiroilib.glessential.program.GLSimpleProgram;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
 
@@ -19,7 +17,7 @@ public class SimpleFragmentShaderFilter extends AbsFilter {
     public SimpleFragmentShaderFilter(Context context,
                                       final String fragmentShaderPath) {
         super("SimpleFragmentShaderFilter");
-        glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/simple.glsl",fragmentShaderPath);
+        glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/base/simple.glsl",fragmentShaderPath);
     }
 
     @Override
