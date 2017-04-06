@@ -107,9 +107,14 @@ public class CameraPreviewActivity extends AppCompatActivity {
         filterAdapter.setOnFilterChangeListener(new FilterAdapter.OnFilterChangeListener() {
             @Override
             public void onFilterChanged(FilterType filterType) {
-                cameraView.getGlRender().getFilterGroup().switchLastFilter(
-                        FilterFactory.createFilter(filterType,CameraPreviewActivity.this)
-                );
+                cameraView.getGlRender().switchLastFilter(filterType);
+            }
+        });
+
+        findViewById(R.id.switch_camera_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraView.getGlRender().switchCamera();
             }
         });
     }

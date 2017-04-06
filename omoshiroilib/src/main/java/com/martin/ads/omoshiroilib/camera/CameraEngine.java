@@ -158,7 +158,12 @@ public class CameraEngine
         }
     }
 
-
+    public void switchCamera(boolean facingFront){
+        stopPreview();
+        releaseCamera();
+        openCamera(facingFront);
+        startPreview();
+    }
 
     @Override
     public void onAutoFocus(boolean success, Camera camera) {

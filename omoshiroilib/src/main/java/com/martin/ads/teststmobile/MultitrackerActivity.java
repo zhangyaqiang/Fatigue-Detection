@@ -66,8 +66,6 @@ public class MultitrackerActivity extends Activity {
 			@Override
 			public void onTrackdetected(final int value, final float pitch, final float roll, final float yaw, final int eye_dist,
 										final int id, final int eyeBlink, final int mouthAh, final int headYaw, final int headPitch, final int browJump) {
-				// TODO Auto-generated method stub
-				
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {

@@ -12,7 +12,7 @@ public class FastBlurFilter extends ShaderToyAbsFilter {
     private boolean scale;
 
     public FastBlurFilter(Context context) {
-        super(context, "filter/fsh/imgproc/fast_blur.glsl");
+        super(context, "filter/fsh/shadertoy/fast_blur.glsl");
     }
 
     @Override

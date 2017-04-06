@@ -42,7 +42,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     private void start(){
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     @Override

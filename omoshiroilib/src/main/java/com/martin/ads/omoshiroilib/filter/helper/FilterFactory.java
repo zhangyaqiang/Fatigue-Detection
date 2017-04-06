@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
+import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterA;
 import com.martin.ads.omoshiroilib.filter.effect.SphereReflector;
 import com.martin.ads.omoshiroilib.filter.effect.mx.BlackWhiteFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.BrightnessFilter;
@@ -25,8 +26,28 @@ import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestLeftFilter;
 import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestRightFilter;
 import com.martin.ads.omoshiroilib.filter.ext.ScalingFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.AscIIArtFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.BasicDeformFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.BlueorangeFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.ChromaticAberrationFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.ContrastFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.CrackedFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.CrosshatchFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.EMInterferenceFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.EdgeDetectionFilter;
 import com.martin.ads.omoshiroilib.filter.ext.shadertoy.FastBlurFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.LegofiedFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.LichtensteinEsqueFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.MappingFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.MoneyFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.NoiseWarpFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.PixelizeFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.PolygonizationFilter;
 import com.martin.ads.omoshiroilib.filter.ext.shadertoy.RandomBlurFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.RefractionFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.TileMosaicFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.TrianglesMosaicFilter;
+import com.martin.ads.omoshiroilib.filter.imgproc.CustomizedBoxBlurFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.GrayScaleShaderFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.InvertColorFilter;
@@ -86,6 +107,52 @@ public class FilterFactory {
                 return new BraSizeTestLeftFilter(context);
             case BRA_SIZE_TEST_RIGHT:
                 return new BraSizeTestRightFilter(context);
+
+            //ShaderToy : 20
+            case EDGE_DETECTION_FILTER:
+                return new EdgeDetectionFilter(context);
+            case PIXELIZE_FILTER:
+                return new PixelizeFilter(context);
+            case EM_INTERFERENCE_FILTER:
+                return new EMInterferenceFilter(context);
+            case TRIANGLES_MOSAIC_FILTER:
+                return new TrianglesMosaicFilter(context);
+            case LEGOFIED_FILTER:
+                return new LegofiedFilter(context);
+            case TILE_MOSAIC_FILTER:
+                return new TileMosaicFilter(context);
+            case BLUEORANGE_FILTER:
+                return new BlueorangeFilter(context);
+            case CHROMATIC_ABERRATION_FILTER:
+                return new ChromaticAberrationFilter(context);
+            case BASICDEFORM_FILTER:
+                return new BasicDeformFilter(context);
+            case CONTRAST_FILTER:
+                return new ContrastFilter(context);
+            case NOISE_WARP_FILTER:
+                return new NoiseWarpFilter(context);
+            case REFRACTION_FILTER:
+                return new RefractionFilter(context);
+            case MAPPING_FILTER:
+                return new MappingFilter(context);
+            case CROSSHATCH_FILTER:
+                return new CrosshatchFilter(context);
+            case LICHTENSTEINESQUE_FILTER:
+                return new LichtensteinEsqueFilter(context);
+            case ASCII_ART_FILTER:
+                return new AscIIArtFilter(context);
+            case MONEY_FILTER:
+                return new MoneyFilter(context);
+            case CRACKED_FILTER:
+                return new CrackedFilter(context);
+            case POLYGONIZATION_FILTER:
+                return new PolygonizationFilter(context);
+            case FAST_BLUR_FILTER:
+                return new FastBlurFilter(context);
+
+            //Beautify
+            case BEAUTIFY_A:
+                return new BeautifyFilterA(context);
             default:
                 return new PassThroughFilter(context);
         }
@@ -101,6 +168,7 @@ public class FilterFactory {
             case BLURRED_FRAME:
                 return new BlurredFrameEffect(context);
             case BOX_BLUR:
+                return new CustomizedBoxBlurFilter(4);
             case FAST_BLUR:
                 return new FastBlurFilter(context);
             case RANDOM_BLUR:

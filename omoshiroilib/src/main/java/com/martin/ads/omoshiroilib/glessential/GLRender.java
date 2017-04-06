@@ -11,15 +11,37 @@ import android.util.Log;
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
+import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
 import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.AscIIArtFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.BasicDeformFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.BlueorangeFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.ChromaticAberrationFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.ContrastFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.CrackedFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.CrosshatchFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.EMInterferenceFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.EdgeDetectionFilter;
 import com.martin.ads.omoshiroilib.filter.ext.shadertoy.FastBlurFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.LegofiedFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.LichtensteinEsqueFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.MappingFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.MoneyFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.NoiseWarpFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.PixelizeFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.PolygonizationFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.RandomBlurFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.RefractionFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.TileMosaicFilter;
+import com.martin.ads.omoshiroilib.filter.ext.shadertoy.TrianglesMosaicFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.GrayScaleShaderFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.InvertColorFilter;
+import com.martin.ads.omoshiroilib.ui.CameraPreviewActivity;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 
@@ -44,12 +66,13 @@ public class GLRender implements GLSurfaceView.Renderer {
     private FilterGroup filterGroup;
     private OESFilter oesFilter;
     private Context context;
+    private FilterGroup customizedFilters;
 
     private FilterType currentFilterType=FilterType.NONE;
 
     private int surfaceWidth;
     private int surfaceHeight;
-
+    private boolean isCameraFacingFront;
     public GLRender(final Context context, CameraEngine cameraEngine) {
         this.context=context;
         this.cameraEngine=cameraEngine;
@@ -57,9 +80,9 @@ public class GLRender implements GLSurfaceView.Renderer {
         oesFilter=new OESFilter(context);
         filterGroup.addFilter(oesFilter);
 
-        filterGroup.addFilter(
-                FilterFactory.createFilter(currentFilterType,context)
-        );
+        customizedFilters=new FilterGroup();
+        customizedFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
+        filterGroup.addFilter(customizedFilters);
 
         filterGroup.addFilter(new BlurredFrameEffect(context));
 
@@ -90,28 +113,7 @@ public class GLRender implements GLSurfaceView.Renderer {
 
             }
         });
-//        filterGroup.addFilter(new SphereReflector(context));
-//        filterGroup.addFilter(new InvertColorFilter(context));
-//        filterGroup.addFilter(new BraSizeTestRightFilter(context));
-//        filterGroup.addFilter(new BraSizeTestLeftFilter(context));
-//        filterGroup.addFilter(new GrayScaleShaderFilter(context));
-//
-//        filterGroup.addFilter(new FillLightFilter(context));
-//        filterGroup.addFilter(new GreenHouseFilter(context));
-//        filterGroup.addFilter(new BlackWhiteFilter(context));
-//        filterGroup.addFilter(new PastTimeFilter(context));
-//        filterGroup.addFilter(new MoonLightFilter(context));
-//        filterGroup.addFilter(new PrintingFilter(context));
-//        filterGroup.addFilter(new ToyFilter(context));
-//        filterGroup.addFilter(new BrightnessFilter(context));
-//        filterGroup.addFilter(new VignetteFilter(context));
-//        filterGroup.addFilter(new MultiplyFilter(context));
-//        filterGroup.addFilter(new ReminiscenceFilter(context));
-//        filterGroup.addFilter(new SunnyFilter(context));
-//        filterGroup.addFilter(new MxLomoFilter(context));
-//        filterGroup.addFilter(new ShiftColorFilter(context));
-//        filterGroup.addFilter(new MxFaceBeautyFilter(context));
-//        filterGroup.addFilter(new MxProFilter(context));
+        isCameraFacingFront=false;
     }
 
     @Override
@@ -137,7 +139,7 @@ public class GLRender implements GLSurfaceView.Renderer {
             cameraEngine.releaseCamera();
         }
         cameraEngine.setTexture(oesFilter.getGlOESTexture().getTextureId());
-        cameraEngine.openCamera(false);
+        cameraEngine.openCamera(isCameraFacingFront);
         cameraEngine.startPreview();
     }
 
@@ -157,11 +159,18 @@ public class GLRender implements GLSurfaceView.Renderer {
         }
     }
 
+    public void switchCamera(){
+        isCameraFacingFront=!isCameraFacingFront;
+        cameraEngine.switchCamera(isCameraFacingFront);
+    }
+
     public interface PictureTakenCallBack{
         void saveAsBitmap(final byte[] data);
     }
 
-    public FilterGroup getFilterGroup() {
-        return filterGroup;
+    public void switchLastFilter(FilterType filterType){
+        if (filterType==null) return;
+        currentFilterType=filterType;
+        customizedFilters.switchLastFilter(FilterFactory.createFilter(filterType,context));
     }
 }

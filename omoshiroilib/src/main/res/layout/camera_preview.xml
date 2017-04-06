@@ -50,6 +50,16 @@
             android:background="#44000000"
             android:textColor="#dddddd"
             android:text="record"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/switch_camera_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:background="#44000000"
+            android:textColor="#dddddd"
+            android:text="switch_camera"
             android:visibility="visible"/>
     </LinearLayout>
 
