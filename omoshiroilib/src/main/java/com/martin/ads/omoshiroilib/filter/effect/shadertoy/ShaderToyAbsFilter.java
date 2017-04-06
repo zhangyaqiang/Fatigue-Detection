@@ -1,10 +1,9 @@
-package com.martin.ads.omoshiroilib.filter.ext.shadertoy;
+package com.martin.ads.omoshiroilib.filter.effect.shadertoy;
 
 import android.content.Context;
 import android.opengl.GLES20;
 
 import com.martin.ads.omoshiroilib.filter.base.MultipleTextureFilter;
-import com.martin.ads.omoshiroilib.filter.base.SimpleFragmentShaderFilter;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 import java.nio.FloatBuffer;

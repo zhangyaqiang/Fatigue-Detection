@@ -4,9 +4,8 @@ import android.content.Context;
 
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
-import com.martin.ads.omoshiroilib.filter.ext.shadertoy.FastBlurFilter;
+import com.martin.ads.omoshiroilib.filter.effect.shadertoy.FastBlurFilter;
 import com.martin.ads.omoshiroilib.filter.imgproc.CustomizedGaussianBlurFilter;
-import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
 
 /**
  * Created by Ads on 2017/2/16.

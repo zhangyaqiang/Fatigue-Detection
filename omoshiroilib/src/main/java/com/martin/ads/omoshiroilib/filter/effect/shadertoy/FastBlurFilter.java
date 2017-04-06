@@ -1,4 +1,4 @@
-package com.martin.ads.omoshiroilib.filter.ext.shadertoy;
+package com.martin.ads.omoshiroilib.filter.effect.shadertoy;
 
 import android.content.Context;
 
