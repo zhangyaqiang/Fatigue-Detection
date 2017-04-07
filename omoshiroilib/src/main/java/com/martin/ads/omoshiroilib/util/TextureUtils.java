@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.martin.ads.omoshiroilib.constant.GLEtc;
 
+import java.nio.ByteBuffer;
+
 /**
  * Created by Ads on 2016/11/19.
  */
@@ -74,6 +76,35 @@ public class TextureUtils{
                 GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D,0,bitmap,0);
         bitmap.recycle();
+
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
+        return textureObjectIds[0];
+    }
+
+    public static int getTextureFromByteArray(byte[] bytes,int width,int height){
+        if(bytes.length!=width*height*4) throw new RuntimeException("Illegal byte array");
+        final int[] textureObjectIds=new int[1];
+        GLES20.glGenTextures(1,textureObjectIds,0);
+        if (textureObjectIds[0]==0){
+            Log.d(TAG,"Failed at glGenTextures");
+            return 0;
+        }
+
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,textureObjectIds[0]);
+
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
+        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+                GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
+                width,height, 0,
+                GLES20.GL_RGBA,
+                GLES20.GL_UNSIGNED_BYTE,
+                ByteBuffer.wrap(bytes));
 
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
         return textureObjectIds[0];

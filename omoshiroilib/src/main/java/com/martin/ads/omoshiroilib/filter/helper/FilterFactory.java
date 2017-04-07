@@ -11,6 +11,26 @@ import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUD;
 import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUE;
 import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUF;
 import com.martin.ads.omoshiroilib.filter.effect.SphereReflector;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsAmaroFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsAntiqueFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsBlackCatFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsBrooklynFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsCalmFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsCoolFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsCrayonFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsEarlyBirdFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsEmeraldFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsEvergreenFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsFairyTaleFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsFreudFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsHealthyFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsHefeFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsHudsonFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsKevinFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsLatteFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsLomoFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsN1977Filter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.InsNashvilleFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.BlackWhiteFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.BrightnessFilter;
 import com.martin.ads.omoshiroilib.filter.effect.mx.FillLightFilter;
@@ -219,6 +239,48 @@ public class FilterFactory {
                 return new InkwellFilter(context);
             case FUORIGIN:
                 return new FUOriginFilter(context);
+
+            //Inst
+            case AMARO:
+                return new InsAmaroFilter(context);
+            case ANTIQUE:
+                return new InsAntiqueFilter(context);
+            case BLACK_CAT:
+                return new InsBlackCatFilter(context);
+            case BROOKLYN:
+                return new InsBrooklynFilter(context);
+            case CALM:
+                return new InsCalmFilter(context);
+            case COOL:
+                return new InsCoolFilter(context);
+            case CRAYON:
+                return new InsCrayonFilter(context);
+            case EARLY_BIRD:
+                return new InsEarlyBirdFilter(context);
+            case EMERALD:
+                return new InsEmeraldFilter(context);
+            case EVERGREEN:
+                return new InsEvergreenFilter(context);
+            case FAIRY_TALE:
+                return new InsFairyTaleFilter(context);
+            case FREUD:
+                return new InsFreudFilter(context);
+            case HEALTHY:
+                return new InsHealthyFilter(context);
+            case HEFE:
+                return new InsHefeFilter(context);
+            case HUDSON:
+                return new InsHudsonFilter(context);
+            case KEVIN:
+                return new InsKevinFilter(context);
+            case LATTE:
+                return new InsLatteFilter(context);
+            case LOMO:
+                return new InsLomoFilter(context);
+            case N1977:
+                return new InsN1977Filter(context);
+            case NASHVILLE:
+                return new InsNashvilleFilter(context);
 
             //Beautify
             case BEAUTIFY_A:

@@ -92,6 +92,7 @@ public class BitmapUtils {
     }
 
     private static void saveIntBufferAsBitmap(IntBuffer buf, String filePath, int width, int height) {
+        mkDirs(filePath);
         final int[] pixelMirroredArray = new int[width * height];
         Log.d(TAG, "Creating " + filePath);
         BufferedOutputStream bos = null;
@@ -122,6 +123,7 @@ public class BitmapUtils {
     }
 
     private static void saveBitmap(final Bitmap bitmap, final String outputFilePath,final IWorkerCallback workerCallback) {
+        mkDirs(outputFilePath);
         try {
             BufferedOutputStream bos = null;
             try {
@@ -147,6 +149,7 @@ public class BitmapUtils {
     }
 
     public static void saveByteArray(final byte[] input, final String outputFilePath, final IWorkerCallback workerCallback,final Handler handler) {
+        mkDirs(outputFilePath);
         FakeThreadUtils.postTask(new Runnable() {
             @Override
             public void run() {
@@ -227,7 +230,15 @@ public class BitmapUtils {
         return bitmap;
     }
 
+    public static void mkDirs(String fileName){
+        File file=new File(fileName);
+        if(!file.getParentFile().exists()){
+            file.getParentFile().mkdirs();
+        }
+    }
+
     public static void savePNGBitmap(final Bitmap bitmap, final String outputFilePath) {
+        mkDirs(outputFilePath);
         try {
             BufferedOutputStream bos = null;
             try {
@@ -247,6 +258,20 @@ public class BitmapUtils {
         } catch (final Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static Bitmap loadARGBBitmapFromRGBAByteArray(byte[] bytes,int width,int height,boolean ignoreAlphaChannel) {
+        int totSize=width*height;
+        if(bytes.length!=totSize*4) throw new RuntimeException("Illegal argument");
+        int histogram[]=new int[totSize];
+        for(int i=0,pos=0;i<totSize;i++,pos+=4){
+            histogram[i]=0;
+            histogram[i]|=(((int)bytes[pos+0])&0xff)<<16;
+            histogram[i]|=(((int)bytes[pos+1])&0xff)<<8;
+            histogram[i]|=(((int)bytes[pos+2])&0xff)<<0;
+            histogram[i]|=ignoreAlphaChannel? 0xff000000:(((int)bytes[pos+3])&0xff)<<24;
+        }
+        return Bitmap.createBitmap(histogram, width,height, Bitmap.Config.ARGB_8888);
     }
 
 }

@@ -28,6 +28,10 @@ public class BitmapTexture {
         return this;
     }
 
+    public void setImageTextureId(int imageTextureId) {
+        this.imageTextureId = imageTextureId;
+    }
+
     public int getImageTextureId() {
         return imageTextureId;
     }

@@ -53,7 +53,7 @@ public class FilterResourceHelper {
         String ret= filterType.name().toLowerCase();
         ret=ret.replaceAll("filter","");
         if(ret.endsWith("_")) ret=ret.substring(0,ret.length()-1);
-        return ret;
+        return ret.toUpperCase();
     }
 
     public static Bitmap getFilterThumbFromFiles(Context context,FilterType filterType){

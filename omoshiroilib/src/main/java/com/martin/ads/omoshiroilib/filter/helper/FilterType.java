@@ -34,6 +34,28 @@ public enum FilterType {
     INKWELL,
     FUORIGIN,
 
+    //Inst
+    AMARO,
+    ANTIQUE,
+    BLACK_CAT,
+    BROOKLYN,
+    CALM,
+    COOL,
+    CRAYON,
+    EARLY_BIRD,
+    EMERALD,
+    EVERGREEN,
+    FAIRY_TALE,
+    FREUD,
+    HEALTHY,
+    HEFE,
+    HUDSON,
+    KEVIN,
+    LATTE,
+    LOMO,
+    N1977,
+    NASHVILLE,
+
     //Beautify
     BEAUTIFY_FU_B,
     BEAUTIFY_FU_C,

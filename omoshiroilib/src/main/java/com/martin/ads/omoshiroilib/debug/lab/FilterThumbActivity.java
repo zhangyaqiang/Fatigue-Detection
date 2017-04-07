@@ -53,7 +53,7 @@ public class FilterThumbActivity extends AppCompatActivity {
     private void updateThumb(){
         imageView.setImageBitmap(
                 FilterResourceHelper.getFilterThumbFromFiles(this,filterTypes[currentPos]));
-        currentFilterText.setText(filterTypes[currentPos].name().toLowerCase());
+        currentFilterText.setText(filterTypes[currentPos].name().toUpperCase());
         currentPos=(currentPos+1)%filterSize;
     }
 }
