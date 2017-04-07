@@ -55,6 +55,11 @@ public abstract class AbsFilter {
         }
     }
 
+    public void setUniform1i(final int programId, final String name, final int intValue) {
+        int location=GLES20.glGetUniformLocation(programId,name);
+        GLES20.glUniform1i(location,intValue);
+    }
+
     public void setUniform1f(final int programId, final String name, final float floatValue) {
         int location=GLES20.glGetUniformLocation(programId,name);
         GLES20.glUniform1f(location,floatValue);

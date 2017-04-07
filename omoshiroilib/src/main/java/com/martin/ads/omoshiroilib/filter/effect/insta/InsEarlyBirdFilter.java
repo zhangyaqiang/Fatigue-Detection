@@ -17,10 +17,10 @@ public class InsEarlyBirdFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/earlybirdcurves.png");
-        externalBitmapTextures[1].load(context,"filter/textures/insta/earlybirdoverlaymap_new.png");
-        externalBitmapTextures[2].load(context,"filter/textures/insta/vignettemap_new.png");
-        externalBitmapTextures[3].load(context,"filter/textures/insta/earlybirdblowout.png");
-        externalBitmapTextures[4].load(context,"filter/textures/insta/earlybirdmap.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/earlybirdcurves.png");
+        externalBitmapTextures[1].load(context, "filter/textures/inst/earlybirdoverlaymap_new.png");
+        externalBitmapTextures[2].load(context, "filter/textures/inst/vignettemap_new.png");
+        externalBitmapTextures[3].load(context, "filter/textures/inst/earlybirdblowout.png");
+        externalBitmapTextures[4].load(context, "filter/textures/inst/earlybirdmap.png");
     }
 }

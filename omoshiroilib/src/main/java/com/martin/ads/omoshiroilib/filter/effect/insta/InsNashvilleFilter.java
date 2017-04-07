@@ -17,7 +17,7 @@ public class InsNashvilleFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/nashvillemap.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/nashvillemap.png");
     }
 
     @Override

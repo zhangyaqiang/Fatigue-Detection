@@ -18,8 +18,8 @@ public class InsCalmFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/calm_mask1.jpg");
-        externalBitmapTextures[1].load(context,"filter/textures/insta/calm_mask2.jpg");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/calm_mask1.jpg");
+        externalBitmapTextures[1].load(context, "filter/textures/inst/calm_mask2.jpg");
         externalBitmapTextures[2].setImageTextureId(prepareRawTexture1());
     }
 

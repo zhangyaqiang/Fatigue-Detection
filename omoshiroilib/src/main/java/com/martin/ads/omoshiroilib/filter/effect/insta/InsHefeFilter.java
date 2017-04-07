@@ -17,11 +17,11 @@ public class InsHefeFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/edgeburn.png");
-        externalBitmapTextures[1].load(context,"filter/textures/insta/hefemap.png");
-        externalBitmapTextures[2].load(context,"filter/textures/insta/hefegradientmap.png");
-        externalBitmapTextures[3].load(context,"filter/textures/insta/hefesoftlight.png");
-        externalBitmapTextures[4].load(context,"filter/textures/insta/hefemetal.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/edgeburn.png");
+        externalBitmapTextures[1].load(context, "filter/textures/inst/hefemap.png");
+        externalBitmapTextures[2].load(context, "filter/textures/inst/hefegradientmap.png");
+        externalBitmapTextures[3].load(context, "filter/textures/inst/hefesoftlight.png");
+        externalBitmapTextures[4].load(context, "filter/textures/inst/hefemetal.png");
     }
 
     @Override

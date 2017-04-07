@@ -35,6 +35,7 @@ public enum FilterType {
     FUORIGIN,
 
     //Inst
+    //a
     AMARO,
     ANTIQUE,
     BLACK_CAT,
@@ -55,6 +56,26 @@ public enum FilterType {
     LOMO,
     N1977,
     NASHVILLE,
+    //b
+    NOSTALGIA,
+    PIXAR,
+    RISE,
+    ROMANCE,
+    SAKURA,
+    SIERRA,
+    SKETCH,
+    SKIN_WHITEN,
+    SUNRISE,
+    SUNSET2,
+    SUTRO,
+    SWEETS,
+    TENDER,
+    TOASTER,
+    VALENCIA2,
+    WALDEN2,
+    WARM,
+    WHITE_CAT,
+    XPROII,
 
     //Beautify
     BEAUTIFY_FU_B,

@@ -4,99 +4,15 @@ import android.content.Context;
 
 import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
-import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterA;
-import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUB;
-import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUC;
-import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUD;
-import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUE;
-import com.martin.ads.omoshiroilib.filter.beautify.BeautifyFilterFUF;
+import com.martin.ads.omoshiroilib.filter.beautify.*;
 import com.martin.ads.omoshiroilib.filter.effect.SphereReflector;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsAmaroFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsAntiqueFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsBlackCatFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsBrooklynFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsCalmFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsCoolFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsCrayonFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsEarlyBirdFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsEmeraldFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsEvergreenFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsFairyTaleFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsFreudFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsHealthyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsHefeFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsHudsonFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsKevinFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsLatteFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsLomoFilter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsN1977Filter;
-import com.martin.ads.omoshiroilib.filter.effect.insta.InsNashvilleFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.BlackWhiteFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.BrightnessFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.FillLightFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.GreenHouseFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.MoonLightFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.MultiplyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.MxFaceBeautyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.MxLomoFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.MxProFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.PastTimeFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.PrintingFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.ReminiscenceFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.ShiftColorFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.SunnyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.ToyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.mx.VignetteFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.BeachFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.BrannanFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.CleanFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.CoralFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.CrispFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.FUOriginFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.FreshFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.GrassFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.InkwellFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.LolitaFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.NatureFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.PinkFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.RococoFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.RosyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.SunsetFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.SweetyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.UrbanFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.ValenciaFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.VintageFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.VividFilter;
-import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.WaldenFilter;
-import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
-import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestLeftFilter;
-import com.martin.ads.omoshiroilib.filter.ext.BraSizeTestRightFilter;
-import com.martin.ads.omoshiroilib.filter.ext.ScalingFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.AscIIArtFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.BasicDeformFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.BlueorangeFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.ChromaticAberrationFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.ContrastFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.CrackedFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.CrosshatchFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.EMInterferenceFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.EdgeDetectionFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.FastBlurFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.LegofiedFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.LichtensteinEsqueFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.MappingFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.MoneyFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.NoiseWarpFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.PixelizeFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.PolygonizationFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.RandomBlurFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.RefractionFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.TileMosaicFilter;
-import com.martin.ads.omoshiroilib.filter.effect.shadertoy.TrianglesMosaicFilter;
-import com.martin.ads.omoshiroilib.filter.imgproc.CustomizedBoxBlurFilter;
-import com.martin.ads.omoshiroilib.filter.imgproc.GaussianBlurFilter;
-import com.martin.ads.omoshiroilib.filter.imgproc.GrayScaleShaderFilter;
-import com.martin.ads.omoshiroilib.filter.imgproc.InvertColorFilter;
+import com.martin.ads.omoshiroilib.filter.effect.insta.*;
+import com.martin.ads.omoshiroilib.filter.effect.instb.*;
+import com.martin.ads.omoshiroilib.filter.effect.mx.*;
+import com.martin.ads.omoshiroilib.filter.effect.xiuxiuxiu.*;
+import com.martin.ads.omoshiroilib.filter.ext.*;
+import com.martin.ads.omoshiroilib.filter.effect.shadertoy.*;
+import com.martin.ads.omoshiroilib.filter.imgproc.*;
 
 /**
  * Created by Ads on 2017/2/13.
@@ -281,6 +197,44 @@ public class FilterFactory {
                 return new InsN1977Filter(context);
             case NASHVILLE:
                 return new InsNashvilleFilter(context);
+            case NOSTALGIA:
+                return new InsNostalgiaFilter(context);
+            case PIXAR:
+                return new InsPixarFilter(context);
+            case RISE:
+                return new InsRiseFilter(context);
+            case ROMANCE:
+                return new InsRomanceFilter(context);
+            case SAKURA:
+                return new InsSakuraFilter(context);
+            case SIERRA:
+                return new InsSierraFilter(context);
+            case SKETCH:
+                return new InsSketchFilter(context);
+            case SKIN_WHITEN:
+                return new InsSkinWhitenFilter(context);
+            case SUNRISE:
+                return new InsSunriseFilter(context);
+            case SUNSET2:
+                return new InsSunsetFilter(context);
+            case SUTRO:
+                return new InsSutroFilter(context);
+            case SWEETS:
+                return new InsSweetsFilter(context);
+            case TENDER:
+                return new InsTenderFilter(context);
+            case TOASTER:
+                return new InsToasterFilter(context);
+            case VALENCIA2:
+                return new InsValenciaFilter(context);
+            case WALDEN2:
+                return new InsWaldenFilter(context);
+            case WARM:
+                return new InsWarmFilter(context);
+            case WHITE_CAT:
+                return new InsWhiteCatFilter(context);
+            case XPROII:
+                return new InsXproIIFilter(context);
 
             //Beautify
             case BEAUTIFY_A:

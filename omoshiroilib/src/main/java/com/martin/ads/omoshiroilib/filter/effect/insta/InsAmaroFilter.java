@@ -17,9 +17,9 @@ public class InsAmaroFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/brannan_blowout.png");
-        externalBitmapTextures[1].load(context,"filter/textures/insta/overlaymap.png");
-        externalBitmapTextures[2].load(context,"filter/textures/insta/amaromap.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/brannan_blowout.png");
+        externalBitmapTextures[1].load(context, "filter/textures/inst/overlaymap.png");
+        externalBitmapTextures[2].load(context, "filter/textures/inst/amaromap.png");
     }
 
     @Override

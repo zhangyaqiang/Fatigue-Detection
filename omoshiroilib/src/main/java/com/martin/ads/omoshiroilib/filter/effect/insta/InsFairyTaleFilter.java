@@ -3,7 +3,6 @@ package com.martin.ads.omoshiroilib.filter.effect.insta;
 import android.content.Context;
 
 import com.martin.ads.omoshiroilib.filter.base.MultipleTextureFilter;
-import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 /**
  * Created by Ads on 2017/4/7.
@@ -18,7 +17,7 @@ public class InsFairyTaleFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/fairy_tale.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/fairy_tale.png");
     }
 
 }

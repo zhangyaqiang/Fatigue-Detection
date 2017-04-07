@@ -17,8 +17,8 @@ public class InsN1977Filter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/n1977map.png");
-        externalBitmapTextures[1].load(context,"filter/textures/insta/n1977blowout.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/n1977map.png");
+        externalBitmapTextures[1].load(context, "filter/textures/inst/n1977blowout.png");
     }
 
     @Override

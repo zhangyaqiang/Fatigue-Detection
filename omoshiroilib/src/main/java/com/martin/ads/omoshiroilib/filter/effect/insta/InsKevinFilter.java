@@ -17,7 +17,7 @@ public class InsKevinFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/kevinmap.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/kevinmap.png");
     }
 
 }

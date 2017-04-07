@@ -17,7 +17,7 @@ public class InsFreudFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/freud_rand.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/freud_rand.png");
     }
 
     @Override

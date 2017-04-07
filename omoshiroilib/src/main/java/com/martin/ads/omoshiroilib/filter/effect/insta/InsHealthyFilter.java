@@ -19,7 +19,7 @@ public class InsHealthyFilter extends MultipleTextureFilter {
     public void init() {
         super.init();
         externalBitmapTextures[0].setImageTextureId(prepareRawTexture1());
-        externalBitmapTextures[1].load(context,"filter/textures/insta/healthy_mask_1.jpg");
+        externalBitmapTextures[1].load(context, "filter/textures/inst/healthy_mask_1.jpg");
     }
 
     @Override

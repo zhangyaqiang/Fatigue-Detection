@@ -17,9 +17,9 @@ public class InsBrooklynFilter extends MultipleTextureFilter {
     @Override
     public void init() {
         super.init();
-        externalBitmapTextures[0].load(context,"filter/textures/insta/brooklynCurves1.png");
-        externalBitmapTextures[1].load(context,"filter/textures/insta/filter_map_first.png");
-        externalBitmapTextures[2].load(context,"filter/textures/insta/brooklynCurves2.png");
+        externalBitmapTextures[0].load(context, "filter/textures/inst/brooklynCurves1.png");
+        externalBitmapTextures[1].load(context, "filter/textures/inst/filter_map_first.png");
+        externalBitmapTextures[2].load(context, "filter/textures/inst/brooklynCurves2.png");
     }
 
     @Override
