@@ -15,7 +15,7 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
 
 class MxOneHashBaseFilter extends SimpleFragmentShaderFilter {
     private static final int HISTOGRAM_SIZE = 256;
-    private static int[] mHistogram = new int[HISTOGRAM_SIZE];
+    private int[] mHistogram = new int[HISTOGRAM_SIZE];
     static int[] rgbMap=null;
     private BitmapTexture bitmapTexture;
 

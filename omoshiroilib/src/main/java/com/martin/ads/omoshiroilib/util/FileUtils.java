@@ -11,6 +11,8 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Created by Ads on 2016/11/28.
@@ -50,6 +52,42 @@ public class FileUtils {
         final File dir = new File(saveDir);
         dir.mkdirs();
         return new File(dir, prefix + timeStamp + extension);
+    }
+
+    public static void upZipFile(Context context,String assetPath,String outputFolderPath){
+        File desDir = new File(outputFolderPath);
+        if (!desDir.isDirectory()) {
+            desDir.mkdirs();
+        }
+        try {
+            InputStream inputStream = context.getResources().getAssets().open(assetPath);
+            ZipInputStream zipInputStream=new ZipInputStream(inputStream);
+            ZipEntry zipEntry;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                Log.d(TAG, "upZipFile: "+zipEntry.getName());
+                if(zipEntry.isDirectory()) {
+                    File tmpFile=new File(outputFolderPath,zipEntry.getName());
+                    //Log.d(TAG, "upZipFile: folder "+tmpFile.getAbsolutePath());
+                    if(!tmpFile.isDirectory())
+                        tmpFile.mkdirs();
+                } else {
+                    File desFile = new File(outputFolderPath +"/"+ zipEntry.getName());
+                    if(desFile.exists()) continue;
+                    OutputStream out = new FileOutputStream(desFile);
+                    //Log.d(TAG, "upZipFile: "+desFile.getAbsolutePath());
+                    byte buffer[] = new byte[1024];
+                    int realLength;
+                    while ((realLength = zipInputStream.read(buffer)) > 0) {
+                        out.write(buffer, 0, realLength);
+                    }
+                    zipInputStream.closeEntry();
+                    out.close();
+                }
+            }
+            zipInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

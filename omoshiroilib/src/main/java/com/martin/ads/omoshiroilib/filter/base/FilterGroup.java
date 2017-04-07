@@ -165,6 +165,7 @@ public class FilterGroup extends AbsFilter {
 
     public void switchLastFilter(final AbsFilter filter){
         if (filter==null) return;
+        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
         if (!isRunning){
             if(filters.size()>0) {
                 filters.remove(filters.size()-1)

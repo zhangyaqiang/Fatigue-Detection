@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRootView;
+import com.martin.ads.omoshiroilib.util.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ import java.util.List;
 public class CameraPreviewActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraPreviewActivity";
+    private static final boolean DEBUG=false;
     private CameraView cameraView;
 
     private CaptureAnimation captureAnimation;
@@ -48,9 +51,9 @@ public class CameraPreviewActivity extends AppCompatActivity {
     }
 
     private void init(){
-        //remove it
-        FilterResourceHelper.generateFilterThumbs(CameraPreviewActivity.this,false);
-
+        if(DEBUG)
+            FilterResourceHelper.generateFilterThumbs(CameraPreviewActivity.this,false);
+        FileUtils.upZipFile(this,"filter/thumbs/thumbs.zip",getFilesDir().getAbsolutePath());
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
