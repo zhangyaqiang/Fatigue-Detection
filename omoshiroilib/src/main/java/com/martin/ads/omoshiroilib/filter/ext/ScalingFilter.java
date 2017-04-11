@@ -22,7 +22,7 @@ public class ScalingFilter extends PassThroughFilter {
     }
 
     public ScalingFilter setScalingFactor(float scalingFactor){
-        plain.scale(scalingFactor);
+        plane.scale(scalingFactor);
         return this;
     }
 

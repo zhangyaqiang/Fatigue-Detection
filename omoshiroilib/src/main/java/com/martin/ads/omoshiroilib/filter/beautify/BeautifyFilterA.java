@@ -27,7 +27,7 @@ public class BeautifyFilterA extends SimpleFragmentShaderFilter {
 
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glSimpleProgram.getTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-        plain.draw();
+        plane.draw();
     }
 
     public BeautifyFilterA setStepLength(int stepLength){

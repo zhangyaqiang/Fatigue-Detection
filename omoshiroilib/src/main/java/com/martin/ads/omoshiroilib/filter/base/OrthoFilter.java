@@ -5,7 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
-import com.martin.ads.omoshiroilib.glessential.object.Plain;
+import com.martin.ads.omoshiroilib.glessential.object.Plane;
 import com.martin.ads.omoshiroilib.glessential.program.GLPassThroughProgram;
 import com.martin.ads.omoshiroilib.util.MatrixUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
@@ -37,8 +37,8 @@ public class OrthoFilter extends AbsFilter{
     public void onPreDrawElements() {
         super.onPreDrawElements();
         glPassThroughProgram.use();
-        plain.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
-        plain.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
+        plane.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
+        plane.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
         GLES20.glUniformMatrix4fv(glPassThroughProgram.getMVPMatrixHandle(), 1, false, projectionMatrix, 0);
     }
 
@@ -52,7 +52,7 @@ public class OrthoFilter extends AbsFilter{
         onPreDrawElements();
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glPassThroughProgram.getTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-        plain.draw();
+        plane.draw();
     }
 
     public void updateProjection(CameraEngine.PreviewSize previewSize){

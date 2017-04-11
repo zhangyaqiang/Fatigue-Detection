@@ -18,7 +18,7 @@ package com.martin.ads.omoshiroilib.util;
 
 import com.martin.ads.omoshiroilib.constant.Rotation;
 
-public class PlainTextureRotationUtils {
+public class PlaneTextureRotationUtils {
 
     public static final float TEXTURE_NO_ROTATION[] = {
             0.0f, 1.0f,
@@ -46,7 +46,7 @@ public class PlainTextureRotationUtils {
             1.0f, 1.0f,
     };
 
-    private PlainTextureRotationUtils() {
+    private PlaneTextureRotationUtils() {
     }
 
     public static float[] getRotation(final Rotation rotation, final boolean flipHorizontal,

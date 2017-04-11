@@ -4,7 +4,7 @@ import android.opengl.GLES20;
 
 import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.util.BufferUtils;
-import com.martin.ads.omoshiroilib.util.PlainTextureRotationUtils;
+import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
 import java.nio.FloatBuffer;
@@ -15,7 +15,7 @@ import java.nio.FloatBuffer;
  * if you want to render it alone, set isInGroup false
  */
 
-public class Plain {
+public class Plane {
     private FloatBuffer mVerticesBuffer;
     private FloatBuffer mTexCoordinateBuffer;
     private final float TRIANGLES_DATA[] = {
@@ -25,11 +25,11 @@ public class Plain {
             1.0f, 1.0f, 0f
     };
 
-    public Plain(boolean isInGroup) {
+    public Plane(boolean isInGroup) {
         mVerticesBuffer = BufferUtils.getFloatBuffer(TRIANGLES_DATA,0);
         if (isInGroup)
-            mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.getRotation(Rotation.NORMAL, false, true), 0);
-        else mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.TEXTURE_NO_ROTATION,0);
+            mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlaneTextureRotationUtils.getRotation(Rotation.NORMAL, false, true), 0);
+        else mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlaneTextureRotationUtils.TEXTURE_NO_ROTATION,0);
     }
 
     public void uploadVerticesBuffer(int positionHandle){
@@ -75,15 +75,15 @@ public class Plain {
     public void resetTextureCoordinateBuffer(boolean isInGroup) {
         mTexCoordinateBuffer=null;
         if (isInGroup)
-            mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.getRotation(Rotation.NORMAL, false, true), 0);
-        else mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlainTextureRotationUtils.TEXTURE_NO_ROTATION,0);
+            mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlaneTextureRotationUtils.getRotation(Rotation.NORMAL, false, true), 0);
+        else mTexCoordinateBuffer = BufferUtils.getFloatBuffer(PlaneTextureRotationUtils.TEXTURE_NO_ROTATION,0);
     }
 
     public void draw() {
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
     }
 
-    public Plain scale(float scalingFactor){
+    public Plane scale(float scalingFactor){
         float[] temp=new float[TRIANGLES_DATA.length];
         System.arraycopy(TRIANGLES_DATA,0,temp,0,TRIANGLES_DATA.length);
         for(int i=0;i<temp.length;i++){

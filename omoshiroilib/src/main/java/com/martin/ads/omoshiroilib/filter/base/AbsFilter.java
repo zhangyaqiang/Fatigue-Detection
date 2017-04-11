@@ -2,7 +2,7 @@ package com.martin.ads.omoshiroilib.filter.base;
 
 import android.opengl.GLES20;
 
-import com.martin.ads.omoshiroilib.glessential.object.Plain;
+import com.martin.ads.omoshiroilib.glessential.object.Plane;
 
 import java.nio.FloatBuffer;
 import java.util.LinkedList;
@@ -16,14 +16,14 @@ public abstract class AbsFilter {
     private final LinkedList<Runnable> mPreDrawTaskList;
     protected int surfaceWidth,surfaceHeight;
 
-    protected Plain plain;
+    protected Plane plane;
 
     private String filterTag;
 
     public AbsFilter(String filterTag) {
         this.filterTag=filterTag;
         mPreDrawTaskList = new LinkedList<Runnable>();
-        plain=new Plain(true);
+        plane =new Plane(true);
     }
 
     abstract public void init();
@@ -80,7 +80,7 @@ public abstract class AbsFilter {
 
     //TODO:remove it
     public AbsFilter resetPlane(boolean inGroup){
-        plain.resetTextureCoordinateBuffer(inGroup);
+        plane.resetTextureCoordinateBuffer(inGroup);
         return this;
     }
 }

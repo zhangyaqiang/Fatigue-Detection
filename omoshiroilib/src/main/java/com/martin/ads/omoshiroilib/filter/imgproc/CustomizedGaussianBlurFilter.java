@@ -38,8 +38,8 @@ public class CustomizedGaussianBlurFilter extends AbsFilter {
     public void onPreDrawElements() {
         super.onPreDrawElements();
         glSimpleProgram.use();
-        plain.uploadTexCoordinateBuffer(glSimpleProgram.getTextureCoordinateHandle());
-        plain.uploadVerticesBuffer(glSimpleProgram.getPositionHandle());
+        plane.uploadTexCoordinateBuffer(glSimpleProgram.getTextureCoordinateHandle());
+        plane.uploadVerticesBuffer(glSimpleProgram.getPositionHandle());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CustomizedGaussianBlurFilter extends AbsFilter {
 
         TextureUtils.bindTexture2D(textureId, GLES20.GL_TEXTURE0,glSimpleProgram.getTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-        plain.draw();
+        plane.draw();
     }
 
     public CustomizedGaussianBlurFilter setTexelHeightOffset(float texelHeightOffset) {

@@ -5,7 +5,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.martin.ads.omoshiroilib.glessential.object.Plain;
+import com.martin.ads.omoshiroilib.glessential.object.Plane;
 import com.martin.ads.omoshiroilib.glessential.program.GLOESProgram;
 import com.martin.ads.omoshiroilib.glessential.texture.GLOESTexture;
 import com.martin.ads.omoshiroilib.util.BufferUtils;
@@ -32,7 +32,7 @@ public class OESFilter extends AbsFilter{
 
     public OESFilter(Context context) {
         super("OESFilter");
-        plain.setVerticesBuffer(BufferUtils.getFloatBuffer(TRIANGLES_DATA_CAMERA,0));
+        plane.setVerticesBuffer(BufferUtils.getFloatBuffer(TRIANGLES_DATA_CAMERA,0));
         glOESProgram=new GLOESProgram(context);
         glOESTexture=new GLOESTexture();
         Matrix.setIdentityM(mSTMatrix, 0);
@@ -49,8 +49,8 @@ public class OESFilter extends AbsFilter{
     public void onPreDrawElements() {
         super.onPreDrawElements();
         glOESProgram.use();
-        plain.uploadTexCoordinateBuffer(glOESProgram.getTextureCoordinateHandle());
-        plain.uploadVerticesBuffer(glOESProgram.getPositionHandle());
+        plane.uploadTexCoordinateBuffer(glOESProgram.getTextureCoordinateHandle());
+        plane.uploadVerticesBuffer(glOESProgram.getPositionHandle());
         GLES20.glUniformMatrix4fv(glOESProgram.getMuSTMatrixHandle(), 1, false, mSTMatrix, 0);
     }
 
@@ -65,7 +65,7 @@ public class OESFilter extends AbsFilter{
         onPreDrawElements();
         TextureUtils.bindTextureOES(textureId, GLES20.GL_TEXTURE0,glOESProgram.getUTextureSamplerHandle(),0);
         GLES20.glViewport(0,0,surfaceWidth,surfaceHeight);
-        plain.draw();
+        plane.draw();
     }
 
     public GLOESProgram getGlOESProgram() {
