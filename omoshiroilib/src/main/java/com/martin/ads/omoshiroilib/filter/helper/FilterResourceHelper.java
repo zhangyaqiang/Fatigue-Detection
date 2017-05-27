@@ -24,6 +24,21 @@ public class FilterResourceHelper {
         }
     }
 
+    private final static String[] ORIGIN_THUMBS={
+            "filter/thumbs/origin_thumb_1.jpg",
+            "filter/thumbs/origin_thumb_2.jpg",
+            "filter/thumbs/origin_thumb_3.jpg",
+            "filter/thumbs/miss_ysj.jpg",
+            "filter/thumbs/origin_thumb_4.jpg",
+            "filter/thumbs/origin_thumb_5.jpg",
+            "filter/thumbs/origin_thumb_6.jpg",
+    };
+
+    private static String getThumbName(int x){
+        int pos= (x/3)%ORIGIN_THUMBS.length;
+        return ORIGIN_THUMBS[pos];
+    }
+
     @Deprecated
     public static void generateFilterThumbs(Context context,boolean debugMode){
         File thumbFolderPath = null;
@@ -33,8 +48,9 @@ public class FilterResourceHelper {
         else thumbFolderPath=new File(context.getFilesDir().getAbsolutePath(),"thumbs");
         if (!thumbFolderPath.exists())
             thumbFolderPath.mkdirs();
+        int tot=0;
         for(FilterType filterType:FilterType.values()){
-            Bitmap original=BitmapUtils.loadBitmapFromAssets(context, "filter/thumbs/miss_ysj.jpg");
+            Bitmap original=BitmapUtils.loadBitmapFromAssets(context, getThumbName(tot));
             String fileName=filterType.name().toLowerCase()+".jpg";
             File outputFile=new File(thumbFolderPath.getAbsolutePath(),fileName);
             Log.d(TAG, "generateFilterThumbs: saving to "+outputFile.getAbsolutePath());
@@ -45,6 +61,7 @@ public class FilterResourceHelper {
                     outputFile.getAbsolutePath(),
                     null
                     );
+            tot++;
         }
         Toast.makeText(context,"Finished generating filter thumbs",Toast.LENGTH_LONG).show();
     }

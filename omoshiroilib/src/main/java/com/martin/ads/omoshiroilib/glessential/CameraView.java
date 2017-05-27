@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 
 /**
  * Created by Ads on 2017/1/27.
@@ -20,6 +21,7 @@ public class CameraView{
     private CameraEngine cameraEngine;
     private Context context;
     private GLRootView glRootView;
+    private ScreenSizeChangedListener screenSizeChangedListener;
 
     public CameraView(Context context,GLRootView glRootView) {
         this.glRootView=glRootView;
@@ -44,7 +46,12 @@ public class CameraView{
                 ((Activity)context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        glRootView.setAspectRatio(previewWidth,previewHeight);
+                        if(!GlobalConfig.FULL_SCREEN)
+                            glRootView.setAspectRatio(previewWidth,previewHeight);
+                        else glRender.getOrthoFilter().updateProjection(previewWidth,previewHeight);
+                        if(screenSizeChangedListener!=null){
+                            screenSizeChangedListener.updateScreenSize(glRootView.getWidth(),glRootView.getHeight());
+                        }
                     }
                 });
             }
@@ -97,5 +104,13 @@ public class CameraView{
 
     public GLRender getGlRender() {
         return glRender;
+    }
+
+    public void setScreenSizeChangedListener(ScreenSizeChangedListener screenSizeChangedListener) {
+        this.screenSizeChangedListener = screenSizeChangedListener;
+    }
+
+    public interface ScreenSizeChangedListener {
+        void updateScreenSize(int width,int height);
     }
 }

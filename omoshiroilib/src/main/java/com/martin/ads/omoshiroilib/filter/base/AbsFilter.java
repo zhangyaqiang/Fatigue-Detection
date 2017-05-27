@@ -14,6 +14,7 @@ import java.util.LinkedList;
 public abstract class AbsFilter {
     protected static final String TAG = "AbsFilter";
     private final LinkedList<Runnable> mPreDrawTaskList;
+    private final LinkedList<Runnable> mPostDrawTaskList;
     protected int surfaceWidth,surfaceHeight;
 
     protected Plane plane;
@@ -23,6 +24,7 @@ public abstract class AbsFilter {
     public AbsFilter(String filterTag) {
         this.filterTag=filterTag;
         mPreDrawTaskList = new LinkedList<Runnable>();
+        mPostDrawTaskList = new LinkedList<Runnable>();
         plane =new Plane(true);
     }
 
@@ -52,6 +54,18 @@ public abstract class AbsFilter {
     public void addPreDrawTask(final Runnable runnable) {
         synchronized (mPreDrawTaskList) {
             mPreDrawTaskList.addLast(runnable);
+        }
+    }
+
+    public void runPostDrawTasks() {
+        while (!mPostDrawTaskList.isEmpty()) {
+            mPostDrawTaskList.removeFirst().run();
+        }
+    }
+
+    public void addPostDrawTask(final Runnable runnable) {
+        synchronized (mPreDrawTaskList) {
+            mPostDrawTaskList.addLast(runnable);
         }
     }
 

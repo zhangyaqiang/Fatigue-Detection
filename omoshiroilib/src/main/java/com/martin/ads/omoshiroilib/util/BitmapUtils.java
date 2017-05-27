@@ -63,11 +63,11 @@ public class BitmapUtils {
             this.context = context;
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
             File sdRoot = Environment.getExternalStorageDirectory();
-            String dir = "/Screenshots/";
+            String dir = "/Omoshiroi/Photos/";
             File mkDir = new File(sdRoot, dir);
             if (!mkDir.exists())
                 mkDir.mkdir();
-            String filename="/ScreenShot_" +width + "_" + height + "_" + simpleDateFormat.format(new Date())+".jpg";
+            String filename="/Pic_" +width + "_" + height + "_" + simpleDateFormat.format(new Date())+".jpg";
             filePath= mkDir.getAbsolutePath()+filename;
         }
 

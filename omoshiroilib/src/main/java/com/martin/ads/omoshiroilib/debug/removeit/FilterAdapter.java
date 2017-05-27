@@ -1,12 +1,14 @@
 package com.martin.ads.omoshiroilib.debug.removeit;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.martin.ads.omoshiroilib.R;
@@ -38,12 +40,9 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
                 .findViewById(R.id.filter_thumb_image);
         viewHolder.filterName = (TextView) view
                 .findViewById(R.id.filter_thumb_name);
-        viewHolder.filterRoot = (FrameLayout)view
+        viewHolder.filterRoot = (LinearLayout)view
                 .findViewById(R.id.filter_root);
-        viewHolder.thumbSelected = (FrameLayout) view
-                .findViewById(R.id.filter_thumb_selected);
-        viewHolder.thumbSelected_bg = view.
-                findViewById(R.id.filter_thumb_selected_bg);
+        viewHolder.filterImg= (FrameLayout) view.findViewById(R.id.filter_img_panel);
         return viewHolder;
     }
 
@@ -52,19 +51,15 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
         final FilterType filterType=filterTypeList.get(position);
         holder.thumbImage.setImageBitmap(FilterResourceHelper.getFilterThumbFromFiles(context,filterType));
         holder.filterName.setText(FilterResourceHelper.getSimpleName(filterType));
-//        holder.filterName.setBackgroundColor(context.getResources().getColor(
-//                FilterTypeHelper.FilterType2Color(filters[position])));
         if(position == selected){
-            holder.thumbSelected.setVisibility(View.VISIBLE);
-//            holder.thumbSelected_bg.setBackgroundColor(context.getResources().getColor(
-//                    FilterTypeHelper.FilterType2Color(filters[position])));
-            holder.thumbSelected_bg.setAlpha(0.7f);
+            holder.filterImg.setBackgroundResource(R.drawable.effect_item_selected_bg);
+            holder.filterName.setTextColor(GlobalConfig.context.getResources().getColor(R.color.app_color));
         }else {
-            holder.thumbSelected.setVisibility(View.GONE);
+            holder.filterImg.setBackgroundResource(0);
+            holder.filterName.setTextColor(Color.WHITE);
         }
 
         holder.filterRoot.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if(selected == position)
@@ -86,10 +81,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
     class FilterHolder extends RecyclerView.ViewHolder {
         ImageView thumbImage;
         TextView filterName;
-        FrameLayout thumbSelected;
-        FrameLayout filterRoot;
-        View thumbSelected_bg;
-
+        LinearLayout filterRoot;
+        FrameLayout filterImg;
         public FilterHolder(View itemView) {
             super(itemView);
         }

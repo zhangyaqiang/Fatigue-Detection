@@ -67,6 +67,7 @@ public class FilterGroup extends AbsFilter {
                 filter.onDrawFrame(previousTexture);
             }
         }
+        runPostDrawTasks();
     }
 
     @Override

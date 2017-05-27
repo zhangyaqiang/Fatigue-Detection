@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.martin.ads.omoshiroilib.debug.lab.FilterThumbActivity;
 import com.martin.ads.omoshiroilib.ui.CameraPreviewActivity;
 import com.martin.ads.testfaceu.faceu.ui.TestFaceUActivity;
-import com.martin.ads.teststmobile.MultitrackerActivity;
+import com.martin.ads.omoshiroilib.debug.teststmobile.MultitrackerActivity;
 
 /**
  * Created by Ads on 2017/4/3.

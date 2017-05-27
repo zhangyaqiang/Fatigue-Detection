@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.SystemClock;
@@ -17,7 +18,6 @@ import com.martin.ads.omoshiroilib.util.BitmapUtils;
  */
 
 public class CaptureAnimation extends View {
-    //private Bitmap captureAnimBitmap;
     private long mAnimStartTime;
     private Bitmap mFlashBitmap;
     Paint mPaint = new Paint();
@@ -32,15 +32,25 @@ public class CaptureAnimation extends View {
         mFlashBitmap=BitmapUtils.loadBitmapFromAssets(context,"ui/capture/capture_animation.png");
     }
 
-    private void initDisplayMetrics()
-    {
-        this.mScreenWidth = 800;
-        this.mScreenHeight = 1280;
+    private void initDisplayMetrics() {
+        this.mScreenWidth = 1080;
+        this.mScreenHeight = 1920;
         this.mPortClipRect = new RectF(0.0F, 0.0F, this.mScreenWidth, this.mScreenHeight);
     }
 
-    public void draw(Canvas paramCanvas)
-    {
+    public CaptureAnimation resetAnimationSize(int width,int height){
+        this.mScreenWidth = width;
+        this.mScreenHeight = height;
+        this.mPortClipRect = new RectF(0.0F, 0.0F, this.mScreenWidth, this.mScreenHeight);
+        Matrix matrix = new Matrix();
+        matrix.postScale(
+                (float)width/mFlashBitmap.getWidth(),
+                (float)height/mFlashBitmap.getHeight());
+        mFlashBitmap=Bitmap.createBitmap(mFlashBitmap,0,0,mFlashBitmap.getWidth(),mFlashBitmap.getHeight(),matrix,true);
+        return this;
+    }
+
+    public void draw(Canvas paramCanvas) {
         super.draw(paramCanvas);
         long l = SystemClock.elapsedRealtime() - this.mAnimStartTime;
         if (l > 400L) {
@@ -50,8 +60,7 @@ public class CaptureAnimation extends View {
         if (l < 200L) {
             paramCanvas.drawBitmap(this.mFlashBitmap, 0.0F, 0.0F, null);
         }
-        else
-        {
+        else {
             int i = Color.argb(204, 255, 255, 255);
             this.mPaint.setColor(i);
             this.mPaint.setStyle(Paint.Style.STROKE);

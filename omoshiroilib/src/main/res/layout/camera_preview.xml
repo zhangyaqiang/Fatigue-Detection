@@ -16,6 +16,124 @@
         android:layout_height="match_parent"
         android:visibility="visible"/>
 
+    <RelativeLayout android:id="@+id/camera_tool" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentTop="true" android:layout_centerHorizontal="true">
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton android:id="@+id/btn_camera_setting" android:background="@drawable/camera_setting" android:layout_width="70.0dip" android:layout_height="70.0dip" android:layout_alignParentLeft="true" android:layout_alignParentTop="true" />
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton android:id="@+id/btn_switch_camera" android:background="@drawable/camera_switch_btn" android:layout_width="70.0dip" android:layout_height="70.0dip" android:layout_alignParentTop="true" android:layout_alignParentRight="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/camera_setting_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="57.0dip">
+        <ImageView
+            android:id="@+id/camera_setting_content_arrow"
+            android:background="@drawable/camera_setting_content_background_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28.0dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+        <LinearLayout android:orientation="horizontal"
+            android:id="@+id/ll_camera_setting_content"
+            android:background="@drawable/camera_setting_content_background"
+            android:layout_width="match_parent"
+            android:layout_height="100.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+            android:layout_below="@id/camera_setting_content_arrow"
+            android:layout_centerHorizontal="true">
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0">
+                <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+                    android:id="@+id/btn_camera_touch"
+                    android:background="@drawable/camera_flash_touch_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20.0dip"
+                    android:checked="false"
+                    android:layout_centerHorizontal="true" />
+                <TextView
+                    android:textSize="11.0dip"
+                    android:textColor="@drawable/setting_color_selector"
+                    android:id="@+id/camera_touch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6.0dip"
+                    android:text="触屏拍摄"
+                    android:layout_alignBottom="@id/btn_camera_touch"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
+                <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+                    android:id="@+id/btn_camera_time_lapse"
+                    android:background="@drawable/camera_flash_time_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20.0dip"
+                    android:checked="false"
+                    android:layout_centerHorizontal="true" />
+                <TextView
+                    android:textSize="11.0dip"
+                    android:textColor="@drawable/setting_color_selector"
+                    android:id="@+id/camera_time_lapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6.0dip"
+                    android:text="延时拍摄"
+                    android:layout_alignBottom="@id/btn_camera_time_lapse"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
+                <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+                    android:id="@+id/btn_camera_light"
+                    android:background="@drawable/camera_flash_light_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_marginTop="20.0dip" android:checked="false" android:layout_centerHorizontal="true" />
+                <TextView
+                    android:textSize="11.0dip"
+                    android:textColor="@drawable/setting_color_selector"
+                    android:id="@+id/camera_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6.0dip"
+                    android:text="闪光灯"
+                    android:layout_alignBottom="@id/btn_camera_light"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0">
+                <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+                    android:id="@+id/btn_camera_picture_type"
+                    android:background="@drawable/picture_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20.0dip"
+                    android:checked="false"
+                    android:layout_centerHorizontal="true" />
+                <TextView
+                    android:textSize="11.0dip"
+                    android:textColor="@drawable/setting_color_selector"
+                    android:id="@+id/camera_picture_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6.0dip"
+                    android:text="小图"
+                    android:layout_alignBottom="@id/btn_camera_picture_type"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/filter_list"
         android:layout_width="match_parent"

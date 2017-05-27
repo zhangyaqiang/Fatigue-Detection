@@ -10,9 +10,10 @@ import android.util.Log;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
-import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
+import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
@@ -46,12 +47,18 @@ public class GLRender implements GLSurfaceView.Renderer {
     private int surfaceWidth;
     private int surfaceHeight;
     private boolean isCameraFacingFront;
+
+    private OrthoFilter orthoFilter;
+
     public GLRender(final Context context, CameraEngine cameraEngine) {
         this.context=context;
         this.cameraEngine=cameraEngine;
         filterGroup=new FilterGroup();
         oesFilter=new OESFilter(context);
         filterGroup.addFilter(oesFilter);
+        orthoFilter=new OrthoFilter(context);
+        if(GlobalConfig.FULL_SCREEN)
+            filterGroup.addFilter(orthoFilter);
 
         customizedFilters=new FilterGroup();
         customizedFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
@@ -81,11 +88,11 @@ public class GLRender implements GLSurfaceView.Renderer {
                 //BitmapUtils.saveBitmap(bitmap,outputFile.getAbsolutePath()+".jpg",workerCallback);
 
                 //BitmapUtils.saveByteArray(data, outputFile.getAbsolutePath(), workerCallback);
-                BitmapUtils.saveBitmapWithFilterApplied(GlobalContext.context,currentFilterType,bitmap,outputFile.getAbsolutePath(),workerCallback);
+                BitmapUtils.saveBitmapWithFilterApplied(GlobalConfig.context,currentFilterType,bitmap,outputFile.getAbsolutePath(),workerCallback);
 
             }
         });
-        isCameraFacingFront=false;
+        isCameraFacingFront=true;
     }
 
     @Override
@@ -144,5 +151,13 @@ public class GLRender implements GLSurfaceView.Renderer {
         if (filterType==null) return;
         currentFilterType=filterType;
         customizedFilters.switchLastFilter(FilterFactory.createFilter(filterType,context));
+    }
+
+    public FilterGroup getFilterGroup() {
+        return filterGroup;
+    }
+
+    public OrthoFilter getOrthoFilter() {
+        return orthoFilter;
     }
 }

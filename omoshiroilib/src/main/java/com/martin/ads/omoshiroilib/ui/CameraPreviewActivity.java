@@ -1,15 +1,7 @@
 package com.martin.ads.omoshiroilib.ui;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +11,13 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.R;
-import com.martin.ads.omoshiroilib.debug.lab.FilterThumbActivity;
 import com.martin.ads.omoshiroilib.debug.removeit.FilterAdapter;
-import com.martin.ads.omoshiroilib.debug.removeit.GlobalContext;
-import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRootView;
+import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 
 import java.util.ArrayList;
@@ -36,6 +27,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraPreviewActivity";
     private static final boolean DEBUG=false;
+
     private CameraView cameraView;
 
     private CaptureAnimation captureAnimation;
@@ -43,6 +35,8 @@ public class CameraPreviewActivity extends AppCompatActivity {
     private boolean isRecording=false;
 
     private RecyclerView filterListView;
+
+    private int surfaceWidth,surfaceHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +59,18 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
         GLRootView glRootView= (GLRootView) findViewById(R.id.camera_view);
         cameraView=new CameraView(this,glRootView);
-        GlobalContext.context=this;
+
+        cameraView.setScreenSizeChangedListener(new CameraView.ScreenSizeChangedListener() {
+            @Override
+            public void updateScreenSize(int width, int height) {
+                Log.d(TAG, "updateScreenSize: "+width+" "+height);
+                surfaceWidth=width;
+                surfaceHeight=height;
+                captureAnimation.resetAnimationSize(width,height);
+            }
+        });
+
+        GlobalConfig.context=this;
 
         captureAnimation= (CaptureAnimation) findViewById(R.id.capture_animation_view);
         findViewById(R.id.tmp_btn).setOnClickListener(new View.OnClickListener() {
@@ -73,7 +78,13 @@ public class CameraPreviewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 captureAnimation.setVisibility(View.VISIBLE);
                 captureAnimation.startAnimation();
-                cameraView.getCameraEngine().takePhoto();
+                //cameraView.getCameraEngine().takePhoto();
+                cameraView.getGlRender().getFilterGroup().addPostDrawTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        BitmapUtils.sendImage(surfaceWidth,surfaceHeight, GlobalConfig.context);
+                    }
+                });
             }
         });
 

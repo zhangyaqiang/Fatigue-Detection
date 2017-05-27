@@ -1,4 +1,4 @@
-package com.martin.ads.teststmobile;
+package com.martin.ads.omoshiroilib.debug.teststmobile;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;

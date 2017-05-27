@@ -43,7 +43,7 @@ public class DrawImageFilter extends PassThroughFilter {
         TextureUtils.bindTexture2D(bitmapTexture.getImageTextureId(), GLES20.GL_TEXTURE0,glPassThroughProgram.getTextureSamplerHandle(),0);
         imagePlane.uploadTexCoordinateBuffer(glPassThroughProgram.getTextureCoordinateHandle());
         imagePlane.uploadVerticesBuffer(glPassThroughProgram.getPositionHandle());
-        MatrixUtils.updateProjection(
+        MatrixUtils.updateProjectionFit(
                 bitmapTexture.getImageWidth(),
                 bitmapTexture.getImageHeight(),
                 surfaceWidth,

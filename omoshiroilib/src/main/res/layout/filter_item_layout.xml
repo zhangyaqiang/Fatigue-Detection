@@ -1,44 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout 
+<LinearLayout
     android:id="@+id/filter_root"
-    android:layout_gravity="center_vertical" 
     android:orientation="vertical" 
-    android:layout_width="74.0dip" 
-    android:layout_height="84.0dip"
-    android:padding="5dip"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="3.0dip"
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <FrameLayout 
-        android:layout_width="fill_parent" 
-        android:layout_height="64.0dip">
-        <ImageView 
-            android:id="@+id/filter_thumb_image" 
-            android:layout_width="64.0dip" 
-            android:layout_height="64.0dip"
+    <FrameLayout
+        android:id="@+id/filter_img_panel"
+        android:layout_width="62.0dip"
+        android:layout_height="62.0dip"
+        android:padding="2.0dip">
+        <ImageView
+            android:id="@+id/filter_thumb_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop" />
-        <FrameLayout 
-            android:id="@+id/filter_thumb_selected" 
-            android:visibility="gone" 
-            android:layout_width="fill_parent" 
-            android:layout_height="fill_parent">
-            <View 
-                android:id="@+id/filter_thumb_selected_bg"
-                android:layout_width="fill_parent" 
-            	android:layout_height="fill_parent"/>
-            <ImageView 
-                android:layout_gravity="center" 
-                android:id="@+id/filter_thumb_selected_icon" 
-                android:layout_width="34.0dip" 
-                android:layout_height="34.0dip" 
-                android:src="@drawable/take_filter_confirm_btn_skin_flat" />
-        </FrameLayout>
     </FrameLayout>
-    <TextView 
-        android:textSize="10.0sp" 
+    <TextView
+        android:id="@+id/filter_thumb_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:textColor="@android:color/white"
-        android:background="#CC3d5afe"
-        android:gravity="center" 
-        android:layout_gravity="bottom" 
-        android:id="@+id/filter_thumb_name" 
-        android:layout_width="fill_parent" 
-        android:layout_height="20.0dip"  />
-</FrameLayout>
+        android:textSize="8.0sp" />
+</LinearLayout>

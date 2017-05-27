@@ -33,10 +33,9 @@ public class CameraEngine
 
     private static final String TAG = "CameraEngine";
     //this should be adjustable
-    private static final double preferredRatio=4.0/3;
+    private static final double preferredRatio=16.0/9;
     private SurfaceTexture mSurfaceTexture;
     private CameraView.RenderCallback renderCallback;
-
     private Camera camera;
     private Camera.Parameters mParams;
     private boolean cameraOpened;
@@ -429,5 +428,4 @@ public class CameraEngine
             camera.startPreview();
         }
     }
-
 }

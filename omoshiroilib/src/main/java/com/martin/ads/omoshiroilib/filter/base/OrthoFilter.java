@@ -5,7 +5,6 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
-import com.martin.ads.omoshiroilib.glessential.object.Plane;
 import com.martin.ads.omoshiroilib.glessential.program.GLPassThroughProgram;
 import com.martin.ads.omoshiroilib.util.MatrixUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
@@ -15,7 +14,6 @@ import com.martin.ads.omoshiroilib.util.TextureUtils;
  * let the image pass through
  * and simply fit the image to the screen
  */
-@Deprecated
 public class OrthoFilter extends AbsFilter{
 
     private GLPassThroughProgram glPassThroughProgram;
@@ -55,8 +53,8 @@ public class OrthoFilter extends AbsFilter{
         plane.draw();
     }
 
-    public void updateProjection(CameraEngine.PreviewSize previewSize){
-        MatrixUtils.updateProjection(previewSize.getWidth(),previewSize.getHeight(),
+    public void updateProjection(int width,int height){
+        MatrixUtils.updateProjectionCrop(width,height,
                 surfaceWidth,surfaceHeight,projectionMatrix);
     }
 }
