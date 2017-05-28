@@ -13,11 +13,3 @@ Download demo [here](https://raw.githubusercontent.com/Martin20150405/Omoshiroi/
 ![ScreenShot](https://github.com/Martin20150405/Omoshiroi/blob/master/screenshots/demo_cap1.png)
 
 ![ScreenShot](https://github.com/Martin20150405/Omoshiroi/blob/master/screenshots/demo_cap2.png)
-
-项目中的人脸检测API与贴纸素材仅供学习交流使用，如要用于商业用途，请与相应提供商联系。
-
-FaceU SDK is used for test, please set the system date **to 2016.12.04** to enable all features.
-
-**This project is still 'under construction',reconsider it if you want to fork this project.**
-You can download the apk and have a try, the library is neither bug-free nor stable now, and will be updated frequently.
-
