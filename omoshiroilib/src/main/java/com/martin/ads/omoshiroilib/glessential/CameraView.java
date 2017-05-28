@@ -22,6 +22,7 @@ public class CameraView{
     private Context context;
     private GLRootView glRootView;
     private ScreenSizeChangedListener screenSizeChangedListener;
+    private RootViewClickListener rootViewClickListener;
 
     public CameraView(Context context,GLRootView glRootView) {
         this.glRootView=glRootView;
@@ -71,6 +72,8 @@ public class CameraView{
                 if(event.getAction()==MotionEvent.ACTION_UP)
                     cameraEngine.focusCamera(event);
                 Log.d(TAG, "onTouch: "+glRootView.getWidth()+" "+glRootView.getHeight());
+                if(rootViewClickListener!=null)
+                    rootViewClickListener.onRootViewClicked();
                 return true;
             }
         });
@@ -112,5 +115,13 @@ public class CameraView{
 
     public interface ScreenSizeChangedListener {
         void updateScreenSize(int width,int height);
+    }
+
+    public interface RootViewClickListener{
+        void onRootViewClicked();
+    }
+
+    public void setRootViewClickListener(RootViewClickListener rootViewClickListener) {
+        this.rootViewClickListener = rootViewClickListener;
     }
 }

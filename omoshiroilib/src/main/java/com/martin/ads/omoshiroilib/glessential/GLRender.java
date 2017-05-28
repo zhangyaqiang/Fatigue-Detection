@@ -11,9 +11,11 @@ import android.util.Log;
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
+import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
 import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
+import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
@@ -38,6 +40,7 @@ public class GLRender implements GLSurfaceView.Renderer {
 
     private CameraEngine cameraEngine;
     private FilterGroup filterGroup;
+    private FilterGroup postProcessFilters;
     private OESFilter oesFilter;
     private Context context;
     private FilterGroup customizedFilters;
@@ -54,6 +57,7 @@ public class GLRender implements GLSurfaceView.Renderer {
         this.context=context;
         this.cameraEngine=cameraEngine;
         filterGroup=new FilterGroup();
+        postProcessFilters=new FilterGroup();
         oesFilter=new OESFilter(context);
         filterGroup.addFilter(oesFilter);
         orthoFilter=new OrthoFilter(context);
@@ -62,8 +66,9 @@ public class GLRender implements GLSurfaceView.Renderer {
 
         customizedFilters=new FilterGroup();
         customizedFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
+        postProcessFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
         filterGroup.addFilter(customizedFilters);
-        //filterGroup.addFilter(new BlurredFrameEffect(context));
+        filterGroup.addFilter(postProcessFilters);
 
         cameraEngine.setPictureTakenCallBack(new PictureTakenCallBack() {
             @Override
@@ -147,10 +152,15 @@ public class GLRender implements GLSurfaceView.Renderer {
         void saveAsBitmap(final byte[] data);
     }
 
-    public void switchLastFilter(FilterType filterType){
+    public void switchLastFilterOfCustomizedFilters(FilterType filterType){
         if (filterType==null) return;
         currentFilterType=filterType;
         customizedFilters.switchLastFilter(FilterFactory.createFilter(filterType,context));
+    }
+
+    public void switchLastFilterOfPostProcess(AbsFilter filter){
+        if (filter==null) return;
+        postProcessFilters.switchLastFilter(filter);
     }
 
     public FilterGroup getFilterGroup() {

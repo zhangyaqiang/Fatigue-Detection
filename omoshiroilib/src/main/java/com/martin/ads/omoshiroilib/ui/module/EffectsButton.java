@@ -28,6 +28,7 @@ public class EffectsButton extends AppCompatButton
     private int[] locationOnScreen;
     private Animation.AnimationListener animationListener = new Animation.AnimationListener() {
         public void onAnimationEnd(Animation paramAnonymousAnimation) {
+            //setSelected(!isSelected());
             EffectsButton.this.clearAnimation();
             //Log.d(TAG, "onAnimationEnd: ");
             if (EffectsButton.this.onClickEffectButtonListener != null) {
