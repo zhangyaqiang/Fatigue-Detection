@@ -31,13 +31,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             init();
     }
 
+    public static final boolean DEBUG=false;
     private void init(){
-        setContentView(R.layout.home_content);
-        intent=new Intent();
-        findViewById(R.id.camera_view_btn).setOnClickListener(this);
-        findViewById(R.id.face_detect_test_btn).setOnClickListener(this);
-        findViewById(R.id.test_faceu_btn).setOnClickListener(this);
-        findViewById(R.id.debug_btn).setOnClickListener(this);
+        if(DEBUG){
+            setContentView(R.layout.home_content);
+            intent=new Intent();
+            findViewById(R.id.camera_view_btn).setOnClickListener(this);
+            findViewById(R.id.face_detect_test_btn).setOnClickListener(this);
+            findViewById(R.id.test_faceu_btn).setOnClickListener(this);
+            findViewById(R.id.debug_btn).setOnClickListener(this);
+        }else {
+            startActivity(new Intent(this,CameraPreviewActivity.class));
+            finish();
+        }
     }
 
     private void start(){

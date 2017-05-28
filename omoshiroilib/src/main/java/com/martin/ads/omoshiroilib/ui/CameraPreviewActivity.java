@@ -1,5 +1,6 @@
 package com.martin.ads.omoshiroilib.ui;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRootView;
 import com.martin.ads.omoshiroilib.ui.module.EffectsButton;
+import com.martin.ads.omoshiroilib.ui.module.RecordButton;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 
@@ -55,6 +57,12 @@ public class CameraPreviewActivity extends AppCompatActivity {
     private CameraSettingBtn cameraTimeLapseBtn;
     private CameraSettingBtn cameraLightBtn;
     private CameraSettingBtn cameraPictureTypeBtn;
+    private EffectsButton switchFilterBtn;
+    //TODO
+    private EffectsButton switchFaceBtn;
+    private RelativeLayout bottomControlPanel;
+    private RecordButton recordButton;
+
     private ImageView cameraActionTip;
 
     @Override
@@ -91,20 +99,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
         });
 
         captureAnimation= (CaptureAnimation) findViewById(R.id.capture_animation_view);
-        findViewById(R.id.tmp_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                captureAnimation.setVisibility(View.VISIBLE);
-                captureAnimation.startAnimation();
-                //cameraView.getCameraEngine().takePhoto();
-                cameraView.getGlRender().getFilterGroup().addPostDrawTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        BitmapUtils.sendImage(surfaceWidth,surfaceHeight, GlobalConfig.context);
-                    }
-                });
-            }
-        });
 
         findViewById(R.id.record_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,11 +139,36 @@ public class CameraPreviewActivity extends AppCompatActivity {
         initEffectsButtons();
         cameraSettingsFrag= (RelativeLayout) findViewById(R.id.rl_camera_setting_content);
         cameraSettingsFrag.setVisibility(View.GONE);
-        //TODO:hide it when click shutter
         cameraActionTip= (ImageView) findViewById(R.id.iv_frag_camera_action_tip);
+        bottomControlPanel= (RelativeLayout) findViewById(R.id.bottom_control_panel);
+    }
+
+    private void hideAllControlBtn(){
+        displayAnim(switchFilterBtn,GlobalConfig.context,R.anim.fast_faded_out,View.GONE);
+        displayAnim(switchFaceBtn,GlobalConfig.context,R.anim.fast_faded_out,View.GONE);
+        displayAnim(cameraSettingBtn,GlobalConfig.context,R.anim.fast_faded_out,View.GONE);
+        displayAnim(switchCameraBtn,GlobalConfig.context,R.anim.fast_faded_out,View.GONE);
+        requestHideCameraSettingsFrag();
+    }
+
+    private void showAllControlBtn(){
+        displayAnim(switchFilterBtn,GlobalConfig.context,R.anim.fast_faded_in,View.VISIBLE);
+        displayAnim(switchFaceBtn,GlobalConfig.context,R.anim.fast_faded_in,View.VISIBLE);
+        displayAnim(cameraSettingBtn,GlobalConfig.context,R.anim.fast_faded_in,View.VISIBLE);
+        displayAnim(switchCameraBtn,GlobalConfig.context,R.anim.fast_faded_in,View.VISIBLE);
     }
 
     private void initEffectsButtons() {
+        switchFilterBtn=getEffectsBtn(R.id.btn_switch_filter);
+        switchFilterBtn.setOnClickEffectButtonListener(new EffectsButton.OnClickEffectButtonListener() {
+            @Override
+            public void onClickEffectButton() {
+                switchFilterBtn.setSelected(false);
+                requestShowFilterView();
+            }
+        });
+        switchFaceBtn=getEffectsBtn(R.id.btn_switch_face);
+
         switchCameraBtn= getEffectsBtn(R.id.btn_switch_camera);
         switchCameraBtn.setOnClickEffectButtonListener(new EffectsButton.OnClickEffectButtonListener() {
             @Override
@@ -172,6 +191,10 @@ public class CameraPreviewActivity extends AppCompatActivity {
             public void onRootViewClicked() {
                 requestHideCameraSettingsFrag();
                 cameraActionTip.setVisibility(View.GONE);
+                if(bottomControlPanel.getVisibility()==View.GONE){
+                    requestHideFilterView();
+                    displayAnim(bottomControlPanel,GlobalConfig.context,R.anim.fast_faded_in,View.VISIBLE);
+                }
             }
         });
 
@@ -224,24 +247,71 @@ public class CameraPreviewActivity extends AppCompatActivity {
                        }
                    }
                });
+
+        recordButton= (RecordButton) findViewById(R.id.btn_takePicture);
+        recordButton.setClickListener(new RecordButton.ClickListener() {
+            @Override
+            public void onClick() {
+                cameraActionTip.setVisibility(View.GONE);
+                captureAnimation.setVisibility(View.VISIBLE);
+                captureAnimation.startAnimation();
+                //cameraView.getCameraEngine().takePhoto();
+                cameraView.getGlRender().getFilterGroup().addPostDrawTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        BitmapUtils.sendImage(surfaceWidth,surfaceHeight, GlobalConfig.context);
+                    }
+                });
+            }
+
+            @Override
+            public void onLongClickStart() {
+                cameraActionTip.setVisibility(View.GONE);
+                hideAllControlBtn();
+                Log.d(TAG, "onLongClickStart: ");
+            }
+
+            @Override
+            public void onLongClickEnd() {
+                showAllControlBtn();
+                Log.d(TAG, "onLongClickEnd: ");
+            }
+        });
+    }
+
+    private void displayAnim(View view, Context context,int animId, int targetVisibility){
+        view.clearAnimation();
+        Animation anim =
+                AnimationUtils.loadAnimation(context, animId);
+        view.setVisibility(targetVisibility);
+        view.startAnimation(anim);
+    }
+
+    private void requestShowFilterView(){
+        if(!switchFilterBtn.isSelected()){
+            displayAnim(filterListView,GlobalConfig.context,R.anim.anim_gallery_show,View.VISIBLE);
+            displayAnim(bottomControlPanel,GlobalConfig.context,R.anim.fast_faded_out,View.GONE);
+            switchFilterBtn.setSelected(true);
+        }
+    }
+
+    private void requestHideFilterView(){
+        if(switchFilterBtn.isSelected()){
+            displayAnim(filterListView,GlobalConfig.context,R.anim.anim_gallery_hide,View.GONE);
+            switchFilterBtn.setSelected(false);
+        }
     }
 
     private void requestShowCameraSettingsFrag(){
         if(!cameraSettingBtn.isSelected()){
-            cameraSettingsFrag.clearAnimation();
-            Animation showAnim = AnimationUtils.loadAnimation(GlobalConfig.context, R.anim.anim_setting_content_show);
-            cameraSettingsFrag.setVisibility(View.VISIBLE);
-            cameraSettingsFrag.startAnimation(showAnim);
+            displayAnim(cameraSettingsFrag,GlobalConfig.context,R.anim.anim_setting_content_show,View.VISIBLE);
             cameraSettingBtn.setSelected(true);
         }
     }
 
     private void requestHideCameraSettingsFrag(){
         if(cameraSettingBtn.isSelected()){
-            cameraSettingsFrag.clearAnimation();
-            Animation hideAnim = AnimationUtils.loadAnimation(GlobalConfig.context, R.anim.anim_setting_content_hide);
-            cameraSettingsFrag.setVisibility(View.GONE);
-            cameraSettingsFrag.startAnimation(hideAnim);
+            displayAnim(cameraSettingsFrag,GlobalConfig.context,R.anim.anim_setting_content_hide,View.GONE);
             cameraSettingBtn.setSelected(false);
         }
     }

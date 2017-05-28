@@ -63,7 +63,7 @@
         android:layout_height="94.0dip"
         android:padding="5.0dip"
         android:scrollbars="none"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:background="#88000000"/>
 
 
@@ -73,16 +73,6 @@
         android:layout_alignParentTop="true"
         android:id="@+id/test_layout"
         android:orientation="horizontal">
-        <Button
-            android:id="@+id/tmp_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:background="#44000000"
-            android:textColor="#dddddd"
-            android:text="Take photo"
-            android:visibility="visible"/>
-
         <Button
             android:id="@+id/record_btn"
             android:layout_width="wrap_content"
@@ -94,9 +84,16 @@
             android:visibility="invisible"/>
     </LinearLayout>
 
-    <com.martin.ads.omoshiroilib.ui.module.EffectsButton android:id="@+id/btn_switch_filter" android:background="@drawable/ic_choose_filter" android:layout_width="55.0dip" android:layout_height="55.0dip" android:checked="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" />
-    <ImageView android:id="@+id/iv_new_filter_tip" android:background="@drawable/effect_red_point" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12.0dip" android:layout_marginRight="12.0dip" android:layout_alignTop="@id/btn_switch_filter" android:layout_alignRight="@id/btn_switch_filter" />
-    <com.martin.ads.omoshiroilib.ui.module.EffectsButton android:id="@+id/btn_switch_face" android:background="@drawable/ic_choose_face" android:layout_width="55.0dip" android:layout_height="55.0dip" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" />
+    <RelativeLayout
+        android:id="@+id/bottom_control_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton android:id="@+id/btn_switch_filter" android:background="@drawable/ic_choose_filter" android:layout_width="55.0dip" android:layout_height="55.0dip" android:checked="true" android:layout_alignParentRight="true" android:layout_alignParentBottom="true" />
+        <ImageView android:id="@+id/iv_new_filter_tip" android:background="@drawable/effect_red_point" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12.0dip" android:layout_marginRight="12.0dip" android:layout_alignTop="@id/btn_switch_filter" android:layout_alignRight="@id/btn_switch_filter" />
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton android:id="@+id/btn_switch_face" android:background="@drawable/ic_choose_face" android:layout_width="55.0dip" android:layout_height="55.0dip" android:layout_alignParentLeft="true" android:layout_alignParentBottom="true" />
+        <com.martin.ads.omoshiroilib.ui.module.RecordButton
+            android:id="@+id/btn_takePicture" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="11.0dip" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/iv_frag_camera_action_tip"

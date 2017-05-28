@@ -71,8 +71,8 @@ public class Sphere {
             for(s = 0; s < sectors; s++) {
                 indices[counter++] = (short) (r * sectorsPlusOne + s);       //(a)
                 indices[counter++] = (short) ((r+1) * sectorsPlusOne + (s));    //(b)
-                indices[counter++] = (short) ((r) * sectorsPlusOne + (s+1));  // (c)
-                indices[counter++] = (short) ((r) * sectorsPlusOne + (s+1));  // (c)
+                indices[counter++] = (short) ((r) * sectorsPlusOne + (s+1));  // (sendLoopMsg)
+                indices[counter++] = (short) ((r) * sectorsPlusOne + (s+1));  // (sendLoopMsg)
                 indices[counter++] = (short) ((r+1) * sectorsPlusOne + (s));    //(b)
                 indices[counter++] = (short) ((r+1) * sectorsPlusOne + (s+1));  // (d)
             }
