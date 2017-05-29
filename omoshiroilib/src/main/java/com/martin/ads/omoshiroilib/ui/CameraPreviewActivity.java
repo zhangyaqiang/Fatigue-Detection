@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -186,6 +187,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 else requestShowCameraSettingsFrag();
             }
         });
+
         cameraView.setRootViewClickListener(new CameraView.RootViewClickListener() {
             @Override
             public void onRootViewClicked() {
@@ -196,19 +198,20 @@ public class CameraPreviewActivity extends AppCompatActivity {
                     displayAnim(bottomControlPanel,GlobalConfig.context,R.anim.fast_faded_in,View.VISIBLE);
                 }
             }
+
+            @Override
+            public void onRootViewLongClicked() {
+                if(cameraTouchBtn.isSelected()){
+                    requestTakePicture();
+                }
+            }
         });
 
-       cameraTouchBtn=
-               new CameraSettingBtn(R.id.btn_camera_touch,R.id.tv_camera_touch)
+       cameraTouchBtn= new CameraSettingBtn(R.id.btn_camera_touch,R.id.tv_camera_touch)
                        .register(new EffectsButton.OnClickEffectButtonListener() {
                            @Override
                            public void onClickEffectButton() {
                                cameraTouchBtn.changeState();
-                               if(cameraTouchBtn.isSelected()){
-
-                               }else{
-
-                               }
                            }
                        });
        cameraTimeLapseBtn=new CameraSettingBtn(R.id.btn_camera_time_lapse,R.id.tv_camera_time_lapse)
@@ -216,11 +219,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
                    @Override
                    public void onClickEffectButton() {
                        cameraTimeLapseBtn.changeState();
-                       if(cameraTimeLapseBtn.isSelected()){
-
-                       }else{
-
-                       }
                    }
                });
        cameraLightBtn=new CameraSettingBtn(R.id.btn_camera_light,R.id.tv_camera_light)
@@ -229,9 +227,9 @@ public class CameraPreviewActivity extends AppCompatActivity {
                    public void onClickEffectButton() {
                        cameraLightBtn.changeState();
                        if(cameraLightBtn.isSelected()){
-
+                           cameraView.getCameraEngine().requestOpenFlashLight(true);
                        }else{
-
+                           cameraView.getCameraEngine().requestCloseFlashLight();
                        }
                    }
                });
@@ -252,16 +250,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
         recordButton.setClickListener(new RecordButton.ClickListener() {
             @Override
             public void onClick() {
-                cameraActionTip.setVisibility(View.GONE);
-                captureAnimation.setVisibility(View.VISIBLE);
-                captureAnimation.startAnimation();
-                //cameraView.getCameraEngine().takePhoto();
-                cameraView.getGlRender().getFilterGroup().addPostDrawTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        BitmapUtils.sendImage(surfaceWidth,surfaceHeight, GlobalConfig.context);
-                    }
-                });
+                requestTakePicture();
             }
 
             @Override
@@ -277,6 +266,28 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 Log.d(TAG, "onLongClickEnd: ");
             }
         });
+    }
+
+    private void takePic(){
+        cameraActionTip.setVisibility(View.GONE);
+        captureAnimation.setVisibility(View.VISIBLE);
+        captureAnimation.startAnimation();
+        //cameraView.getCameraEngine().takePhoto();
+        cameraView.getGlRender().getFilterGroup().addPostDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                BitmapUtils.sendImage(surfaceWidth,surfaceHeight, GlobalConfig.context);
+            }
+        });
+    }
+    private void requestTakePicture(){
+        if(cameraTimeLapseBtn.isSelected()){
+            new Handler().postDelayed(new Runnable(){
+                public void run() {
+                    takePic();
+                }
+            }, 3000);
+        }else takePic();
     }
 
     private void displayAnim(View view, Context context,int animId, int targetVisibility){

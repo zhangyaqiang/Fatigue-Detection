@@ -66,14 +66,21 @@ public class CameraView{
             glRootView.setPreserveEGLContextOnPause(true);
         }
 
-        glRootView.setOnTouchListener(new View.OnTouchListener() {
+        glRootView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_UP)
-                    cameraEngine.focusCamera(event);
-                Log.d(TAG, "onTouch: "+glRootView.getWidth()+" "+glRootView.getHeight());
+            public void onClick(View v) {
+                cameraEngine.focusCamera();
+                Log.d(TAG, "onClick: "+glRootView.getWidth()+" "+glRootView.getHeight());
                 if(rootViewClickListener!=null)
                     rootViewClickListener.onRootViewClicked();
+            }
+        });
+        glRootView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d(TAG, "onLongClick: ");
+                if(rootViewClickListener!=null)
+                    rootViewClickListener.onRootViewLongClicked();
                 return true;
             }
         });
@@ -119,6 +126,7 @@ public class CameraView{
 
     public interface RootViewClickListener{
         void onRootViewClicked();
+        void onRootViewLongClicked();
     }
 
     public void setRootViewClickListener(RootViewClickListener rootViewClickListener) {

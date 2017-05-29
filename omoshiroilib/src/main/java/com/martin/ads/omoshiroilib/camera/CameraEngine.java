@@ -237,11 +237,33 @@ public class CameraEngine
         return cameraOpened;
     }
 
-    public void focusCamera(MotionEvent event){
+    public void focusCamera(){
         synchronized (this) {
             if (camera != null) {
                 camera.cancelAutoFocus();
                 camera.autoFocus(this);
+            }
+        }
+    }
+
+    public void requestOpenFlashLight(boolean isTorch){
+        synchronized (this) {
+            if (camera != null) {
+                Camera.Parameters p = camera.getParameters();
+                if(isTorch){
+                    p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                }else p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                camera.setParameters(p);
+            }
+        }
+    }
+
+    public void requestCloseFlashLight(){
+        synchronized (this) {
+            if (camera != null) {
+                Camera.Parameters p = camera.getParameters();
+                p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                camera.setParameters(p);
             }
         }
     }
