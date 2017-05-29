@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.martin.ads.omoshiroilib.R;
+import com.martin.ads.omoshiroilib.util.DisplayUtils;
 
 public class RecordButton
         extends View {
@@ -118,10 +119,10 @@ public class RecordButton
     }
 
     void init() {
-        BOUNDING_BOX_SIZE = getRefLength(100.0F);
-        OUT_CIRCLE_WIDTH = getRefLength(2.3F);
-        OUTER_CIRCLE_WIDTH_INC=getRefLength(4.3F);
-        INNER_CIRCLE_RADIUS = getRefLength(32.0F);
+        BOUNDING_BOX_SIZE = DisplayUtils.getRefLength(mContext,100.0F);
+        OUT_CIRCLE_WIDTH = DisplayUtils.getRefLength(mContext,2.3F);
+        OUTER_CIRCLE_WIDTH_INC=DisplayUtils.getRefLength(mContext,4.3F);
+        INNER_CIRCLE_RADIUS = DisplayUtils.getRefLength(mContext,32.0F);
         colorRecord = getResources().getColor(R.color.app_color);
         colorWhite = getResources().getColor(R.color.white);
         colorWhiteP60 = getResources().getColor(R.color.white_sixty_percent);
@@ -159,9 +160,9 @@ public class RecordButton
         translucentPaint.setStyle(Style.FILL_AND_STROKE);
         centerX = (BOUNDING_BOX_SIZE / 2);
         centerY = (BOUNDING_BOX_SIZE / 2);
-        outMostCircleRadius = getRefLength(37.0F);
-        outBlackCircleRadiusInc = getRefLength(7.0F);
-        innerCircleRadiusWhenRecord = getRefLength(35.0F);
+        outMostCircleRadius = DisplayUtils.getRefLength(mContext,37.0F);
+        outBlackCircleRadiusInc = DisplayUtils.getRefLength(mContext,7.0F);
+        innerCircleRadiusWhenRecord = DisplayUtils.getRefLength(mContext,35.0F);
         innerCircleRadiusToDraw = INNER_CIRCLE_RADIUS;
         outBlackCircleRadius = (outMostCircleRadius - OUT_CIRCLE_WIDTH / 2.0F);
         outMostBlackCircleRadius = (outMostCircleRadius + OUT_CIRCLE_WIDTH / 2.0F);
@@ -190,10 +191,6 @@ public class RecordButton
 
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(BOUNDING_BOX_SIZE, BOUNDING_BOX_SIZE);
-    }
-
-    public int getRefLength(float len) {
-        return (int) (mContext.getResources().getDisplayMetrics().density * len + 0.5F);
     }
 
     public boolean onTouchEvent(MotionEvent e) {

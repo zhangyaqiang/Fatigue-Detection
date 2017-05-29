@@ -66,6 +66,15 @@ public class CameraView{
             glRootView.setPreserveEGLContextOnPause(true);
         }
 
+        glRootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(rootViewClickListener!=null)
+                    rootViewClickListener.onRootViewTouched(event);
+                return false;
+            }
+        });
+
         glRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +134,7 @@ public class CameraView{
     }
 
     public interface RootViewClickListener{
+        void onRootViewTouched(MotionEvent e);
         void onRootViewClicked();
         void onRootViewLongClicked();
     }

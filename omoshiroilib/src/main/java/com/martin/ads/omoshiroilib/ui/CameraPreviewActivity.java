@@ -3,12 +3,14 @@ package com.martin.ads.omoshiroilib.ui;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -30,6 +32,7 @@ import com.martin.ads.omoshiroilib.glessential.GLRootView;
 import com.martin.ads.omoshiroilib.ui.module.EffectsButton;
 import com.martin.ads.omoshiroilib.ui.module.RecordButton;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
+import com.martin.ads.omoshiroilib.util.DisplayUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 
 import java.util.ArrayList;
@@ -65,6 +68,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
     private RecordButton recordButton;
 
     private ImageView cameraActionTip;
+    private ImageView cameraFocusView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +141,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
             }
         });
 
-        initEffectsButtons();
+        initButtons();
         cameraSettingsFrag= (RelativeLayout) findViewById(R.id.rl_camera_setting_content);
         cameraSettingsFrag.setVisibility(View.GONE);
         cameraActionTip= (ImageView) findViewById(R.id.iv_frag_camera_action_tip);
@@ -159,7 +163,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
         displayAnim(switchCameraBtn,GlobalConfig.context,R.anim.fast_faded_in,View.VISIBLE);
     }
 
-    private void initEffectsButtons() {
+    private void initButtons() {
         switchFilterBtn=getEffectsBtn(R.id.btn_switch_filter);
         switchFilterBtn.setOnClickEffectButtonListener(new EffectsButton.OnClickEffectButtonListener() {
             @Override
@@ -189,6 +193,11 @@ public class CameraPreviewActivity extends AppCompatActivity {
         });
 
         cameraView.setRootViewClickListener(new CameraView.RootViewClickListener() {
+            @Override
+            public void onRootViewTouched(MotionEvent e) {
+                displayFocusAnim(e);
+            }
+
             @Override
             public void onRootViewClicked() {
                 requestHideCameraSettingsFrag();
@@ -266,6 +275,36 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 Log.d(TAG, "onLongClickEnd: ");
             }
         });
+
+        cameraFocusView=(ImageView) findViewById(R.id.iv_focus_anim_view);
+    }
+
+    private void displayFocusAnim(MotionEvent e){
+        int dx = (int)(e.getX() - DisplayUtils.getRefLength(GlobalConfig.context, 150.0F) / 2);
+        int dy = (int)(e.getY() - DisplayUtils.getRefLength(GlobalConfig.context, 150.0F) / 2);
+        RelativeLayout.LayoutParams localLayoutParams = (RelativeLayout.LayoutParams)cameraFocusView.getLayoutParams();
+        localLayoutParams.leftMargin = dx;
+        localLayoutParams.topMargin = dy;
+        cameraFocusView.setLayoutParams(localLayoutParams);
+        cameraFocusView.clearAnimation();
+        Animation anim =
+                AnimationUtils.loadAnimation(GlobalConfig.context, R.anim.anim_camera_focus);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                cameraFocusView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        cameraFocusView.setVisibility(View.VISIBLE);
+        cameraFocusView.startAnimation(anim);
     }
 
     private void takePic(){
@@ -280,6 +319,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
             }
         });
     }
+
     private void requestTakePicture(){
         if(cameraTimeLapseBtn.isSelected()){
             new Handler().postDelayed(new Runnable(){

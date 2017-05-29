@@ -20,6 +20,8 @@
         <com.martin.ads.omoshiroilib.ui.module.EffectsButton
             android:id="@+id/btn_camera_setting" android:background="@drawable/camera_setting" android:layout_width="55.0dip" android:layout_height="55.0dip" android:layout_centerInParent="true"/>
         <com.martin.ads.omoshiroilib.ui.module.EffectsButton android:id="@+id/btn_switch_camera" android:background="@drawable/bg_camera" android:layout_width="55.0dip" android:layout_height="55.0dip" android:layout_alignParentRight="true"/>
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+            android:id="@+id/btn_app_setting" android:background="@drawable/app_setting" android:layout_width="55.0dip" android:layout_height="55.0dip" android:layout_alignParentLeft="true"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -104,5 +106,7 @@
         android:layout_marginBottom="120.0dip"
         android:src="@drawable/tip_camera_action"
         android:visibility="visible" />
+
+    <ImageView android:id="@+id/iv_focus_anim_view" android:background="@drawable/camera_btn_focus" android:visibility="gone" android:layout_width="101.0dip" android:layout_height="101.0dip" />
 
 </RelativeLayout>

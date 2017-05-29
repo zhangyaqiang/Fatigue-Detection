@@ -29,10 +29,10 @@ public class EffectsButton extends AppCompatButton
     private Animation.AnimationListener animationListener = new Animation.AnimationListener() {
         public void onAnimationEnd(Animation paramAnonymousAnimation) {
             //setSelected(!isSelected());
-            EffectsButton.this.clearAnimation();
+            clearAnimation();
             //Log.d(TAG, "onAnimationEnd: ");
-            if (EffectsButton.this.onClickEffectButtonListener != null) {
-                EffectsButton.this.onClickEffectButtonListener.onClickEffectButton();
+            if (onClickEffectButtonListener != null) {
+                onClickEffectButtonListener.onClickEffectButton();
             }
         }
 
@@ -51,8 +51,8 @@ public class EffectsButton extends AppCompatButton
 
     public EffectsButton(Context paramContext, AttributeSet paramAttributeSet, int paramInt) {
         super(paramContext, paramAttributeSet, paramInt);
-        this.upAnimation.setAnimationListener(this.animationListener);
-        this.locationOnScreen = new int[2];
+        upAnimation.setAnimationListener(this.animationListener);
+        locationOnScreen = new int[2];
         setGravity(Gravity.CENTER);
     }
 
@@ -84,8 +84,8 @@ public class EffectsButton extends AppCompatButton
             startAnimation(this.downAnim);
             this.shouldAbortAnim = false;
             getLocationOnScreen(this.locationOnScreen);
-            this.preX = (this.locationOnScreen[0] + getWidth() / 2);
-            this.preY = (this.locationOnScreen[1] + getHeight() / 2);
+            preX = (this.locationOnScreen[0] + getWidth() / 2);
+            preY = (this.locationOnScreen[1] + getHeight() / 2);
         }
         if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
             clearAnimation();
