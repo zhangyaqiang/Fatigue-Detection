@@ -81,7 +81,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     ActivityCompat.requestPermissions(this,
                             new String[]{
                                     permission,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.RECORD_AUDIO
                             },
                             requestCode);
                 }

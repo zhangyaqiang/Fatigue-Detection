@@ -32,6 +32,7 @@ import com.martin.ads.omoshiroilib.ui.module.RecordButton;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.DisplayUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
+import com.martin.ads.omoshiroilib.encoder.MediaCodecUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,8 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
     private ImageView cameraActionTip;
     private ImageView cameraFocusView;
+
+    private boolean canUseMediaCodec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +149,12 @@ public class CameraPreviewActivity extends AppCompatActivity {
         cameraSettingsFrag.setVisibility(View.GONE);
         cameraActionTip= (ImageView) findViewById(R.id.iv_frag_camera_action_tip);
         bottomControlPanel= (RelativeLayout) findViewById(R.id.bottom_control_panel);
+
+        canUseMediaCodec=
+                MediaCodecUtils.checkMediaCodecVideoEncoderSupport()==MediaCodecUtils.CODEC_SUPPORTED
+                    &&
+                MediaCodecUtils.checkMediaCodecAudioEncoderSupport()==MediaCodecUtils.CODEC_SUPPORTED;
+        recordButton.setRecordable(canUseMediaCodec);
     }
 
     private void hideAllControlBtn(){
@@ -172,7 +181,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
             public void onClickEffectButton() {
                 hideTips();
                 switchFilterBtn.setSelected(false);
-                Log.d(TAG, "onClickEffectButton: 123");
                 requestShowFilterView();
             }
         });
@@ -181,8 +189,17 @@ public class CameraPreviewActivity extends AppCompatActivity {
             @Override
             public void onClickEffectButton() {
                 hideTips();
+                int retV=MediaCodecUtils.checkMediaCodecVideoEncoderSupport();
+                int retA=MediaCodecUtils.checkMediaCodecAudioEncoderSupport();
+                showHint(" V " +retV+" A "+retA);
+//                Intent intent = new Intent(Intent.ACTION_SEND);
+//                intent.setType("image/*");
+//                intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(new File("")));
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(Intent.createChooser(intent, "分享给朋友"));
             }
         });
+
         switchCameraBtn= getEffectsBtn(R.id.btn_switch_camera);
         switchCameraBtn.setOnClickEffectButtonListener(new EffectsButton.OnClickEffectButtonListener() {
             @Override
@@ -275,12 +292,25 @@ public class CameraPreviewActivity extends AppCompatActivity {
             public void onLongClickStart() {
                 hideTips();
                 hideAllControlBtn();
+                if(canUseMediaCodec){
+                    //TODO:start recording
+                }else{
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showHint(getString(R.string.not_support_media_codec));
+                        }
+                    });
+                }
                 Log.d(TAG, "onLongClickStart: ");
             }
 
             @Override
             public void onLongClickEnd() {
                 showAllControlBtn();
+                if(canUseMediaCodec){
+                    //TODO:stop recording
+                }
                 Log.d(TAG, "onLongClickEnd: ");
             }
         });

@@ -28,7 +28,8 @@ public class RecordButton
     private float INNER_CIRCLE_RADIUS;
 
     private TouchTimeHandler touchTimeHandler;
-    private boolean touchable = true;
+    private boolean touchable;
+    private boolean recordable;
 
     private Paint centerCirclePaint;
     private Paint outBlackCirclePaint;
@@ -76,6 +77,7 @@ public class RecordButton
                         }
                     }
                 }
+                if(!recordable) return;
                 centerCirclePaint.setColor(colorRecord);
                 outMostWhiteCirclePaint.setColor(colorWhite);
                 percentInDegree = (360.0F * percent);
@@ -119,6 +121,7 @@ public class RecordButton
     }
 
     void init() {
+        touchable=recordable=true;
         BOUNDING_BOX_SIZE = DisplayUtils.getRefLength(mContext,100.0F);
         OUT_CIRCLE_WIDTH = DisplayUtils.getRefLength(mContext,2.3F);
         OUTER_CIRCLE_WIDTH_INC=DisplayUtils.getRefLength(mContext,4.3F);
@@ -240,6 +243,18 @@ public class RecordButton
         outBlackCircleRadius = (outMostCircleRadius - OUT_CIRCLE_WIDTH / 2.0F);
         outMostBlackCircleRadius = (outMostCircleRadius + OUT_CIRCLE_WIDTH / 2.0F);
         invalidate();
+    }
+
+    public boolean isTouchable() {
+        return touchable;
+    }
+
+    public boolean isRecordable() {
+        return recordable;
+    }
+
+    public void setRecordable(boolean recordable) {
+        this.recordable = recordable;
     }
 
     public void setTouchable(boolean touchable) {
