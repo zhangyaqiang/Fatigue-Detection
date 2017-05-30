@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
-import android.view.MotionEvent;
 
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRender;
@@ -58,6 +57,10 @@ public class CameraEngine
     private MediaRecorder mMediaRecorder;
     private Camera.Size previewSize;
     private int currentCameraId;
+
+    private double lastZoomValueRec;
+    private int lastZoomValue;
+
     public CameraEngine() {
         frameWidth=480; frameHeight=640;
         cameraOpened=false;
@@ -106,7 +109,8 @@ public class CameraEngine
                 //mParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                 int size = frameWidth*frameHeight;
                 size = size * ImageFormat.getBitsPerPixel(mParams.getPreviewFormat()) / 8;
-                if (mBuffer==null) mBuffer = new byte[size];
+                if (mBuffer==null || mBuffer.length!=size)
+                    mBuffer = new byte[size];
                 mFrameChain[0].init(size);
                 mFrameChain[1].init(size);
                 camera.addCallbackBuffer(mBuffer);
@@ -117,6 +121,7 @@ public class CameraEngine
     }
 
     public void startPreview(){
+        lastZoomValueRec=lastZoomValue=0;
         if(camera!=null){
             try {
                 camera.setPreviewTexture(mSurfaceTexture);
@@ -253,6 +258,25 @@ public class CameraEngine
                 if(isTorch){
                     p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 }else p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                camera.setParameters(p);
+            }
+        }
+    }
+
+    public void requestZoom(double zoomValue){
+        Log.d(TAG, "requestZoom: "+zoomValue+" "+lastZoomValueRec+" "+lastZoomValue);
+        synchronized (this) {
+            if (camera != null) {
+                Camera.Parameters p = camera.getParameters();
+                if(p.isZoomSupported()){
+                    lastZoomValueRec +=zoomValue;
+                    lastZoomValueRec=Math.max(0,Math.min(lastZoomValueRec,1.0));
+                    int curZoom= (int) (lastZoomValueRec*p.getMaxZoom());
+                    if(Math.abs(curZoom-lastZoomValue)>=1){
+                        lastZoomValue= curZoom;
+                        p.setZoom(lastZoomValue);
+                    }
+                }else return;
                 camera.setParameters(p);
             }
         }

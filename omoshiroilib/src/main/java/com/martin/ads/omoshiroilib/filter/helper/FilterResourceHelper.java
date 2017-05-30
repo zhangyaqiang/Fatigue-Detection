@@ -28,7 +28,6 @@ public class FilterResourceHelper {
             "filter/thumbs/origin_thumb_1.jpg",
             "filter/thumbs/origin_thumb_2.jpg",
             "filter/thumbs/origin_thumb_3.jpg",
-            "filter/thumbs/miss_ysj.jpg",
             "filter/thumbs/origin_thumb_4.jpg",
             "filter/thumbs/origin_thumb_5.jpg",
             "filter/thumbs/origin_thumb_6.jpg",

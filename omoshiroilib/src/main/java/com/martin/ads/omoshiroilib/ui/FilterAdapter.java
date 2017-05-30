@@ -1,8 +1,9 @@
-package com.martin.ads.omoshiroilib.debug.removeit;
+package com.martin.ads.omoshiroilib.ui;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +13,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.martin.ads.omoshiroilib.R;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 
 import java.util.List;
 
-/**
- * Created by why8222 on 2016/3/17.
- */
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHolder>{
     
     private List<FilterType> filterTypeList;
@@ -32,7 +31,19 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if(position==1) return -1;
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public FilterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.d("lalala", "onCreateViewHolder: "+viewType);
+        if(viewType == -1){
+            View view = LayoutInflater.from(context).inflate(R.layout.filter_division_layout,
+                    parent, false);
+            return new FilterHolder(view);
+        }
         View view = LayoutInflater.from(context).inflate(R.layout.filter_item_layout,
                 parent, false);
         FilterHolder viewHolder = new FilterHolder(view);
@@ -48,6 +59,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
 
     @Override
     public void onBindViewHolder(FilterHolder holder,final int position) {
+        if(position==1) return;
         final FilterType filterType=filterTypeList.get(position);
         holder.thumbImage.setImageBitmap(FilterResourceHelper.getFilterThumbFromFiles(context,filterType));
         holder.filterName.setText(FilterResourceHelper.getSimpleName(filterType));

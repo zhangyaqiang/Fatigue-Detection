@@ -26,9 +26,11 @@ import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.IntDef;
 import android.util.Pair;
 
@@ -319,8 +321,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
             public void onReadData(long timestamp, ByteBuffer pixelBuf, int height, int width, Rotation rotation) {
 //                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 //                bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(pixelBuf.array()));
-//                saveBmpToFile(bitmap, new File("/sdcard/Download/test/" + timestamp + ".jpg"));
-
+//                saveBmpToFile(bitmap, new File(Environment.getExternalStorageDirectory()+"/Omoshiroi/" + timestamp + ".jpg"));
                 if (mProcessedFrameLsn != null) {
                     mProcessedFrameLsn.onProcessedFrame(pixelBuf.array(), width, height, timestamp, rotation);
                 }

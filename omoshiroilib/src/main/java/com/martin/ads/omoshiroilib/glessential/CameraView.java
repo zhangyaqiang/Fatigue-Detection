@@ -5,7 +5,9 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
@@ -23,6 +25,7 @@ public class CameraView{
     private GLRootView glRootView;
     private ScreenSizeChangedListener screenSizeChangedListener;
     private RootViewClickListener rootViewClickListener;
+    private ScaleGestureDetector scaleGestureDetector;
 
     public CameraView(Context context,GLRootView glRootView) {
         this.glRootView=glRootView;
@@ -58,6 +61,26 @@ public class CameraView{
             }
         });
 
+        scaleGestureDetector=new ScaleGestureDetector(context, new ScaleGestureDetector.OnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                float scaleFactor=detector.getScaleFactor();
+                cameraEngine.requestZoom(scaleFactor-1.0f);
+                return true;
+            }
+
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
+                //return true to enter onScale()
+                return true;
+            }
+
+            @Override
+            public void onScaleEnd(ScaleGestureDetector detector) {
+
+            }
+        });
+
         glRender=new GLRender(context,cameraEngine);
         glRootView.setRenderer(glRender);
         glRootView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
@@ -69,15 +92,21 @@ public class CameraView{
         glRootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(rootViewClickListener!=null)
-                    rootViewClickListener.onRootViewTouched(event);
-                return false;
+                boolean ret;
+                scaleGestureDetector.onTouchEvent(event);
+                if (!scaleGestureDetector.isInProgress()){
+                    if(rootViewClickListener!=null && event.getAction()==MotionEvent.ACTION_UP)
+                        rootViewClickListener.onRootViewTouched(event);
+                }
+                ret=event.getPointerCount()!=1;
+                return ret;
             }
         });
 
         glRootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (scaleGestureDetector.isInProgress()) return;
                 cameraEngine.focusCamera();
                 Log.d(TAG, "onClick: "+glRootView.getWidth()+" "+glRootView.getHeight());
                 if(rootViewClickListener!=null)
@@ -87,12 +116,15 @@ public class CameraView{
         glRootView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                if (scaleGestureDetector.isInProgress()) return true;
                 Log.d(TAG, "onLongClick: ");
                 if(rootViewClickListener!=null)
                     rootViewClickListener.onRootViewLongClicked();
                 return true;
             }
         });
+
+
     }
 
     public void onPause(){

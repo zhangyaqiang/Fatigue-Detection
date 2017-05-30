@@ -8,7 +8,7 @@ public class FakeMat {
     private byte[] mFrame=null;
 
     public void init(int size) {
-        if(mFrame==null)
+        if(mFrame==null || mFrame.length!=size)
             mFrame=new byte[size];
     }
 

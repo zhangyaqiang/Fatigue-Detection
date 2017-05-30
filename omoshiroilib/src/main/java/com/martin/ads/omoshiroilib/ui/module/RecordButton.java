@@ -18,9 +18,9 @@ import com.martin.ads.omoshiroilib.util.DisplayUtils;
 public class RecordButton
         extends View {
 
-    private static final String TAG = "VideoButton";
+    private static final String TAG = "RecordButton";
     public static final long TIME_TO_START_RECORD = 500L;
-    public static final float TIME_LIMIT_IN_MILS = 5000.0F;
+    public static final float TIME_LIMIT_IN_MILS = 10000.0F;
     public static final float PROGRESS_LIM_TO_FINISH_STARTING_ANIM = 0.1F;
     private int BOUNDING_BOX_SIZE;
     private int OUT_CIRCLE_WIDTH;
