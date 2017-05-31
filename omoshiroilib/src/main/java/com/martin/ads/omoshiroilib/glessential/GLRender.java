@@ -1,21 +1,28 @@
 package com.martin.ads.omoshiroilib.glessential;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.SurfaceTexture;
+import android.opengl.EGL14;
+import android.opengl.EGLContext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
+import com.martin.ads.easymediacodec.TextureMovieEncoder;
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
+import com.martin.ads.omoshiroilib.encoder.gles.EGLFilterDispatcher;
+import com.martin.ads.omoshiroilib.encoder.gles.GLTextureSaver;
 import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
 import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
-import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
@@ -41,6 +48,7 @@ public class GLRender implements GLSurfaceView.Renderer {
     private CameraEngine cameraEngine;
     private FilterGroup filterGroup;
     private FilterGroup postProcessFilters;
+    private GLTextureSaver lastProcessFilter;
     private OESFilter oesFilter;
     private Context context;
     private FilterGroup customizedFilters;
@@ -52,6 +60,13 @@ public class GLRender implements GLSurfaceView.Renderer {
     private boolean isCameraFacingFront;
 
     private OrthoFilter orthoFilter;
+
+    private static final int RECORDING_OFF = 0;
+    private static final int RECORDING_ON = 1;
+    private static final int RECORDING_RESUMED = 2;
+    private boolean recordingEnabled;
+    // this is static so it survives activity restarts
+    private static TextureMovieEncoder sVideoEncoder = new TextureMovieEncoder();
 
     public GLRender(final Context context, CameraEngine cameraEngine) {
         this.context=context;
@@ -67,9 +82,10 @@ public class GLRender implements GLSurfaceView.Renderer {
         customizedFilters=new FilterGroup();
         customizedFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
         postProcessFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
+        lastProcessFilter= new GLTextureSaver(context);
+        postProcessFilters.addFilter(lastProcessFilter);
         filterGroup.addFilter(customizedFilters);
         filterGroup.addFilter(postProcessFilters);
-
         cameraEngine.setPictureTakenCallBack(new PictureTakenCallBack() {
             @Override
             public void saveAsBitmap(final byte[] data) {
@@ -89,7 +105,6 @@ public class GLRender implements GLSurfaceView.Renderer {
                         }
                     }
                 };
-
                 //BitmapUtils.saveBitmap(bitmap,outputFile.getAbsolutePath()+".jpg",workerCallback);
 
                 //BitmapUtils.saveByteArray(data, outputFile.getAbsolutePath(), workerCallback);
@@ -98,17 +113,84 @@ public class GLRender implements GLSurfaceView.Renderer {
             }
         });
         isCameraFacingFront=true;
+
+
+        mRecordingStatus = -1;
     }
 
+    private int mRecordingStatus;
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
         filterGroup.init();
+        recordingEnabled = sVideoEncoder.isRecording();
+        if (recordingEnabled) {
+            mRecordingStatus = RECORDING_RESUMED;
+        } else {
+            mRecordingStatus = RECORDING_OFF;
+        }
+        sVideoEncoder.setEglDrawer(new EGLFilterDispatcher(context));
     }
+
 
     @Override
     public void onDrawFrame(GL10 glUnused) {
-        cameraEngine.doTextureUpdate(oesFilter.getSTMatrix());
+        long timeStamp=cameraEngine.doTextureUpdate(oesFilter.getSTMatrix());
         filterGroup.onDrawFrame(oesFilter.getGlOESTexture().getTextureId());
+        notifyRecorder(timeStamp);
+    }
+
+    private void notifyRecorder(long timeStamp) {
+        // If the recording state is changing, take care of it here.  Ideally we wouldn't
+        // be doing all this in onDrawFrame(), but the EGLContext sharing with GLSurfaceView
+        // makes it hard to do elsewhere.
+        if (recordingEnabled) {
+            switch (mRecordingStatus) {
+                case RECORDING_OFF:
+                    Log.d(TAG, "START recording");
+                    // start recording
+                    Log.d(TAG, "surface: "+surfaceWidth+" "+surfaceHeight);
+                    //It seems mediacodec doesn't support odd length
+                    sVideoEncoder.startRecording(new TextureMovieEncoder.EncoderConfig(
+                            new File(/*getFilesDir()*/Environment.getExternalStorageDirectory(), System.currentTimeMillis()+".mp4"),surfaceWidth/2*2,surfaceHeight/2*2,8000000, getSharedContext()));
+                    mRecordingStatus = RECORDING_ON;
+                    break;
+                case RECORDING_RESUMED:
+                    Log.d(TAG, "RESUME recording");
+                    sVideoEncoder.updateSharedContext(getSharedContext());
+                    mRecordingStatus = RECORDING_ON;
+                    break;
+                case RECORDING_ON:
+                    // yay
+                    break;
+                default:
+                    throw new RuntimeException("unknown status " + mRecordingStatus);
+            }
+        } else {
+            switch (mRecordingStatus) {
+                case RECORDING_ON:
+                case RECORDING_RESUMED:
+                    // stop recording
+                    Log.d(TAG, "STOP recording");
+                    sVideoEncoder.stopRecording();
+                    mRecordingStatus = RECORDING_OFF;
+                    break;
+                case RECORDING_OFF:
+                    // yay
+                    break;
+                default:
+                    throw new RuntimeException("unknown status " + mRecordingStatus);
+            }
+        }
+
+        sVideoEncoder.setTextureId(lastProcessFilter.getSavedTextureId());
+        // Tell the video encoder thread that a new frame is available.
+        // This will be ignored if we're not actually recording.
+        sVideoEncoder.frameAvailable(timeStamp);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private EGLContext getSharedContext() {
+        return EGL14.eglGetCurrentContext();
     }
 
     @Override
@@ -160,7 +242,6 @@ public class GLRender implements GLSurfaceView.Renderer {
 
     public void switchLastFilterOfPostProcess(AbsFilter filter){
         if (filter==null) return;
-        postProcessFilters.switchLastFilter(filter);
     }
 
     public FilterGroup getFilterGroup() {
@@ -169,5 +250,13 @@ public class GLRender implements GLSurfaceView.Renderer {
 
     public OrthoFilter getOrthoFilter() {
         return orthoFilter;
+    }
+
+    public boolean isRecordingEnabled() {
+        return recordingEnabled;
+    }
+
+    public void setRecordingEnabled(boolean mRecordingEnabled) {
+        this.recordingEnabled = mRecordingEnabled;
     }
 }

@@ -26,7 +26,7 @@ public class GaussianBlurPositionFilter extends AbsFilter {
     private boolean scale;
 
     public GaussianBlurPositionFilter(Context context) {
-        super("GaussianBlurFilter");
+        super();
         glSimpleProgram=new GLSimpleProgram(context,
                 "filter/vsh/imgproc/gaussian_blur_position.glsl",
                 "filter/fsh/imgproc/gaussian_blur_position.glsl");

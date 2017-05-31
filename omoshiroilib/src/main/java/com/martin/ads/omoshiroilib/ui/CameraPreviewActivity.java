@@ -1,6 +1,7 @@
 package com.martin.ads.omoshiroilib.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,6 +37,8 @@ import com.martin.ads.omoshiroilib.encoder.MediaCodecUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.martin.ads.omoshiroilib.util.AnimationUtils.displayAnim;
 
 public class CameraPreviewActivity extends AppCompatActivity {
 
@@ -192,6 +195,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 int retV=MediaCodecUtils.checkMediaCodecVideoEncoderSupport();
                 int retA=MediaCodecUtils.checkMediaCodecAudioEncoderSupport();
                 showHint(" V " +retV+" A "+retA);
+                startActivity(new Intent(CameraPreviewActivity.this,DecorateActivity.class));
 //                Intent intent = new Intent(Intent.ACTION_SEND);
 //                intent.setType("image/*");
 //                intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(new File("")));
@@ -294,6 +298,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 hideAllControlBtn();
                 if(canUseMediaCodec){
                     //TODO:start recording
+                    cameraView.getGlRender().setRecordingEnabled(!cameraView.getGlRender().isRecordingEnabled());
                 }else{
                     runOnUiThread(new Runnable() {
                         @Override
@@ -310,6 +315,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 showAllControlBtn();
                 if(canUseMediaCodec){
                     //TODO:stop recording
+                    cameraView.getGlRender().setRecordingEnabled(!cameraView.getGlRender().isRecordingEnabled());
                 }
                 Log.d(TAG, "onLongClickEnd: ");
             }
@@ -378,14 +384,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 }
             }, 3000);
         }else takePic();
-    }
-
-    private void displayAnim(View view, Context context,int animId, int targetVisibility){
-        view.clearAnimation();
-        Animation anim =
-                AnimationUtils.loadAnimation(context, animId);
-        view.setVisibility(targetVisibility);
-        view.startAnimation(anim);
     }
 
     private void requestShowFilterView(){

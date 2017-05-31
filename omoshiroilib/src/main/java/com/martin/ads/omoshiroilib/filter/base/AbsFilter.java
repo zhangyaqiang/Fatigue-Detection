@@ -19,10 +19,8 @@ public abstract class AbsFilter {
 
     protected Plane plane;
 
-    private String filterTag;
 
-    public AbsFilter(String filterTag) {
-        this.filterTag=filterTag;
+    public AbsFilter() {
         mPreDrawTaskList = new LinkedList<Runnable>();
         mPostDrawTaskList = new LinkedList<Runnable>();
         plane =new Plane(true);
@@ -40,6 +38,10 @@ public abstract class AbsFilter {
     public void onFilterChanged(int surfaceWidth, int surfaceHeight){
         this.surfaceWidth=surfaceWidth;
         this.surfaceHeight=surfaceHeight;
+    }
+
+    void setViewport(){
+        GLES20.glViewport(0, 0, surfaceWidth, surfaceHeight);
     }
 
     abstract public void onDrawFrame(final int textureId);

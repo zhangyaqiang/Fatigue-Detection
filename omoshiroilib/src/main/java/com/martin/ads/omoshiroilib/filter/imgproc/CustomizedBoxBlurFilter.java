@@ -19,7 +19,7 @@ public class CustomizedBoxBlurFilter extends AbsFilter {
     private boolean scale;
 
     public CustomizedBoxBlurFilter(int blurRadius) {
-        super("CustomizedGaussianBlurFilter");
+        super();
         glSimpleProgram=new GLSimpleProgram(
                 generateCustomizedBoxBlurVertexShader(blurRadius),
                 generateCustomizedBoxBlurFragmentShader(blurRadius)

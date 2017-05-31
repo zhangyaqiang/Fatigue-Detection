@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/tmp_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sss" />
+
+    <RelativeLayout
+        android:id="@+id/rl_frag_decorate_tool"
+        android:paddingBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+            android:id="@+id/btn_frag_decorate_save"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/camera_btn_download_normal" />
+
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+            android:id="@+id/btn_frag_decorate_cancel"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="11.0dip"
+            android:background="@drawable/camera_btn_return_normal" />
+
+        <com.martin.ads.omoshiroilib.ui.module.EffectsButton
+            android:id="@+id/btn_frag_decorate_next"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="11.0dip"
+            android:background="@drawable/camera_btn_share" />
+    </RelativeLayout>
+
+</RelativeLayout>

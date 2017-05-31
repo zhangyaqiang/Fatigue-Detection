@@ -12,13 +12,12 @@ import java.util.List;
 
 public class FilterGroup extends AbsFilter {
     private static final String TAG = "FilterGroup";
-    protected int[] frameBuffers = null;
-    protected int[] frameBufferTextures = null;
+    protected FBO[] fboList;
     protected List<AbsFilter> filters;
     protected boolean isRunning;
 
     public FilterGroup() {
-        super("FilterGroup");
+        super();
         filters=new ArrayList<AbsFilter>();
     }
 
@@ -28,10 +27,6 @@ public class FilterGroup extends AbsFilter {
             filter.init();
         }
         isRunning=true;
-    }
-
-    @Override
-    public void onPreDrawElements() {
     }
 
     @Override
@@ -46,7 +41,7 @@ public class FilterGroup extends AbsFilter {
     @Override
     public void onDrawFrame(int textureId) {
         runPreDrawTasks();
-        if (frameBuffers == null || frameBufferTextures == null) {
+        if (fboList==null) {
             return ;
         }
         int size = filters.size();
@@ -56,14 +51,14 @@ public class FilterGroup extends AbsFilter {
             Log.d(TAG, "onDrawFrame: "+i+" / "+size +" "+filter.getClass().getSimpleName()+" "+
                     filter.surfaceWidth+" "+filter.surfaceHeight);
             if (i < size - 1) {
-                GLES20.glViewport(0, 0, filter.surfaceWidth, filter.surfaceHeight);
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffers[i]);
+                filter.setViewport();
+                fboList[i].bind();
                 GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 filter.onDrawFrame(previousTexture);
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-                previousTexture = frameBufferTextures[i];
+                fboList[i].unbind();
+                previousTexture = fboList[i].getFrameBufferTextureId();
             }else{
-                GLES20.glViewport(0, 0 ,filter.surfaceWidth, filter.surfaceHeight);
+                filter.setViewport();
                 filter.onDrawFrame(previousTexture);
             }
         }
@@ -77,49 +72,22 @@ public class FilterGroup extends AbsFilter {
         for (int i = 0; i < size; i++) {
             filters.get(i).onFilterChanged(surfaceWidth, surfaceHeight);
         }
-        if(frameBuffers != null){
+        if(fboList != null){
             destroyFrameBuffers();
+            fboList=null;
         }
-        if (frameBuffers == null) {
-            frameBuffers = new int[size-1];
-            frameBufferTextures = new int[size-1];
-
+        if (fboList == null) {
+            fboList = new FBO[size-1];
             for (int i = 0; i < size-1; i++) {
-                GLES20.glGenFramebuffers(1, frameBuffers, i);
-
-                GLES20.glGenTextures(1, frameBufferTextures, i);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, frameBufferTextures[i]);
-                GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA,
-                        filters.get(i).surfaceWidth, filters.get(i).surfaceHeight, 0,
-                        GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-                GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                        GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBuffers[i]);
-                GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                        GLES20.GL_TEXTURE_2D, frameBufferTextures[i], 0);
-
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                AbsFilter filter=filters.get(i);
+                fboList[i]=FBO.newInstance().create(filter.getSurfaceWidth(),filter.getSurfaceHeight());
             }
         }
     }
 
     private void destroyFrameBuffers() {
-        if (frameBufferTextures != null) {
-            GLES20.glDeleteTextures(frameBufferTextures.length, frameBufferTextures, 0);
-            frameBufferTextures = null;
-        }
-        if (frameBuffers != null) {
-            GLES20.glDeleteFramebuffers(frameBuffers.length, frameBuffers, 0);
-            frameBuffers = null;
-        }
+        for(FBO fbo:fboList)
+            fbo.destroy();
     }
 
     public void addFilter(final AbsFilter filter){
@@ -188,4 +156,5 @@ public class FilterGroup extends AbsFilter {
                 }
             });
     }
+
 }

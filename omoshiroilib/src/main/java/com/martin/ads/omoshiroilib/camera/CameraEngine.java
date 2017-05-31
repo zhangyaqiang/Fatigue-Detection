@@ -75,9 +75,11 @@ public class CameraEngine
         mSurfaceTexture = new SurfaceTexture(mTextureID);
         mSurfaceTexture.setOnFrameAvailableListener(this);
     }
-    public void doTextureUpdate(float[] mSTMatrix){
+
+    public long doTextureUpdate(float[] mSTMatrix){
         mSurfaceTexture.updateTexImage();
         mSurfaceTexture.getTransformMatrix(mSTMatrix);
+        return mSurfaceTexture.getTimestamp();
     }
 
     public void openCamera(boolean facingFront) {
@@ -473,5 +475,9 @@ public class CameraEngine
             mMediaRecorder = null;
             camera.startPreview();
         }
+    }
+
+    public SurfaceTexture getSurfaceTexture() {
+        return mSurfaceTexture;
     }
 }

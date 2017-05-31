@@ -21,7 +21,7 @@ public class OrthoFilter extends AbsFilter{
     private float[] projectionMatrix = new float[16];
 
     public OrthoFilter(Context context) {
-        super("OrthoFilter");
+        super();
         glPassThroughProgram=new GLPassThroughProgram(context);
         Matrix.setIdentityM(projectionMatrix,0);
     }

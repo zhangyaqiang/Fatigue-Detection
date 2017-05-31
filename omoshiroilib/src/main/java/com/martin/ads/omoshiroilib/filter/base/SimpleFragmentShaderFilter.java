@@ -16,7 +16,7 @@ public class SimpleFragmentShaderFilter extends AbsFilter {
 
     public SimpleFragmentShaderFilter(Context context,
                                       final String fragmentShaderPath) {
-        super("SimpleFragmentShaderFilter");
+        super();
         glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/base/simple.glsl",fragmentShaderPath);
     }
 

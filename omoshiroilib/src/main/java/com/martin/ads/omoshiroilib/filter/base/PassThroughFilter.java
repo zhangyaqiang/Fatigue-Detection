@@ -20,7 +20,7 @@ public class PassThroughFilter extends AbsFilter {
     protected float[] projectionMatrix = new float[16];
 
     public PassThroughFilter(Context context) {
-        super("PassThroughFilter");
+        super();
         this.context=context;
         glPassThroughProgram=new GLPassThroughProgram(context);
     }
@@ -57,4 +57,5 @@ public class PassThroughFilter extends AbsFilter {
     public void onFilterChanged(int surfaceWidth, int surfaceHeight) {
         super.onFilterChanged(surfaceWidth, surfaceHeight);
     }
+
 }

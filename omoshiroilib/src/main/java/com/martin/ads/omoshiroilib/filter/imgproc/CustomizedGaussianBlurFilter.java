@@ -20,7 +20,7 @@ public class CustomizedGaussianBlurFilter extends AbsFilter {
     private boolean scale;
 
     public CustomizedGaussianBlurFilter(int blurRadius,double sigma) {
-        super("CustomizedGaussianBlurFilter");
+        super();
         glSimpleProgram=new GLSimpleProgram(
                 generateCustomizedGaussianBlurVertexShader(blurRadius,sigma),
                 generateCustomizedGaussianBlurFragmentShader(blurRadius,sigma)

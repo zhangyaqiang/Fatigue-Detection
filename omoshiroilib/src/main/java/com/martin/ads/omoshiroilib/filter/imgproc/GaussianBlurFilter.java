@@ -20,7 +20,7 @@ public class GaussianBlurFilter extends AbsFilter {
     private boolean scale;
 
     public GaussianBlurFilter(Context context) {
-        super("GaussianBlurFilter");
+        super();
         glSimpleProgram=new GLSimpleProgram(context, "filter/vsh/imgproc/gaussian_blur.glsl", "filter/fsh/imgproc/gaussian_blur.glsl");
         texelWidthOffset=texelHeightOffset=0;
         scale=false;
