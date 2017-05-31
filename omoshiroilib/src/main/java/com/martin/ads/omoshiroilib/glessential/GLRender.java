@@ -157,7 +157,7 @@ public class GLRender implements GLSurfaceView.Renderer {
                     //too high resolution may cause frame loss
                     File vidFolder=FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_VIDEO_PATH);
                     if (!vidFolder.exists())
-                        vidFolder.mkdir();
+                        vidFolder.mkdirs();
                     sVideoEncoder.startRecording(new TextureMovieEncoder.EncoderConfig(
                             new File(vidFolder.getAbsolutePath()+FileUtils.getVidName()),surfaceWidth/2*2,surfaceHeight/2*2,VideoEncoderCore.VIDEO_BIT_RATE, getSharedContext()));
                     mRecordingStatus = RECORDING_ON;

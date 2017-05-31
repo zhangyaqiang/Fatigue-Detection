@@ -65,7 +65,7 @@ public class BitmapUtils {
             this.context = context;
             File picFolder=FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH);
             if (!picFolder.exists())
-                picFolder.mkdir();
+                picFolder.mkdirs();
             filePath= picFolder.getAbsolutePath()+FileUtils.getPicName();
             this.fileSavedCallback=fileSavedCallback;
         }
