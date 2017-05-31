@@ -15,6 +15,9 @@ public class FilterGroup extends AbsFilter {
     protected FBO[] fboList;
     protected List<AbsFilter> filters;
     protected boolean isRunning;
+    //if FilterGroup is in the middle
+    //rebind fbo when draw the last filter
+    private FBO fboToRebind;
 
     public FilterGroup() {
         super();
@@ -23,6 +26,7 @@ public class FilterGroup extends AbsFilter {
 
     @Override
     public void init() {
+        fboToRebind =null;
         for (AbsFilter filter : filters) {
             filter.init();
         }
@@ -54,10 +58,14 @@ public class FilterGroup extends AbsFilter {
                 filter.setViewport();
                 fboList[i].bind();
                 GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+                if(filter instanceof FilterGroup)
+                    ((FilterGroup) filter).setFboToRebind(fboList[i]);
                 filter.onDrawFrame(previousTexture);
                 fboList[i].unbind();
                 previousTexture = fboList[i].getFrameBufferTextureId();
             }else{
+                if(fboToRebind!=null)
+                    fboToRebind.bind();
                 filter.setViewport();
                 filter.onDrawFrame(previousTexture);
             }
@@ -86,8 +94,13 @@ public class FilterGroup extends AbsFilter {
     }
 
     private void destroyFrameBuffers() {
+        fboToRebind =null;
         for(FBO fbo:fboList)
             fbo.destroy();
+    }
+
+    public void setFboToRebind(FBO fboToBind) {
+        this.fboToRebind = fboToBind;
     }
 
     public void addFilter(final AbsFilter filter){
@@ -157,4 +170,27 @@ public class FilterGroup extends AbsFilter {
             });
     }
 
+    public void switchFilterAt(final AbsFilter filter,final int pos){
+        if (filter==null || pos>=filters.size()) return;
+        Log.d(TAG, "onFilterChanged: "+filter.getClass().getSimpleName());
+        addPreDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                filter.init();
+                List<AbsFilter> tmpList=new ArrayList<AbsFilter>();
+                for(int i=0;i<filters.size();i++){
+                    AbsFilter curFilter=filters.get(i);
+                    if(i==pos) {
+                        tmpList.add(filter);
+                        curFilter.destroy();
+                    }
+                    else tmpList.add(curFilter);
+                }
+                filters.clear();
+                for(AbsFilter curFilter:tmpList)
+                    filters.add(curFilter);
+                onFilterChanged(surfaceWidth,surfaceHeight);
+            }
+        });
+    }
 }

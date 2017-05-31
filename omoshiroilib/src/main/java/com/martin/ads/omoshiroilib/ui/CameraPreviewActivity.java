@@ -1,6 +1,5 @@
 package com.martin.ads.omoshiroilib.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -21,12 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.R;
+import com.martin.ads.omoshiroilib.constant.MimeType;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.filter.ext.BlurredFrameEffect;
 import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
+import com.martin.ads.omoshiroilib.glessential.GLRender;
 import com.martin.ads.omoshiroilib.glessential.GLRootView;
 import com.martin.ads.omoshiroilib.ui.module.EffectsButton;
 import com.martin.ads.omoshiroilib.ui.module.RecordButton;
@@ -192,15 +193,6 @@ public class CameraPreviewActivity extends AppCompatActivity {
             @Override
             public void onClickEffectButton() {
                 hideTips();
-                int retV=MediaCodecUtils.checkMediaCodecVideoEncoderSupport();
-                int retA=MediaCodecUtils.checkMediaCodecAudioEncoderSupport();
-                showHint(" V " +retV+" A "+retA);
-                startActivity(new Intent(CameraPreviewActivity.this,DecorateActivity.class));
-//                Intent intent = new Intent(Intent.ACTION_SEND);
-//                intent.setType("image/*");
-//                intent.putExtra(Intent.EXTRA_STREAM,Uri.fromFile(new File("")));
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(Intent.createChooser(intent, "分享给朋友"));
             }
         });
 
@@ -278,9 +270,9 @@ public class CameraPreviewActivity extends AppCompatActivity {
                    public void onClickEffectButton() {
                        cameraPictureTypeBtn.changeState();
                        if(cameraPictureTypeBtn.isSelected()){
-                            cameraView.getGlRender().switchLastFilterOfPostProcess(new BlurredFrameEffect(GlobalConfig.context));
+                            cameraView.getGlRender().switchFilterOfPostProcessAtPos(new BlurredFrameEffect(GlobalConfig.context),0);
                        }else{
-                           cameraView.getGlRender().switchLastFilterOfPostProcess(new PassThroughFilter(GlobalConfig.context));
+                           cameraView.getGlRender().switchFilterOfPostProcessAtPos(new PassThroughFilter(GlobalConfig.context),0);
                        }
                    }
                });
@@ -297,8 +289,14 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 hideTips();
                 hideAllControlBtn();
                 if(canUseMediaCodec){
-                    //TODO:start recording
-                    cameraView.getGlRender().setRecordingEnabled(!cameraView.getGlRender().isRecordingEnabled());
+                    GLRender.getVideoEncoder().setFileSavedCallback(new FileUtils.FileSavedCallback() {
+                        @Override
+                        public void onFileSaved(String filePath) {
+                            if(!GlobalConfig.PREVIEW_WHEN_SHOT) return;
+                            startDecorateActivity(filePath, MimeType.VIDEO);
+                        }
+                    });
+                    cameraView.getGlRender().setRecordingStatus();
                 }else{
                     runOnUiThread(new Runnable() {
                         @Override
@@ -314,8 +312,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
             public void onLongClickEnd() {
                 showAllControlBtn();
                 if(canUseMediaCodec){
-                    //TODO:stop recording
-                    cameraView.getGlRender().setRecordingEnabled(!cameraView.getGlRender().isRecordingEnabled());
+                    cameraView.getGlRender().setRecordingStatus();
                 }
                 Log.d(TAG, "onLongClickEnd: ");
             }
@@ -329,6 +326,13 @@ public class CameraPreviewActivity extends AppCompatActivity {
             }
         });
         cameraFocusView=(ImageView) findViewById(R.id.iv_focus_anim_view);
+    }
+
+    private void startDecorateActivity(String filePath, int type) {
+        Intent intent = new Intent(CameraPreviewActivity.this, DecorateActivity.class);
+        intent.putExtra(DecorateActivity.SAVED_MEDIA_FILE, filePath);
+        intent.putExtra(DecorateActivity.SAVED_MEDIA_TYPE, type);
+        startActivity(intent);
     }
 
     private void hideTips() {
@@ -371,7 +375,18 @@ public class CameraPreviewActivity extends AppCompatActivity {
         cameraView.getGlRender().getFilterGroup().addPostDrawTask(new Runnable() {
             @Override
             public void run() {
-                BitmapUtils.sendImage(surfaceWidth,surfaceHeight, GlobalConfig.context);
+                BitmapUtils.sendImage(
+                        surfaceWidth,
+                        surfaceHeight,
+                        GlobalConfig.context,
+                        new FileUtils.FileSavedCallback() {
+                            @Override
+                            public void onFileSaved(String filePath) {
+                                if(!GlobalConfig.PREVIEW_WHEN_SHOT) return;
+                                startDecorateActivity(filePath, MimeType.PHOTO);
+                            }
+                        }
+                );
             }
         });
     }

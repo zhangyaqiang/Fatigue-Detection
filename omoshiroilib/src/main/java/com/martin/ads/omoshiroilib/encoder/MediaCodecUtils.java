@@ -22,8 +22,8 @@ public class MediaCodecUtils {
     public static final int MIN_API_LEVEL_AUDIO=Build.VERSION_CODES.JELLY_BEAN;
 
     public static final String MIME_TYPE_VIDEO = "video/avc";
-    public static final int TEST_WIDTH = 640;
-    public static final int TEST_HEIGHT = 480;
+    public static final int TEST_WIDTH = 1280;
+    public static final int TEST_HEIGHT = 720;
     public static final int TEST_VIDEO_BIT_RATE = 1000000;
     public static final int TEST_FRAME_RATE = 30;
     public static final int TEST_IFRAME_INTERVAL = 5;

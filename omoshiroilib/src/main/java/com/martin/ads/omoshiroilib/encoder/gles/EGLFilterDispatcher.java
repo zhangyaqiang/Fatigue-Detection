@@ -6,7 +6,7 @@ import com.martin.ads.easymediacodec.TextureMovieEncoder;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 
 /**
- * Created by Ads on 2017/1/27.
+ * Created by Ads on 2017/5/27.
  */
 
 public class EGLFilterDispatcher extends PassThroughFilter implements TextureMovieEncoder.EGLDrawer{

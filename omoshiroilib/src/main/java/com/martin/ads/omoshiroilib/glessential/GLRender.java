@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.SurfaceTexture;
 import android.opengl.EGL14;
 import android.opengl.EGLContext;
 import android.opengl.GLES20;
@@ -14,6 +13,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.martin.ads.easymediacodec.TextureMovieEncoder;
+import com.martin.ads.easymediacodec.VideoEncoderCore;
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
@@ -23,6 +23,7 @@ import com.martin.ads.omoshiroilib.filter.base.AbsFilter;
 import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
 import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
+import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
@@ -81,11 +82,14 @@ public class GLRender implements GLSurfaceView.Renderer {
 
         customizedFilters=new FilterGroup();
         customizedFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
-        postProcessFilters.addFilter(FilterFactory.createFilter(currentFilterType,context));
+
+        postProcessFilters.addFilter(new PassThroughFilter(context));
         lastProcessFilter= new GLTextureSaver(context);
         postProcessFilters.addFilter(lastProcessFilter);
+
         filterGroup.addFilter(customizedFilters);
         filterGroup.addFilter(postProcessFilters);
+
         cameraEngine.setPictureTakenCallBack(new PictureTakenCallBack() {
             @Override
             public void saveAsBitmap(final byte[] data) {
@@ -131,7 +135,6 @@ public class GLRender implements GLSurfaceView.Renderer {
         sVideoEncoder.setEglDrawer(new EGLFilterDispatcher(context));
     }
 
-
     @Override
     public void onDrawFrame(GL10 glUnused) {
         long timeStamp=cameraEngine.doTextureUpdate(oesFilter.getSTMatrix());
@@ -139,10 +142,11 @@ public class GLRender implements GLSurfaceView.Renderer {
         notifyRecorder(timeStamp);
     }
 
-    private void notifyRecorder(long timeStamp) {
+    private void notifyRecorder(final long timeStamp) {
         // If the recording state is changing, take care of it here.  Ideally we wouldn't
         // be doing all this in onDrawFrame(), but the EGLContext sharing with GLSurfaceView
         // makes it hard to do elsewhere.
+        //Log.d(TAG, "notifyRecorder: "+timeStamp+" "+recordingEnabled+" "+mRecordingStatus);
         if (recordingEnabled) {
             switch (mRecordingStatus) {
                 case RECORDING_OFF:
@@ -150,8 +154,12 @@ public class GLRender implements GLSurfaceView.Renderer {
                     // start recording
                     Log.d(TAG, "surface: "+surfaceWidth+" "+surfaceHeight);
                     //It seems mediacodec doesn't support odd length
+                    //too high resolution may cause frame loss
+                    File vidFolder=FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_VIDEO_PATH);
+                    if (!vidFolder.exists())
+                        vidFolder.mkdir();
                     sVideoEncoder.startRecording(new TextureMovieEncoder.EncoderConfig(
-                            new File(/*getFilesDir()*/Environment.getExternalStorageDirectory(), System.currentTimeMillis()+".mp4"),surfaceWidth/2*2,surfaceHeight/2*2,8000000, getSharedContext()));
+                            new File(vidFolder.getAbsolutePath()+FileUtils.getVidName()),surfaceWidth/2*2,surfaceHeight/2*2,VideoEncoderCore.VIDEO_BIT_RATE, getSharedContext()));
                     mRecordingStatus = RECORDING_ON;
                     break;
                 case RECORDING_RESUMED:
@@ -181,11 +189,15 @@ public class GLRender implements GLSurfaceView.Renderer {
                     throw new RuntimeException("unknown status " + mRecordingStatus);
             }
         }
-
-        sVideoEncoder.setTextureId(lastProcessFilter.getSavedTextureId());
-        // Tell the video encoder thread that a new frame is available.
-        // This will be ignored if we're not actually recording.
-        sVideoEncoder.frameAvailable(timeStamp);
+        lastProcessFilter.setFrameAvailableCallback(new GLTextureSaver.FrameAvailableCallback() {
+            @Override
+            public void onFrameAvailable(int textureId) {
+                sVideoEncoder.setTextureId(lastProcessFilter.getSavedTextureId());
+                // Tell the video encoder thread that a new frame is available.
+                // This will be ignored if we're not actually recording.
+                sVideoEncoder.frameAvailable(timeStamp);
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -240,8 +252,9 @@ public class GLRender implements GLSurfaceView.Renderer {
         customizedFilters.switchLastFilter(FilterFactory.createFilter(filterType,context));
     }
 
-    public void switchLastFilterOfPostProcess(AbsFilter filter){
+    public void switchFilterOfPostProcessAtPos(AbsFilter filter,int pos){
         if (filter==null) return;
+        postProcessFilters.switchFilterAt(filter,pos);
     }
 
     public FilterGroup getFilterGroup() {
@@ -252,11 +265,16 @@ public class GLRender implements GLSurfaceView.Renderer {
         return orthoFilter;
     }
 
-    public boolean isRecordingEnabled() {
-        return recordingEnabled;
+    public void setRecordingStatus() {
+        filterGroup.addPostDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                recordingEnabled=!recordingEnabled;
+            }
+        });
     }
 
-    public void setRecordingEnabled(boolean mRecordingEnabled) {
-        this.recordingEnabled = mRecordingEnabled;
+    public static TextureMovieEncoder getVideoEncoder() {
+        return sVideoEncoder;
     }
 }

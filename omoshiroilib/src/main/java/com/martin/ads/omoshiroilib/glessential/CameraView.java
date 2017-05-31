@@ -83,7 +83,8 @@ public class CameraView{
 
         glRender=new GLRender(context,cameraEngine);
         glRootView.setRenderer(glRender);
-        glRootView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        //MediaCodec may be confused when CONTINUOUSLY
+        glRootView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         glRootView.setClickable(true);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB){
             glRootView.setPreserveEGLContextOnPause(true);

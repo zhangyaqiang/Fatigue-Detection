@@ -22,11 +22,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.martin.ads.easymediacodec.gles.EglCore;
 import com.martin.ads.easymediacodec.gles.WindowSurface;
+import com.martin.ads.omoshiroilib.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class TextureMovieEncoder implements Runnable {
     private Object mReadyFence = new Object();      // guards ready/running
     private boolean mReady;
     private boolean mRunning;
-
+    private FileUtils.FileSavedCallback fileSavedCallback;
 
     /**
      * Encoder configuration.
@@ -323,6 +323,9 @@ public class TextureMovieEncoder implements Runnable {
         Log.d(TAG, "handleStopRecording");
         mVideoEncoder.drainEncoder(true);
         releaseEncoder();
+        if(fileSavedCallback!=null){
+            fileSavedCallback.onFileSaved(encoderConfig.mOutputFile.getAbsolutePath());
+        }
     }
 
     /**
@@ -388,6 +391,10 @@ public class TextureMovieEncoder implements Runnable {
 
     public void setEglDrawer(EGLDrawer eglDrawer) {
         this.eglDrawer = eglDrawer;
+    }
+
+    public void setFileSavedCallback(FileUtils.FileSavedCallback fileSavedCallback) {
+        this.fileSavedCallback = fileSavedCallback;
     }
 
     public interface EGLDrawer{

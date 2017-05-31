@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.glessential.GLImageRender;
 import com.martin.ads.omoshiroilib.debug.removeit.PixelBuffer;
@@ -30,7 +31,7 @@ import java.util.Date;
 public class BitmapUtils {
     private static final String TAG = "BitmapUtils";
 
-    public static void sendImage(int width, int height, Context context) {
+    public static void sendImage(int width, int height, Context context, FileUtils.FileSavedCallback fileSavedCallback) {
         final IntBuffer pixelBuffer = IntBuffer.allocate(width * height);
 
         //about 20-50ms
@@ -44,7 +45,7 @@ public class BitmapUtils {
         //about 700-4000ms(png) 200-1000ms(jpeg)
         //use jpeg instead of png to save time
         //it will consume large memory and may take a long time, depends on the phone
-        new SaveBitmapTask(pixelBuffer,width,height,context).execute();
+        new SaveBitmapTask(pixelBuffer,width,height,context,fileSavedCallback).execute();
     }
 
     private static class SaveBitmapTask extends AsyncTask<Void, Integer, Boolean> {
@@ -55,20 +56,18 @@ public class BitmapUtils {
         Context context;
 
         String filePath;
+        FileUtils.FileSavedCallback fileSavedCallback;
 
-        public SaveBitmapTask(IntBuffer rgbaBuf, int width, int height, Context context) {
+        public SaveBitmapTask(IntBuffer rgbaBuf, int width, int height, Context context,FileUtils.FileSavedCallback fileSavedCallback) {
             this.rgbaBuf = rgbaBuf;
             this.width = width;
             this.height = height;
             this.context = context;
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-            File sdRoot = Environment.getExternalStorageDirectory();
-            String dir = "/Omoshiroi/Photos/";
-            File mkDir = new File(sdRoot, dir);
-            if (!mkDir.exists())
-                mkDir.mkdir();
-            String filename="/Pic_" +width + "_" + height + "_" + simpleDateFormat.format(new Date())+".jpg";
-            filePath= mkDir.getAbsolutePath()+filename;
+            File picFolder=FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH);
+            if (!picFolder.exists())
+                picFolder.mkdir();
+            filePath= picFolder.getAbsolutePath()+FileUtils.getPicName();
+            this.fileSavedCallback=fileSavedCallback;
         }
 
         @Override
@@ -86,8 +85,9 @@ public class BitmapUtils {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             Log.d(TAG, "saveBitmap time: " + (System.nanoTime() - start)/1000000+" ms");
-            Toast.makeText(context,"ScreenShot is saved to "+filePath, Toast.LENGTH_LONG).show();
             super.onPostExecute(aBoolean);
+            //Toast.makeText(context,"ScreenShot is saved to "+filePath, Toast.LENGTH_LONG).show();
+            fileSavedCallback.onFileSaved(filePath);
         }
     }
 

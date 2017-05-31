@@ -1,7 +1,10 @@
 package com.martin.ads.omoshiroilib.util;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
+
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -88,6 +91,27 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static File getFileOnSDCard(String path){
+        File sdRoot = Environment.getExternalStorageDirectory();
+        return new File(sdRoot,path);
+    }
+
+    public static String getPicName(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String filename="/Pic_" + simpleDateFormat.format(new Date())+".jpg";
+        return filename;
+    }
+
+    public static String getVidName(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String filename="/Vid_" + simpleDateFormat.format(new Date())+".mp4";
+        return filename;
+    }
+
+    public interface FileSavedCallback{
+        void onFileSaved(String filePath);
     }
 }
 

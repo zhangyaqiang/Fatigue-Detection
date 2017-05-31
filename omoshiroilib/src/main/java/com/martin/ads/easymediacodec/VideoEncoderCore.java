@@ -48,9 +48,9 @@ public class VideoEncoderCore {
 
     // TODO: these ought to be configurable as well
     private static final String MIME_TYPE = "video/avc";    // H.264 Advanced Video Coding
-    private static final int FRAME_RATE = 30;               // 30fps
+    private static final int FRAME_RATE = 25;               // 30fps
     private static final int IFRAME_INTERVAL = 5;           // 5 seconds between I-frames
-
+    public static final int VIDEO_BIT_RATE = 5000000;
     private Surface mInputSurface;
     private MediaMuxer mMuxer;
     private MediaCodec mEncoder;
