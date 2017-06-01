@@ -77,6 +77,8 @@ public class TextureMovieEncoder implements Runnable {
     private EncoderConfig encoderConfig;
     private int mTextureId;
     private VideoEncoderCore mVideoEncoder;
+    private AudioEncoderCore mAudioEncoder;
+    private MediaMuxerWrapper mediaMuxerWrapper;
 
     // ----- accessed by multiple threads -----
     private volatile EncoderHandler mHandler;
@@ -321,6 +323,8 @@ public class TextureMovieEncoder implements Runnable {
      */
     private void handleStopRecording() {
         Log.d(TAG, "handleStopRecording");
+        while(!mAudioEncoder.isStopped())
+            mAudioEncoder.stopAudioThread();
         mVideoEncoder.drainEncoder(true);
         releaseEncoder();
         if(fileSavedCallback!=null){
@@ -364,7 +368,9 @@ public class TextureMovieEncoder implements Runnable {
     private void prepareEncoder(EGLContext sharedContext, int width, int height, int bitRate,
             File outputFile) {
         try {
-            mVideoEncoder = new VideoEncoderCore(width, height, bitRate, outputFile);
+            mediaMuxerWrapper=new MediaMuxerWrapper(outputFile);
+            mVideoEncoder = new VideoEncoderCore(width, height, bitRate,mediaMuxerWrapper);
+            mAudioEncoder = new AudioEncoderCore(mediaMuxerWrapper);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -377,7 +383,9 @@ public class TextureMovieEncoder implements Runnable {
     }
 
     private void releaseEncoder() {
+        mAudioEncoder.release();
         mVideoEncoder.release();
+        mediaMuxerWrapper.release();
         if (mInputWindowSurface != null) {
             mInputWindowSurface.release();
             mInputWindowSurface = null;
