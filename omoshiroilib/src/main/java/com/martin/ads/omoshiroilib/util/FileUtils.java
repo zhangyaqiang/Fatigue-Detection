@@ -7,6 +7,7 @@ import android.util.Log;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +37,32 @@ public class FileUtils {
                 file.createNewFile();
             }else return;
             InputStream in = context.getResources().getAssets().open(inputPath);
+            OutputStream out = new FileOutputStream(file);
+            byte buffer[] = new byte[1024];
+            int realLength;
+            while ((realLength = in.read(buffer)) > 0) {
+                out.write(buffer, 0, realLength);
+            }
+            in.close();
+            out.close();
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public static void copyFileFromTo(String outputPath, String fileName, String inputPath){
+        File file = new File(outputPath, fileName);
+        Log.d(TAG, "copyFileFromTo: "+file.getAbsolutePath());
+        try {
+            if (!file.exists()) {
+                File fileParentDir = file.getParentFile();
+                if (!fileParentDir.exists()) {
+                    fileParentDir.mkdirs();
+                }
+                file.createNewFile();
+            }else return;
+            InputStream in = new FileInputStream(new File(inputPath,fileName));
             OutputStream out = new FileOutputStream(file);
             byte buffer[] = new byte[1024];
             int realLength;

@@ -265,5 +265,12 @@
         android:background="@drawable/camera_btn_focus"
         android:visibility="gone" />
 
-
+    <TextView
+        android:id="@+id/tv_frag_camera_time_lapse_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:textSize="100.0dip" />
 </RelativeLayout>

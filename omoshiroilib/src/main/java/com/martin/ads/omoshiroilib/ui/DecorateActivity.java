@@ -3,7 +3,6 @@ package com.martin.ads.omoshiroilib.ui;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,10 +18,11 @@ import android.widget.VideoView;
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.constant.MimeType;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
-import com.martin.ads.omoshiroilib.filter.helper.FilterResourceHelper;
+import com.martin.ads.omoshiroilib.ui.anim.RotateLoading;
 import com.martin.ads.omoshiroilib.ui.module.EffectsButton;
 import com.martin.ads.omoshiroilib.util.AnimationUtils;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
+import com.martin.ads.omoshiroilib.util.FakeThreadUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 
 import java.io.File;
@@ -36,13 +36,16 @@ public class DecorateActivity extends AppCompatActivity {
     private static final String TAG = "DecorateActivity";
     public static final String SAVED_MEDIA_FILE="saved_media_file";
     public static final String SAVED_MEDIA_TYPE="saved_media_type";
+    public static final String RAW_MEDIA="raw_media";
     private RelativeLayout decorateTool;
 
     private String filePath;
     private int mediaType;
 
-    ImageView imagePreview;
-    VideoView videoPreview;
+    private ImageView imagePreview;
+    private VideoView videoPreview;
+    private RotateLoading rotateLoading;
+    private File mediaFile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +57,13 @@ public class DecorateActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
         setContentView(R.layout.frag_decorate_picture);
+        rotateLoading= (RotateLoading) findViewById(R.id.rotate_loading);
         imagePreview= (ImageView) findViewById(R.id.img_preview);
         videoPreview= (VideoView) findViewById(R.id.video_preview);
         decorateTool= (RelativeLayout) findViewById(R.id.rl_frag_decorate_tool);
         filePath=getIntent().getStringExtra(SAVED_MEDIA_FILE);
         mediaType=getIntent().getIntExtra(SAVED_MEDIA_TYPE,-1);
+        mediaFile=new File(filePath);
         if(mediaType<0) finish();
         if(mediaType== MimeType.PHOTO){
             videoPreview.setVisibility(View.GONE);
@@ -87,7 +92,19 @@ public class DecorateActivity extends AppCompatActivity {
             @Override
             public void onClickEffectButton() {
                 //TODO:show dialog
-                Toast.makeText(DecorateActivity.this,"已保存",Toast.LENGTH_LONG).show();
+                rotateLoading.start();
+                new FakeThreadUtils.SaveFileTask(
+                        FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH).getAbsolutePath(),
+                        mediaFile.getName(),
+                        mediaFile.getParent(),
+                        new FileUtils.FileSavedCallback() {
+                            @Override
+                            public void onFileSaved(String filePath) {
+                                Toast.makeText(DecorateActivity.this,"已保存至"+filePath,Toast.LENGTH_LONG).show();
+                                rotateLoading.stop();
+                            }
+                        }
+                ).execute();
             }
         });
 
@@ -106,14 +123,30 @@ public class DecorateActivity extends AppCompatActivity {
         decorateShareBtn.setOnClickEffectButtonListener(new EffectsButton.OnClickEffectButtonListener() {
             @Override
             public void onClickEffectButton() {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                if(mediaType==MimeType.PHOTO)
-                    intent.setType("image/*");
-                else if(mediaType==MimeType.VIDEO)
-                    intent.setType("video/*");
-                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(Intent.createChooser(intent, "分享给朋友"));
+                rotateLoading.start();
+                String desFolder=
+                        mediaType==MimeType.PHOTO?
+                                FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH).getAbsolutePath():
+                                FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_VIDEO_PATH).getAbsolutePath();
+                new FakeThreadUtils.SaveFileTask(
+                        desFolder,
+                        mediaFile.getName(),
+                        mediaFile.getParent(),
+                        new FileUtils.FileSavedCallback() {
+                            @Override
+                            public void onFileSaved(String filePath) {
+                                Intent intent = new Intent(Intent.ACTION_SEND);
+                                if(mediaType==MimeType.PHOTO)
+                                    intent.setType("image/*");
+                                else if(mediaType==MimeType.VIDEO)
+                                    intent.setType("video/*");
+                                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(Intent.createChooser(intent, "分享给朋友"));
+                                rotateLoading.stop();
+                            }
+                        }
+                ).execute();
             }
         });
 
@@ -128,6 +161,9 @@ public class DecorateActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mediaFile!=null && mediaFile.exists()){
+            mediaFile.delete();
+        }
         if (videoPreview != null) {
             videoPreview.suspend();
         }

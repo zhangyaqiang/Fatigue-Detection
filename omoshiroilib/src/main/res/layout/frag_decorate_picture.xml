@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -31,6 +32,7 @@
             android:layout_marginLeft="11.0dip"
             android:layout_marginTop="11.0dip"
             android:background="@drawable/back"
+            android:visibility="gone"
             />
         <com.martin.ads.omoshiroilib.ui.module.EffectsButton
             android:id="@+id/btn_frag_decorate_save"
@@ -59,4 +61,11 @@
             android:background="@drawable/camera_btn_share" />
     </RelativeLayout>
 
+    <com.martin.ads.omoshiroilib.ui.anim.RotateLoading
+        android:id="@+id/rotate_loading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:loading_width="5dp"
+        app:loading_color="#ffffff"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

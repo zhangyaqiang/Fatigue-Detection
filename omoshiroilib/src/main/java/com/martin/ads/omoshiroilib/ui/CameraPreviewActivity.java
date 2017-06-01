@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,6 +76,9 @@ public class CameraPreviewActivity extends AppCompatActivity {
     private ImageView cameraFocusView;
 
     private boolean canUseMediaCodec;
+
+    private int timeCountDown;
+    private TextView timeCountDownText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +163,8 @@ public class CameraPreviewActivity extends AppCompatActivity {
                     &&
                 MediaCodecUtils.checkMediaCodecAudioEncoderSupport()==MediaCodecUtils.CODEC_SUPPORTED;
         recordButton.setRecordable(canUseMediaCodec);
+
+        timeCountDownText= (TextView) findViewById(R.id.tv_frag_camera_time_lapse_number);
     }
 
     private void hideAllControlBtn(){
@@ -393,11 +399,9 @@ public class CameraPreviewActivity extends AppCompatActivity {
 
     private void requestTakePicture(){
         if(cameraTimeLapseBtn.isSelected()){
-            new Handler().postDelayed(new Runnable(){
-                public void run() {
-                    takePic();
-                }
-            }, 3000);
+            timeCountDown=4;
+            Message message = timeCountDownHandler.obtainMessage(1);
+            timeCountDownHandler.sendMessage(message);
         }else takePic();
     }
 
@@ -488,4 +492,23 @@ public class CameraPreviewActivity extends AppCompatActivity {
             return this;
         }
     }
+
+    final Handler timeCountDownHandler = new Handler(){
+        public void handleMessage(Message msg){
+            switch (msg.what) {
+                case 1:
+                    timeCountDown--;
+                    if(timeCountDown > 0){
+                        timeCountDownText.setText(""+timeCountDown);
+                        displayAnim(timeCountDownText,GlobalConfig.context,R.anim.anim_text_scale,View.VISIBLE);
+                        Message message = timeCountDownHandler.obtainMessage(1);
+                        timeCountDownHandler.sendMessageDelayed(message, 1000);      // send message
+                    }else{
+                        timeCountDownText.setVisibility(View.GONE);
+                        takePic();
+                    }
+            }
+            super.handleMessage(msg);
+        }
+    };
 }

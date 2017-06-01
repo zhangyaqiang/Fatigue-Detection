@@ -31,6 +31,21 @@ import java.util.Date;
 public class BitmapUtils {
     private static final String TAG = "BitmapUtils";
 
+    public static Bitmap getScreenShot(int width, int height){
+        IntBuffer pixelBuffer = IntBuffer.allocate(width * height);
+        GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
+                pixelBuffer);
+        int[] pixelMirroredArray = new int[width * height];
+        int[] pixelArray = pixelBuffer.array();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                pixelMirroredArray[(height - i - 1) * width + j] = pixelArray[i * width + j];
+            }
+        }
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        return bmp;
+    }
+
     public static void sendImage(int width, int height, Context context, FileUtils.FileSavedCallback fileSavedCallback) {
         final IntBuffer pixelBuffer = IntBuffer.allocate(width * height);
 
@@ -63,7 +78,7 @@ public class BitmapUtils {
             this.width = width;
             this.height = height;
             this.context = context;
-            File picFolder=FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH);
+            File picFolder=GlobalConfig.context.getCacheDir();
             if (!picFolder.exists())
                 picFolder.mkdirs();
             filePath= picFolder.getAbsolutePath()+FileUtils.getPicName();

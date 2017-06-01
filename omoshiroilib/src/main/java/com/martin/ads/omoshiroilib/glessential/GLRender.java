@@ -155,7 +155,7 @@ public class GLRender implements GLSurfaceView.Renderer {
                     Log.d(TAG, "surface: "+surfaceWidth+" "+surfaceHeight);
                     //It seems mediacodec doesn't support odd length
                     //too high resolution may cause frame loss
-                    File vidFolder=FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_VIDEO_PATH);
+                    File vidFolder=GlobalConfig.context.getCacheDir();
                     if (!vidFolder.exists())
                         vidFolder.mkdirs();
                     sVideoEncoder.startRecording(new TextureMovieEncoder.EncoderConfig(
