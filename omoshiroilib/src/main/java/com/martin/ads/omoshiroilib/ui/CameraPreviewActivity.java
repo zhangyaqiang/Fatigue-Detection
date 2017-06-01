@@ -36,6 +36,7 @@ import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.DisplayUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 import com.martin.ads.omoshiroilib.encoder.MediaCodecUtils;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -456,7 +457,9 @@ public class CameraPreviewActivity extends AppCompatActivity {
     }
 
     private void showHint(String hint){
-        Toast.makeText(this,hint , Toast.LENGTH_LONG).show();
+        TastyToast.makeText(getApplicationContext(), hint, TastyToast.LENGTH_LONG,
+                TastyToast.INFO);
+        //Toast.makeText(this,hint , Toast.LENGTH_LONG).show();
     }
 
     private EffectsButton getEffectsBtn(int id){

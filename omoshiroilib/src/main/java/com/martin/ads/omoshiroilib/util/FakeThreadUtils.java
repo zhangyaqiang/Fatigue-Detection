@@ -1,19 +1,16 @@
 package com.martin.ads.omoshiroilib.util;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
-
 import java.io.File;
-import java.nio.IntBuffer;
 
 /**
  * Created by Ads on 2017/2/13.
  */
 
 public class FakeThreadUtils {
+    private static final String TAG = "FakeThreadUtils";
     public static void postTask(Runnable runnable) {
         new Thread(runnable).start();
     }
@@ -45,6 +42,7 @@ public class FakeThreadUtils {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+            Log.d(TAG, "onPostExecute: "+outputPath+" "+fileName+" "+inputPath);
             //Toast.makeText(context,"ScreenShot is saved to "+filePath, Toast.LENGTH_LONG).show();
             fileSavedCallback.onFileSaved(new File(outputPath,fileName).getAbsolutePath());
         }

@@ -24,6 +24,7 @@ import com.martin.ads.omoshiroilib.util.AnimationUtils;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.FakeThreadUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
+import com.sdsmdg.tastytoast.TastyToast;
 
 import java.io.File;
 
@@ -46,10 +47,30 @@ public class DecorateActivity extends AppCompatActivity {
     private VideoView videoPreview;
     private RotateLoading rotateLoading;
     private File mediaFile;
+    private String desFolder;
+    private String outputFilePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+    }
+
+    private void saveFile(final Runnable callback){
+        rotateLoading.start();
+        outputFilePath=new File(desFolder,
+                mediaFile.getName()).getAbsolutePath();
+        new FakeThreadUtils.SaveFileTask(
+                desFolder,
+                mediaFile.getName(),
+                mediaFile.getParent(),
+                new FileUtils.FileSavedCallback() {
+                    @Override
+                    public void onFileSaved(String filePath) {
+                        rotateLoading.stop();
+                        callback.run();
+                    }
+                }
+        ).execute();
     }
 
     private void init() {
@@ -64,6 +85,12 @@ public class DecorateActivity extends AppCompatActivity {
         filePath=getIntent().getStringExtra(SAVED_MEDIA_FILE);
         mediaType=getIntent().getIntExtra(SAVED_MEDIA_TYPE,-1);
         mediaFile=new File(filePath);
+
+        desFolder=
+                mediaType==MimeType.PHOTO?
+                        FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH).getAbsolutePath():
+                        FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_VIDEO_PATH).getAbsolutePath();
+
         if(mediaType<0) finish();
         if(mediaType== MimeType.PHOTO){
             videoPreview.setVisibility(View.GONE);
@@ -91,20 +118,14 @@ public class DecorateActivity extends AppCompatActivity {
         decorateSaveBtn.setOnClickEffectButtonListener(new EffectsButton.OnClickEffectButtonListener() {
             @Override
             public void onClickEffectButton() {
-                //TODO:show dialog
-                rotateLoading.start();
-                new FakeThreadUtils.SaveFileTask(
-                        FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH).getAbsolutePath(),
-                        mediaFile.getName(),
-                        mediaFile.getParent(),
-                        new FileUtils.FileSavedCallback() {
-                            @Override
-                            public void onFileSaved(String filePath) {
-                                Toast.makeText(DecorateActivity.this,"已保存至"+filePath,Toast.LENGTH_LONG).show();
-                                rotateLoading.stop();
-                            }
-                        }
-                ).execute();
+                saveFile(new Runnable() {
+                    @Override
+                    public void run() {
+                        TastyToast.makeText(getApplicationContext(), "已保存至SD卡", TastyToast.LENGTH_SHORT,
+                                TastyToast.SUCCESS);
+                        //Toast.makeText(DecorateActivity.this,"已保存至"+outputFilePath,Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
@@ -113,8 +134,7 @@ public class DecorateActivity extends AppCompatActivity {
             public void onClickEffectButton() {
                 File file=new File(filePath);
                 if(file.exists()){
-                    if(file.delete())
-                        Toast.makeText(DecorateActivity.this,"已删除",Toast.LENGTH_LONG).show();
+                    file.delete();
                 }
                 finish();
             }
@@ -123,30 +143,19 @@ public class DecorateActivity extends AppCompatActivity {
         decorateShareBtn.setOnClickEffectButtonListener(new EffectsButton.OnClickEffectButtonListener() {
             @Override
             public void onClickEffectButton() {
-                rotateLoading.start();
-                String desFolder=
-                        mediaType==MimeType.PHOTO?
-                                FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_PHOTO_PATH).getAbsolutePath():
-                                FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_VIDEO_PATH).getAbsolutePath();
-                new FakeThreadUtils.SaveFileTask(
-                        desFolder,
-                        mediaFile.getName(),
-                        mediaFile.getParent(),
-                        new FileUtils.FileSavedCallback() {
-                            @Override
-                            public void onFileSaved(String filePath) {
-                                Intent intent = new Intent(Intent.ACTION_SEND);
-                                if(mediaType==MimeType.PHOTO)
-                                    intent.setType("image/*");
-                                else if(mediaType==MimeType.VIDEO)
-                                    intent.setType("video/*");
-                                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(Intent.createChooser(intent, "分享给朋友"));
-                                rotateLoading.stop();
-                            }
-                        }
-                ).execute();
+                saveFile(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        if(mediaType==MimeType.PHOTO)
+                            intent.setType("image/*");
+                        else if(mediaType==MimeType.VIDEO)
+                            intent.setType("video/*");
+                        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(outputFilePath)));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(Intent.createChooser(intent, "分享给朋友"));
+                    }
+                });
             }
         });
 
