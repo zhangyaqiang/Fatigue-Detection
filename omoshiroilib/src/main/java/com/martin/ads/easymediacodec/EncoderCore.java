@@ -22,16 +22,16 @@ public class EncoderCore {
     protected MediaCodec.BufferInfo mBufferInfo;
     protected int mTrackIndex;
     protected boolean mMuxerStarted;
-    protected MediaMuxerWrapper mediaMuxerWrapper;
+    protected MMediaMuxer MMediaMuxer;
     protected MediaMuxer mMuxer;
     protected MediaCodec mEncoder;
 
-    public EncoderCore(MediaMuxerWrapper mediaMuxerWrapper) {
+    public EncoderCore(MMediaMuxer MMediaMuxer) {
         mMuxerStarted = false;
         mBufferInfo = new MediaCodec.BufferInfo();
         mTrackIndex = -1;
-        this.mediaMuxerWrapper=mediaMuxerWrapper;
-        this.mMuxer=mediaMuxerWrapper.getMuxer();
+        this.MMediaMuxer = MMediaMuxer;
+        this.mMuxer= MMediaMuxer.getMuxer();
     }
 
     /**
@@ -89,12 +89,12 @@ public class EncoderCore {
                 // now that we have the Magic Goodies, start the muxer
                 mTrackIndex = mMuxer.addTrack(newFormat);
                 mMuxerStarted = true;
-                if (!mediaMuxerWrapper.start()) {
+                if (!MMediaMuxer.start()) {
                     // we should wait until muxer is ready
-                    synchronized (mediaMuxerWrapper) {
-                        while (!mediaMuxerWrapper.isStarted())
+                    synchronized (MMediaMuxer) {
+                        while (!MMediaMuxer.isStarted())
                             try {
-                                mediaMuxerWrapper.wait(10);
+                                MMediaMuxer.wait(10);
                             } catch (final InterruptedException e) {
                                 Log.e(TAG, "drainEncoder: "+e);
                                 break;

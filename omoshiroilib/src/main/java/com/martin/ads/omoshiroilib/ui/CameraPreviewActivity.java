@@ -296,14 +296,14 @@ public class CameraPreviewActivity extends AppCompatActivity {
                 hideTips();
                 hideAllControlBtn();
                 if(canUseMediaCodec){
-                    GLRender.getVideoEncoder().setFileSavedCallback(new FileUtils.FileSavedCallback() {
+                    cameraView.getGlRender().setFileSavedCallback(new FileUtils.FileSavedCallback() {
                         @Override
                         public void onFileSaved(String filePath) {
                             if(!GlobalConfig.PREVIEW_WHEN_SHOT) return;
                             startDecorateActivity(filePath, MimeType.VIDEO);
                         }
                     });
-                    cameraView.getGlRender().setRecordingStatus();
+                    cameraView.getGlRender().startRecording();
                 }else{
                     runOnUiThread(new Runnable() {
                         @Override
@@ -319,7 +319,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
             public void onLongClickEnd() {
                 showAllControlBtn();
                 if(canUseMediaCodec){
-                    cameraView.getGlRender().setRecordingStatus();
+                    cameraView.getGlRender().stopRecording();
                 }
                 Log.d(TAG, "onLongClickEnd: ");
             }

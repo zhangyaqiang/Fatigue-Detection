@@ -6,7 +6,6 @@ import android.media.AudioRecord;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
-import android.media.MediaMuxer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.util.Log;
@@ -30,8 +29,8 @@ public class AudioEncoderCore extends EncoderCore {
     private boolean stopped;
     protected final Object mSync = new Object();
 
-    public AudioEncoderCore(MediaMuxerWrapper mediaMuxerWrapper) throws IOException {
-        super(mediaMuxerWrapper);
+    public AudioEncoderCore(MMediaMuxer MMediaMuxer) throws IOException {
+        super(MMediaMuxer);
         final MediaFormat audioFormat = MediaFormat.createAudioFormat(MIME_TYPE, SAMPLE_RATE, 1);
         audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
         audioFormat.setInteger(MediaFormat.KEY_CHANNEL_MASK, AudioFormat.CHANNEL_IN_MONO);

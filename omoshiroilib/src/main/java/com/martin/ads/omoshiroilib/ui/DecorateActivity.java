@@ -3,11 +3,14 @@ package com.martin.ads.omoshiroilib.ui;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -33,7 +36,7 @@ import java.io.File;
  */
 
 //FIXME:change it to save to temp dir
-public class DecorateActivity extends AppCompatActivity {
+public class DecorateActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener{
     private static final String TAG = "DecorateActivity";
     public static final String SAVED_MEDIA_FILE="saved_media_file";
     public static final String SAVED_MEDIA_TYPE="saved_media_type";
@@ -44,7 +47,8 @@ public class DecorateActivity extends AppCompatActivity {
     private int mediaType;
 
     private ImageView imagePreview;
-    private VideoView videoPreview;
+    //private VideoView videoPreview;
+    private IjkWrapper ijkWrapper = new IjkWrapper();
     private RotateLoading rotateLoading;
     private File mediaFile;
     private String desFolder;
@@ -52,6 +56,7 @@ public class DecorateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ijkWrapper.init();
         init();
     }
 
@@ -80,7 +85,7 @@ public class DecorateActivity extends AppCompatActivity {
         setContentView(R.layout.frag_decorate_picture);
         rotateLoading= (RotateLoading) findViewById(R.id.rotate_loading);
         imagePreview= (ImageView) findViewById(R.id.img_preview);
-        videoPreview= (VideoView) findViewById(R.id.video_preview);
+        //videoPreview= (VideoView) findViewById(R.id.video_preview);
         decorateTool= (RelativeLayout) findViewById(R.id.rl_frag_decorate_tool);
         filePath=getIntent().getStringExtra(SAVED_MEDIA_FILE);
         mediaType=getIntent().getIntExtra(SAVED_MEDIA_TYPE,-1);
@@ -92,21 +97,30 @@ public class DecorateActivity extends AppCompatActivity {
                         FileUtils.getFileOnSDCard(GlobalConfig.OMOSHIROI_VIDEO_PATH).getAbsolutePath();
 
         if(mediaType<0) finish();
+
+        TextureView textureView = (TextureView) findViewById(R.id.video_view);
+        textureView.setSurfaceTextureListener(this);
+
         if(mediaType== MimeType.PHOTO){
-            videoPreview.setVisibility(View.GONE);
+            //videoPreview.setVisibility(View.GONE);
+            textureView.setVisibility(View.VISIBLE);
             imagePreview.setImageBitmap(BitmapUtils.loadBitmapFromFile(filePath));
         }else if(mediaType== MimeType.VIDEO){
             imagePreview.setVisibility(View.GONE);
-            videoPreview.setVideoURI(Uri.parse(filePath));
-            Log.d(TAG, "init: "+filePath);
-            videoPreview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                    mp.setLooping(true);
-                }
-            });
-            videoPreview.start();
+            textureView.setVisibility(View.VISIBLE);
+            //videoPreview.setVisibility(View.VISIBLE);
+            ijkWrapper.openRemoteFile(filePath);
+            ijkWrapper.prepare();
+//            videoPreview.setVideoURI(Uri.parse(filePath));
+//            Log.d(TAG, "init: "+filePath);
+//            videoPreview.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mp) {
+//                    mp.start();
+//                    mp.setLooping(true);
+//                }
+//            });
+//            videoPreview.start();
         }
         decorateTool.bringToFront();
         AnimationUtils.displayAnim(decorateTool,DecorateActivity.this,R.anim.fadein,View.VISIBLE);
@@ -173,8 +187,42 @@ public class DecorateActivity extends AppCompatActivity {
         if(mediaFile!=null && mediaFile.exists()){
             mediaFile.delete();
         }
-        if (videoPreview != null) {
-            videoPreview.suspend();
-        }
+//        if (videoPreview != null) {
+//            videoPreview.suspend();
+//        }
+        ijkWrapper.destroy();
+    }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        ijkWrapper.setSurface(new Surface(surface));
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        ijkWrapper.setSurface(null);
+        return true;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ijkWrapper.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ijkWrapper.resume();
     }
 }

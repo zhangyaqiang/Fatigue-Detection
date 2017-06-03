@@ -78,7 +78,7 @@ public class TextureMovieEncoder implements Runnable {
     private int mTextureId;
     private VideoEncoderCore mVideoEncoder;
     private AudioEncoderCore mAudioEncoder;
-    private MediaMuxerWrapper mediaMuxerWrapper;
+    private MMediaMuxer MMediaMuxer;
 
     // ----- accessed by multiple threads -----
     private volatile EncoderHandler mHandler;
@@ -323,8 +323,10 @@ public class TextureMovieEncoder implements Runnable {
      */
     private void handleStopRecording() {
         Log.d(TAG, "handleStopRecording");
-        while(!mAudioEncoder.isStopped())
-            mAudioEncoder.stopAudioThread();
+        if(mAudioEncoder!=null) {
+            while (!mAudioEncoder.isStopped())
+                mAudioEncoder.stopAudioThread();
+        }
         mVideoEncoder.drainEncoder(true);
         releaseEncoder();
         if(fileSavedCallback!=null){
@@ -368,9 +370,9 @@ public class TextureMovieEncoder implements Runnable {
     private void prepareEncoder(EGLContext sharedContext, int width, int height, int bitRate,
             File outputFile) {
         try {
-            mediaMuxerWrapper=new MediaMuxerWrapper(outputFile);
-            mVideoEncoder = new VideoEncoderCore(width, height, bitRate,mediaMuxerWrapper);
-            mAudioEncoder = new AudioEncoderCore(mediaMuxerWrapper);
+            MMediaMuxer =new MMediaMuxer(outputFile);
+            mVideoEncoder = new VideoEncoderCore(width, height, bitRate, MMediaMuxer);
+           // mAudioEncoder = new AudioEncoderCore(MMediaMuxer);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -383,9 +385,10 @@ public class TextureMovieEncoder implements Runnable {
     }
 
     private void releaseEncoder() {
-        mAudioEncoder.release();
+        if(mAudioEncoder!=null)
+            mAudioEncoder.release();
         mVideoEncoder.release();
-        mediaMuxerWrapper.release();
+        MMediaMuxer.release();
         if (mInputWindowSurface != null) {
             mInputWindowSurface.release();
             mInputWindowSurface = null;

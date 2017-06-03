@@ -20,14 +20,11 @@ import android.annotation.TargetApi;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
-import android.media.MediaMuxer;
 import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
  * This class wraps up the core components used for surface-input video encoding.
@@ -53,9 +50,9 @@ public class VideoEncoderCore extends EncoderCore {
     /**
      * Configures encoder and muxer state, and prepares the input Surface.
      */
-    public VideoEncoderCore(int width, int height, int bitRate, MediaMuxerWrapper mediaMuxerWrapper)
+    public VideoEncoderCore(int width, int height, int bitRate, MMediaMuxer MMediaMuxer)
             throws IOException {
-        super(mediaMuxerWrapper);
+        super(MMediaMuxer);
 
         MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, width, height);
 

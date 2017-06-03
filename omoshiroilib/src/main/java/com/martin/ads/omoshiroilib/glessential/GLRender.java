@@ -16,6 +16,10 @@ import com.martin.ads.easymediacodec.TextureMovieEncoder;
 import com.martin.ads.easymediacodec.VideoEncoderCore;
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.camera.IWorkerCallback;
+import com.martin.ads.omoshiroilib.codec.MediaAudioEncoder;
+import com.martin.ads.omoshiroilib.codec.MediaEncoder;
+import com.martin.ads.omoshiroilib.codec.MediaMuxerWrapper;
+import com.martin.ads.omoshiroilib.codec.MediaVideoEncoder;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.encoder.gles.EGLFilterDispatcher;
 import com.martin.ads.omoshiroilib.encoder.gles.GLTextureSaver;
@@ -30,6 +34,7 @@ import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -62,12 +67,7 @@ public class GLRender implements GLSurfaceView.Renderer {
 
     private OrthoFilter orthoFilter;
 
-    private static final int RECORDING_OFF = 0;
-    private static final int RECORDING_ON = 1;
-    private static final int RECORDING_RESUMED = 2;
-    private boolean recordingEnabled;
-    // this is static so it survives activity restarts
-    private static TextureMovieEncoder sVideoEncoder = new TextureMovieEncoder();
+    private MediaVideoEncoder mVideoEncoder;
 
     public GLRender(final Context context, CameraEngine cameraEngine) {
         this.context=context;
@@ -118,87 +118,23 @@ public class GLRender implements GLSurfaceView.Renderer {
         });
         isCameraFacingFront=true;
 
-
-        mRecordingStatus = -1;
     }
 
-    private int mRecordingStatus;
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
         filterGroup.init();
-        recordingEnabled = sVideoEncoder.isRecording();
-        if (recordingEnabled) {
-            mRecordingStatus = RECORDING_RESUMED;
-        } else {
-            mRecordingStatus = RECORDING_OFF;
-        }
-        sVideoEncoder.setEglDrawer(new EGLFilterDispatcher(context));
     }
 
     @Override
     public void onDrawFrame(GL10 glUnused) {
         long timeStamp=cameraEngine.doTextureUpdate(oesFilter.getSTMatrix());
         filterGroup.onDrawFrame(oesFilter.getGlOESTexture().getTextureId());
-        notifyRecorder(timeStamp);
+        if(mVideoEncoder!=null){
+            Log.d(TAG, "onDrawFrame: "+mVideoEncoder.toString());
+            mVideoEncoder.frameAvailableSoon();
+        }
     }
 
-    private void notifyRecorder(final long timeStamp) {
-        // If the recording state is changing, take care of it here.  Ideally we wouldn't
-        // be doing all this in onDrawFrame(), but the EGLContext sharing with GLSurfaceView
-        // makes it hard to do elsewhere.
-        //Log.d(TAG, "notifyRecorder: "+timeStamp+" "+recordingEnabled+" "+mRecordingStatus);
-        if (recordingEnabled) {
-            switch (mRecordingStatus) {
-                case RECORDING_OFF:
-                    Log.d(TAG, "START recording");
-                    // start recording
-                    Log.d(TAG, "surface: "+surfaceWidth+" "+surfaceHeight);
-                    //It seems mediacodec doesn't support odd length
-                    //too high resolution may cause frame loss
-                    File vidFolder=GlobalConfig.context.getCacheDir();
-                    if (!vidFolder.exists())
-                        vidFolder.mkdirs();
-                    sVideoEncoder.startRecording(new TextureMovieEncoder.EncoderConfig(
-                            new File(vidFolder.getAbsolutePath()+FileUtils.getVidName()),surfaceWidth/2*2,surfaceHeight/2*2,VideoEncoderCore.VIDEO_BIT_RATE, getSharedContext()));
-                    mRecordingStatus = RECORDING_ON;
-                    break;
-                case RECORDING_RESUMED:
-                    Log.d(TAG, "RESUME recording");
-                    sVideoEncoder.updateSharedContext(getSharedContext());
-                    mRecordingStatus = RECORDING_ON;
-                    break;
-                case RECORDING_ON:
-                    // yay
-                    break;
-                default:
-                    throw new RuntimeException("unknown status " + mRecordingStatus);
-            }
-        } else {
-            switch (mRecordingStatus) {
-                case RECORDING_ON:
-                case RECORDING_RESUMED:
-                    // stop recording
-                    Log.d(TAG, "STOP recording");
-                    sVideoEncoder.stopRecording();
-                    mRecordingStatus = RECORDING_OFF;
-                    break;
-                case RECORDING_OFF:
-                    // yay
-                    break;
-                default:
-                    throw new RuntimeException("unknown status " + mRecordingStatus);
-            }
-        }
-        lastProcessFilter.setFrameAvailableCallback(new GLTextureSaver.FrameAvailableCallback() {
-            @Override
-            public void onFrameAvailable(int textureId) {
-                sVideoEncoder.setTextureId(lastProcessFilter.getSavedTextureId());
-                // Tell the video encoder thread that a new frame is available.
-                // This will be ignored if we're not actually recording.
-                sVideoEncoder.frameAvailable(timeStamp);
-            }
-        });
-    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private EGLContext getSharedContext() {
@@ -265,16 +201,79 @@ public class GLRender implements GLSurfaceView.Renderer {
         return orthoFilter;
     }
 
-    public void setRecordingStatus() {
-        filterGroup.addPostDrawTask(new Runnable() {
+    private MediaMuxerWrapper mMuxer;
+    public static final boolean DEBUG=true;
+    private String outputPath;
+    FileUtils.FileSavedCallback fileSavedCallback;
+
+    public void startRecording() {
+        try {
+            File vidFolder=GlobalConfig.context.getCacheDir();
+            if (!vidFolder.exists())
+                vidFolder.mkdirs();
+            outputPath=vidFolder.getAbsolutePath()+FileUtils.getVidName();
+            mMuxer = new MediaMuxerWrapper(outputPath);	// if you record audio only, ".m4a" is also OK.
+            if (true) {
+                // for video capturing
+                new MediaVideoEncoder(mMuxer, mMediaEncoderListener, /*surfaceWidth/2*2,surfaceHeight/2*2*/720,1280);
+            }
+            if (true) {
+                // for audio capturing
+                new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
+            }
+            mMuxer.prepare();
+            mMuxer.startRecording();
+        } catch (final IOException e) {
+            Log.e(TAG, "startCapture:", e);
+        }
+    }
+
+    /**
+     * request stop recording
+     */
+    public void stopRecording() {
+        if (mMuxer != null) {
+            mMuxer.stopRecording();
+            mMuxer = null;
+            mVideoEncoder=null;
+            if(fileSavedCallback!=null)
+                fileSavedCallback.onFileSaved(outputPath);
+        }
+    }
+
+    public void setVideoEncoder(final MediaVideoEncoder encoder) {
+        filterGroup.addPreDrawTask(new Runnable() {
             @Override
             public void run() {
-                recordingEnabled=!recordingEnabled;
+                if (encoder != null) {
+                    encoder.getRenderHandler().setEglDrawer(new EGLFilterDispatcher(context));
+                    encoder.setEglContext(getSharedContext(), lastProcessFilter.getSavedTextureId());
+                    mVideoEncoder=encoder;
+                }
             }
         });
     }
 
-    public static TextureMovieEncoder getVideoEncoder() {
-        return sVideoEncoder;
+    /**
+     * callback methods from encoder
+     */
+    private final MediaEncoder.MediaEncoderListener mMediaEncoderListener = new MediaEncoder.MediaEncoderListener() {
+        @Override
+        public void onPrepared(final MediaEncoder encoder) {
+            if (DEBUG) Log.v(TAG, "onPrepared:encoder=" + encoder);
+            if (encoder instanceof MediaVideoEncoder)
+                setVideoEncoder((MediaVideoEncoder)encoder);
+        }
+
+        @Override
+        public void onStopped(final MediaEncoder encoder) {
+            if (DEBUG) Log.v(TAG, "onStopped:encoder=" + encoder);
+            if (encoder instanceof MediaVideoEncoder)
+                setVideoEncoder(null);
+        }
+    };
+
+    public void setFileSavedCallback(FileUtils.FileSavedCallback fileSavedCallback) {
+        this.fileSavedCallback = fileSavedCallback;
     }
 }
