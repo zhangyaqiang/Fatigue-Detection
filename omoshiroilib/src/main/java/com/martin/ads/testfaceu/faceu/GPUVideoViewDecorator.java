@@ -17,7 +17,7 @@ import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
 import com.martin.ads.testfaceu.faceu.ui.VideoViewDecorator;
 
 public class GPUVideoViewDecorator extends VideoViewDecorator {
-    private final static Logger log = LoggerFactory.getLogger(GPUVideoViewDecorator.class);
+    private final static Logger log = LoggerFactory.getLogger();
 
     public GPUImage mGPUImage;
     public GPUImageFilter mFilter;

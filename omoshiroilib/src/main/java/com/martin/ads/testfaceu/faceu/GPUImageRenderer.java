@@ -3,8 +3,6 @@
 package com.martin.ads.testfaceu.faceu;
 
 import android.annotation.TargetApi;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.SurfaceTexture;
@@ -16,16 +14,17 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Build;
 import android.support.annotation.IntDef;
+import android.util.Log;
 
 import com.lemon.faceu.openglfilter.common.FilterConstants;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.lemon.faceu.openglfilter.gpuimage.draw.OpenGlUtils;
-import com.lemon.faceu.openglfilter.gpuimage.draw.Rotation;
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.lemon.faceu.sdk.utils.ObjectCacher;
-import com.lemon.faceusdkdemo.detect.IFaceDetector;
+import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.testfaceu.faceu.detect.SenseTimeDetector;
 import com.martin.ads.testfaceu.faceu.fake.Logger;
@@ -44,8 +43,8 @@ import javax.microedition.khronos.opengles.GL10;
 
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDetector.FaceDetectorListener {
-    private final static Logger log = LoggerFactory.getLogger(GPUImageRenderer.class);
+public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetector.FaceDetectorListener {
+    private final static Logger log = LoggerFactory.getLogger();
 
     @IntDef(value = {
             CMD_PROCESS_FRAME,
@@ -136,7 +135,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         }
     };
 
-    @Override
     public void onDetectFinish() {
         if (null != mSurfaceView) {
             mSurfaceView.requestRender();
@@ -171,7 +169,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
                 .asFloatBuffer();
         mNormalCubeBuffer.put(FilterConstants.CUBE).position(0);
 
-        float[] flipTexture = PlaneTextureRotationUtils.getRotation(com.martin.ads.omoshiroilib.constant.Rotation.ROTATION_270, false, true);
+        float[] flipTexture = PlaneTextureRotationUtils.getRotation(Rotation.ROTATION_270, false, true);
         mNormalTextureFlipBuffer = ByteBuffer.allocateDirect(flipTexture.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
@@ -310,7 +308,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
 
         synchronized (mFaceDetectorLock) {
             if (null != mFaceDetector) {
-                mFaceDetector.onFrameAvailable(mCachePrevSize.x, mCachePrevSize.y, mRotation, mFlipVertical,
+                mFaceDetector.onFrameAvailable(mCachePrevSize.x, mCachePrevSize.y, Rotation.ROTATION_270, mFlipVertical,
                         data, mDirectionDetector.getDirection());
             }
         }
@@ -436,7 +434,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         float ratioHeight = imageHeightNew / outputHeight;
 
         float[] cube = CUBE;
-        float[] textureCords = PlaneTextureRotationUtils.getRotation(com.martin.ads.omoshiroilib.constant.Rotation.ROTATION_270,
+        float[] textureCords = PlaneTextureRotationUtils.getRotation(Rotation.ROTATION_270,
                 mFlipHorizontal, mFlipVertical);
         if (mScaleType == GPUImage.ScaleType.CENTER_CROP) {
             float distHorizontal = (1 - 1 / ratioWidth) / 2;

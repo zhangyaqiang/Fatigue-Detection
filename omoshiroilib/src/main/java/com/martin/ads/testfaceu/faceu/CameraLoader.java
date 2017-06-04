@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Build;
-import android.util.Log;
 import android.view.Surface;
 
-import com.lemon.faceu.sdk.platform.ApiLevel;
-import com.lemon.faceu.sdk.utils.Wrapper;
+import com.martin.ads.omoshiroilib.flyu.ApiLevel;
 import com.martin.ads.testfaceu.faceu.fake.Logger;
 import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
-
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,7 +19,7 @@ import java.util.List;
  * @since 2015-04-01
  */
 public class CameraLoader {
-    private final static Logger log = LoggerFactory.getLogger(CameraLoader.class);
+    private final static Logger log = LoggerFactory.getLogger();
 
     public final static int MAX_FRAME_RATE = 30;
 
@@ -58,16 +55,10 @@ public class CameraLoader {
 
     public CameraLoader(Activity activity, boolean useFrontFace, int highPhoneWidth, int highPhoneHeigt,
                         int lowPhoneWidth, int lowPhoneHeight) {
-        boolean isHighEndPhone = com.lemon.faceu.sdk.devices.CpuUtils.isHighEndPhone(activity);
-        int maxWidth = isHighEndPhone ? highPhoneWidth : lowPhoneWidth;
-        int maxHeight = isHighEndPhone ? highPhoneHeigt : lowPhoneHeight;
-        log.debug("isHighEndPhone: " + isHighEndPhone);
+        int maxWidth = highPhoneWidth;
+        int maxHeight = highPhoneHeigt;
 
         init(activity, useFrontFace, maxWidth, maxHeight);
-    }
-
-    public CameraLoader(Activity activity, boolean useFrontFace, Wrapper.Size maxSize) {
-        init(activity, useFrontFace, maxSize.width, maxSize.height);
     }
 
     public CameraLoader(Activity activity, boolean useFrontFace) {
@@ -333,7 +324,7 @@ public class CameraLoader {
             Camera.Parameters params = mCamera.getParameters();
             if (open) {
                 // android L上面有BUG会导致开了auto之后，无法再off。
-                if (Build.VERSION.SDK_INT < ApiLevel.API21_KLOLLIPOP &&
+                if (Build.VERSION.SDK_INT < ApiLevel.API21_LOLLIPOP &&
                         params.getSupportedFlashModes().contains(Camera.Parameters.FLASH_MODE_AUTO)) {
                     params.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
                     mFlashMode = MODE_AUTO;

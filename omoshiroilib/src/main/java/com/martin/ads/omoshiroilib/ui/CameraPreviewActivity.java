@@ -463,7 +463,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this,hint ,Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,hint ,Toast.LENGTH_LONG).show();
     }
 
     private EffectsButton getEffectsBtn(int id){

@@ -2,8 +2,6 @@ package com.martin.ads.testfaceu.faceu.ui;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -25,7 +23,6 @@ import com.lemon.faceu.openglfilter.gpuimage.switchface.CloneFaceFilter;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceInfo;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceNet;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
-import com.lemon.faceu.sdk.utils.SdkConstants;
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
@@ -45,7 +42,7 @@ import java.io.IOException;
 
 public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGroupBase.IGroupStateChanged {
 
-    private final static Logger log = LoggerFactory.getLogger(TestFaceUActivity.class);
+    private final static Logger log = LoggerFactory.getLogger();
 
     protected boolean mUseFrontFace = true;
     @Override
@@ -79,8 +76,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     }
 
 
-    @SdkConstants.NotationClockwiseDirection
-    protected int mRecordPhoneDirection = SdkConstants.ClockwiseDirection.DEG_0;
     protected DirectionDetector mDirectionDetector;
 
     protected CameraLoader mCameraLoader;
@@ -99,7 +94,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         if (null == mDirectionDetector) {
             mDirectionDetector = new DirectionDetector(this,false);
             mDirectionDetector.start();
-            mRecordPhoneDirection = mDirectionDetector.getDirection();
         }
 
         log.info("init camera start");

@@ -24,7 +24,7 @@ import java.util.Map;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
-    private final static Logger log = LoggerFactory.getLogger(BaseActivity.class);
+    private final static Logger log = LoggerFactory.getLogger();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

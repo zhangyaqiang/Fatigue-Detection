@@ -12,13 +12,13 @@ public enum Rotation {
 
     public int asInt() {
         switch(ordinal()) {
-            case 1:
+            case 0:
                 return 0;
-            case 2:
+            case 1:
                 return 90;
-            case 3:
+            case 2:
                 return 180;
-            case 4:
+            case 3:
                 return 270;
             default:
                 throw new IllegalStateException("Unknown Rotation!");

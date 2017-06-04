@@ -10,12 +10,12 @@ import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
+import android.util.Log;
 import android.view.ViewTreeObserver;
 
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
-import com.lemon.faceu.openglfilter.gpuimage.draw.Rotation;
 import com.lemon.faceu.openglfilter.gpuimage.filtergroup.GPUImageFilterGroup;
-import com.lemon.faceu.sdk.utils.Log;
+import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 
 import java.nio.ByteBuffer;
@@ -161,6 +161,7 @@ public class GPUImage {
                 rotation = Rotation.ROTATION_270;
                 break;
         }
+        android.util.Log.d(TAG, "setUpCamera: "+rotation);
         mRenderer.setRotationCamera(rotation, flipHorizontal, flipVertical);
     }
 

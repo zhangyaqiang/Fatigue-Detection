@@ -8,10 +8,9 @@ import android.os.Message;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
-import com.lemon.faceu.openglfilter.gpuimage.draw.Rotation;
 import com.lemon.faceu.sdk.utils.JniEntry;
-import com.lemon.faceu.sdk.utils.SdkConstants;
-import com.lemon.faceusdkdemo.detect.IFaceDetector;
+import com.martin.ads.omoshiroilib.constant.Rotation;
+import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
 import com.sensetime.stmobileapi.STImageFormat;
 import com.sensetime.stmobileapi.STMobile106;
 import com.sensetime.stmobileapi.STMobileMultiTrack106;
@@ -20,7 +19,7 @@ import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class SenseTimeDetector implements Runnable, IFaceDetector {
+public class SenseTimeDetector implements Runnable ,IFaceDetector{
     static final String TAG = "SenseTimeDetector";
 
     static {
@@ -36,7 +35,7 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
     static final int SAMPLE_HEIGHT = 320;
 
     Handler mDetectHandler;
-    FaceDetectorListener mFaceDetectorLsn;
+    IFaceDetector.FaceDetectorListener mFaceDetectorLsn;
     Context mContext;
 
     int mInputWidth = -1;
@@ -57,7 +56,7 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
     int mMaxFaceCount = 0;
     STMobile106[] mFaceInfoLst;
 
-    public SenseTimeDetector(FaceDetectorListener listener) {
+    public SenseTimeDetector(IFaceDetector.FaceDetectorListener listener) {
         mFaceDetectorLsn = listener;
     }
 
@@ -134,6 +133,7 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
         }
 
         mRotation = rotate.asInt();
+        Log.d(TAG, "updatePreviewSize: "+mRotation);
         mSampleData = ByteBuffer.allocateDirect(mSampleWidth * mSampleHeight).order(ByteOrder.nativeOrder());
         Log.d(TAG, "updatePreviewSize: lalala "+mSampleWidth+" "+mSampleHeight);
         mInputWidth = width;
@@ -146,7 +146,8 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
      * @param yuvData 数据帧,格式是yuv420sp
      */
     public void onFrameAvailable(int width, int height, Rotation rotate, boolean mirror,
-                                 byte[] yuvData, @SdkConstants.NotationClockwiseDirection int direction) {
+                                 byte[] yuvData, int direction) {
+        Log.d(TAG, "onFrameAvailable: -1");
         synchronized (mReadyFence) {
             if (!mReady) {
                 return;
@@ -177,12 +178,11 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
 			Bitmap grayBitmap = Bitmap.createBitmap(mSampleWidth, mSampleHeight, Bitmap.Config.ARGB_8888);
 			grayBitmap.copyPixelsFromBuffer(grayBuffer);
 			*/
-
+            Log.d(TAG, "onFrameAvailable: -2");
             mDetectHandler.sendMessage(Message.obtain(mDetectHandler, MSG_DETECT, direction, 0, mSampleData));
         }
     }
 
-    @Override
     public int getFaceDetectResult(PointF[][] detectResult, int imageScaleWidth, int imageScaleHeight,
                                    int outputWidth, int outputHeight) {
         float width = 100f, height = 100f;
@@ -238,8 +238,15 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
         mFaceTrack = null;
     }
 
+    public interface ClockwiseDirection{
+        int DEG_0 = 0;
+        int DEG_90 = 1;
+        int DEG_180 = 2;
+        int DEG_270 = 3;
+    }
+
     @WorkerThread
-    void handleDetect(ByteBuffer sampleData, @SdkConstants.NotationClockwiseDirection int direction) {
+    void handleDetect(ByteBuffer sampleData, int direction) {
         mDetecting = true;
 
         if (null == mFaceTrack) {
@@ -250,16 +257,16 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
         // 人脸识别的方向定义有些特殊
         int faceDirection = 0;
         switch (direction) {
-            case SdkConstants.ClockwiseDirection.DEG_0:
+            case ClockwiseDirection.DEG_0:
                 faceDirection = 3;
                 break;
-            case SdkConstants.ClockwiseDirection.DEG_90:
+            case ClockwiseDirection.DEG_90:
                 faceDirection = 0;
                 break;
-            case SdkConstants.ClockwiseDirection.DEG_180:
+            case ClockwiseDirection.DEG_180:
                 faceDirection = 1;
                 break;
-            case SdkConstants.ClockwiseDirection.DEG_270:
+            case ClockwiseDirection.DEG_270:
                 faceDirection = 2;
                 break;
         }
