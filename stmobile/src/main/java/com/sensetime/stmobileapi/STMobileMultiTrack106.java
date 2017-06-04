@@ -209,7 +209,8 @@ public class STMobileMultiTrack106 {
      * @return CvFace array, each one in array is Detected by SDK native API
      */
     public STMobile106[] track(byte[] colorImage,int cvImageFormat, int imageWidth, int imageHeight, int imageStride, int orientation) {
-    	if(DEBUG){
+		Log.d("ST_mobile", "track: "+imageWidth+" "+imageHeight+" "+imageStride+" "+orientation);
+		if(DEBUG){
     		System.out.println("SampleLiveness-------->CvFaceMultiTrack--------->track4");
     	}
     	
@@ -263,6 +264,7 @@ public class STMobileMultiTrack106 {
 	 * @return CvFace action array, each one in array is Detected by SDK native API
 	 * */
 	public STMobileFaceAction[] trackFaceAction(byte[] image, int orientation, int width, int height) {
+		Log.d("ST_mobile", "track: "+width+" "+height+" "+orientation);
 		if(DEBUG) {
 			System.out.println("SampleTrackFaceAction-------->CvFaceMultiTrack--------->trackFaceAction1");
 		}

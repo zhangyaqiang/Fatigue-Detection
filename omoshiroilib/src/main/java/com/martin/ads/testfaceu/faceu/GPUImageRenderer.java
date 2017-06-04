@@ -309,7 +309,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
 
         synchronized (mFaceDetectorLock) {
             if (null != mFaceDetector) {
-                mFaceDetector.onFrameAvailable(mCachePrevSize.x, mCachePrevSize.y, Rotation.ROTATION_270, mFlipVertical,
+                mFaceDetector.onFrameAvailable(mCachePrevSize.x, mCachePrevSize.y, mRotation, mFlipVertical,
                         data, mDirectionDetector.getDirection());
             }
         }
@@ -436,7 +436,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         float ratioHeight = imageHeightNew / outputHeight;
 
         float[] cube = CUBE;
-        float[] textureCords = PlaneTextureRotationUtils.getRotation(Rotation.ROTATION_270,
+        float[] textureCords = PlaneTextureRotationUtils.getRotation(mRotation,
                 mFlipHorizontal, mFlipVertical);
         if (mScaleType == GPUImage.ScaleType.CENTER_CROP) {
             float distHorizontal = (1 - 1 / ratioWidth) / 2;
