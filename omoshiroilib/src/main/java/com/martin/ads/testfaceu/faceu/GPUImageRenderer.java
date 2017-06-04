@@ -14,18 +14,19 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Build;
 import android.support.annotation.IntDef;
-import android.util.Log;
 
-import com.lemon.faceu.openglfilter.common.FilterConstants;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
-import com.lemon.faceu.openglfilter.gpuimage.draw.OpenGlUtils;
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.lemon.faceu.sdk.utils.ObjectCacher;
+
+import com.martin.ads.omoshiroilib.constant.GLEtc;
 import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.FilterConstants;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
+import com.martin.ads.omoshiroilib.util.TextureUtils;
 import com.martin.ads.testfaceu.faceu.detect.SenseTimeDetector;
 import com.martin.ads.testfaceu.faceu.fake.Logger;
 import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
@@ -145,7 +146,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         mGroupBase = filter;
         mRunOnDraw = new LinkedList<>();
         mRunOnDrawEnd = new LinkedList<>();
-        mGLTextureId = OpenGlUtils.NO_TEXTURE;
+        mGLTextureId = GLEtc.NO_TEXTURE;
 
         mGLCubeBuffer = ByteBuffer.allocateDirect(CUBE.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -253,7 +254,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         // 坐标已经规范到了屏幕范围内了
         mGroupBase.setFaceDetResult(mFaceCount, mFaceDetectResultLst, mOutputWidth, mOutputHeight);
 
-        mGroupBase.draw(mGLTextureId, OpenGlUtils.NO_TEXTURE, mGLCubeBuffer, mGLTextureBuffer);
+        mGroupBase.draw(mGLTextureId, GLEtc.NO_TEXTURE, mGLCubeBuffer, mGLTextureBuffer);
 
         runAll(mRunOnDrawEnd);
     }
@@ -315,7 +316,8 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
 
         JniEntry.YUVtoRBGA(data, mCachePrevSize.x, mCachePrevSize.y, mGLRgbBuffer.array());
 
-        mGLTextureId = OpenGlUtils.loadTexture(mGLRgbBuffer, mCachePrevSize, mGLTextureId);
+        mGLTextureId = TextureUtils.getTextureFromByteBufferWithOldTexId(
+                mGLRgbBuffer,mCachePrevSize.x,mCachePrevSize.y,mGLTextureId);
         camera.addCallbackBuffer(data);
         mGLRgbBuffer.clear();
     }
@@ -482,7 +484,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
 
     public void setRotationCamera(final Rotation rotation,
                                   final boolean flipHorizontal, final boolean flipVertical) {
-        mGLTextureId = OpenGlUtils.NO_TEXTURE;
+        mGLTextureId = GLEtc.NO_TEXTURE;
         setRotation(rotation, flipVertical, flipHorizontal);
     }
 
@@ -535,7 +537,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         runAll(mRunOnDraw);
         runAll(mRunOnDrawEnd);
 
-        mGLTextureId = OpenGlUtils.NO_TEXTURE;
+        mGLTextureId = GLEtc.NO_TEXTURE;
         if (null != mGLRgbBuffer) {
             mGLRgbBuffer.clear();
             mGLRgbBuffer = null;

@@ -81,8 +81,31 @@ public class TextureUtils{
         return textureObjectIds[0];
     }
 
+
+    public static int loadTextureWithOldTexId(final Bitmap img, final int usedTexId) {
+        int textures[] = new int[1];
+        if (usedTexId == GLEtc.NO_TEXTURE) {
+            return getTextureFromBitmap(img,null);
+        } else {
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, usedTexId);
+            GLUtils.texSubImage2D(GLES20.GL_TEXTURE_2D, 0, 0, 0, img);
+            textures[0] = usedTexId;
+        }
+        return textures[0];
+    }
+
     public static int getTextureFromByteArray(byte[] bytes,int width,int height){
         if(bytes.length!=width*height*4) throw new RuntimeException("Illegal byte array");
+        return getTextureFromByteBuffer(ByteBuffer.wrap(bytes),width,height);
+    }
+
+    public static int getTextureFromByteArrayWithOldTexId(byte[] bytes,int width,int height,int usedTexId){
+        if(bytes.length!=width*height*4) throw new RuntimeException("Illegal byte array");
+        return getTextureFromByteBufferWithOldTexId(ByteBuffer.wrap(bytes),width,height,usedTexId);
+    }
+
+    public static int getTextureFromByteBuffer(ByteBuffer byteBuffer,int width,int height){
+        if(byteBuffer.array().length!=width*height*4) throw new RuntimeException("Illegal byte array");
         final int[] textureObjectIds=new int[1];
         GLES20.glGenTextures(1,textureObjectIds,0);
         if (textureObjectIds[0]==0){
@@ -104,9 +127,27 @@ public class TextureUtils{
                 width,height, 0,
                 GLES20.GL_RGBA,
                 GLES20.GL_UNSIGNED_BYTE,
-                ByteBuffer.wrap(bytes));
+                byteBuffer);
 
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
         return textureObjectIds[0];
+    }
+
+    public static int getTextureFromByteBufferWithOldTexId(ByteBuffer byteBuffer,int width,int height,int usedTexId){
+        if(byteBuffer.array().length!=width*height*4) throw new RuntimeException("Illegal byte array");
+        int textures[] = new int[1];
+        if (usedTexId == GLEtc.NO_TEXTURE) {
+            return getTextureFromByteBuffer(byteBuffer,width,height);
+        } else {
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, usedTexId);
+            GLES20.glTexSubImage2D(GLES20.GL_TEXTURE_2D,0,0,0,
+                    width,height,
+                    GLES20.GL_RGBA,
+                    GLES20.GL_UNSIGNED_BYTE,
+                    byteBuffer
+            );
+            textures[0] = usedTexId;
+        }
+        return textures[0];
     }
 }

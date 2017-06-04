@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.lemon.faceu.openglfilter.common.FilterConstants;
 import com.lemon.faceu.openglfilter.gpuimage.base.FilterFactory;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
@@ -25,6 +24,7 @@ import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceNet;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.FilterConstants;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
 import com.martin.ads.testfaceu.faceu.FuCameraCompat;

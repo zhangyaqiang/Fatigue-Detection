@@ -1,7 +1,9 @@
 package com.martin.ads.testfaceu.faceu.detect;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -11,6 +13,7 @@ import android.util.Log;
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
+import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.sensetime.stmobileapi.STImageFormat;
 import com.sensetime.stmobileapi.STMobile106;
 import com.sensetime.stmobileapi.STMobileMultiTrack106;
@@ -31,8 +34,8 @@ public class SenseTimeDetector implements Runnable ,IFaceDetector{
     }
 
     // 样本的高和宽
-    static final int SAMPLE_WIDTH = 240;
-    static final int SAMPLE_HEIGHT = 320;
+    static final int SAMPLE_WIDTH = 720;
+    static final int SAMPLE_HEIGHT = 1280;
 
     Handler mDetectHandler;
     IFaceDetector.FaceDetectorListener mFaceDetectorLsn;
@@ -147,7 +150,6 @@ public class SenseTimeDetector implements Runnable ,IFaceDetector{
      */
     public void onFrameAvailable(int width, int height, Rotation rotate, boolean mirror,
                                  byte[] yuvData, int direction) {
-        Log.d(TAG, "onFrameAvailable: -1");
         synchronized (mReadyFence) {
             if (!mReady) {
                 return;
@@ -161,24 +163,23 @@ public class SenseTimeDetector implements Runnable ,IFaceDetector{
 
             JniEntry.YuvToGrayAndScale(yuvData, mInputWidth, mInputHeight, mRotation, mMirror,
                     mSampleData.array(), mSampleWidth, mSampleHeight);
-
-			/* 将灰度数组生成bitmap的代码,用于测试
-			ByteBuffer grayBuffer = ByteBuffer.allocateDirect(mSampleWidth * mSampleHeight * 4).order(ByteOrder.nativeOrder());
-			byte[] grayData = grayBuffer.array();
-			byte[] sampleData = mSampleData.array();
-			int offset = 0;
-			for (int i = 0; i < mSampleHeight; ++i) {
-				for (int j = 0; j < mSampleWidth; ++j) {
-					offset = i * mSampleWidth + j;
-					grayData[offset * 4 + 1] = grayData[offset * 4 + 2] = grayData[offset * 4] = sampleData[offset];
-					grayData[offset * 4 + 3] = (byte) 0xff;
-				}
-			}
-
-			Bitmap grayBitmap = Bitmap.createBitmap(mSampleWidth, mSampleHeight, Bitmap.Config.ARGB_8888);
-			grayBitmap.copyPixelsFromBuffer(grayBuffer);
-			*/
-            Log.d(TAG, "onFrameAvailable: -2");
+            Log.d(TAG, "onFrameAvailable: "+mInputWidth+ " "+mInputHeight+" "+mSampleWidth+" "+mSampleHeight);
+            // 将灰度数组生成bitmap的代码,用于测试
+//			ByteBuffer grayBuffer = ByteBuffer.allocateDirect(mSampleWidth * mSampleHeight * 4).order(ByteOrder.nativeOrder());
+//			byte[] grayData = grayBuffer.array();
+//			byte[] sampleData = mSampleData.array();
+//			int offset = 0;
+//			for (int i = 0; i < mSampleHeight; ++i) {
+//				for (int j = 0; j < mSampleWidth; ++j) {
+//					offset = i * mSampleWidth + j;
+//					grayData[offset * 4 + 1] = grayData[offset * 4 + 2] = grayData[offset * 4] = sampleData[offset];
+//					grayData[offset * 4 + 3] = (byte) 0xff;
+//				}
+//			}
+//
+//			Bitmap grayBitmap = Bitmap.createBitmap(mSampleWidth, mSampleHeight, Bitmap.Config.ARGB_8888);
+//			grayBitmap.copyPixelsFromBuffer(grayBuffer);
+//            BitmapUtils.savePNGBitmap(grayBitmap, Environment.getExternalStorageDirectory()+"/Omoshiroi/test.png");
             mDetectHandler.sendMessage(Message.obtain(mDetectHandler, MSG_DETECT, direction, 0, mSampleData));
         }
     }
