@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2012 CyberAgent
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.martin.ads.testfaceu.faceu;
 
@@ -27,11 +12,11 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.view.ViewTreeObserver;
 
-import com.lemon.faceu.openglfilter.detect.DirectionDetector;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.lemon.faceu.openglfilter.gpuimage.draw.Rotation;
 import com.lemon.faceu.openglfilter.gpuimage.filtergroup.GPUImageFilterGroup;
 import com.lemon.faceu.sdk.utils.Log;
+import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 
 import java.nio.ByteBuffer;
 
@@ -196,34 +181,6 @@ public class GPUImage {
         requestRender();
     }
 
-    public void setDrawFrameListener(GPUImageRenderer.OnDrawFrameListener listener) {
-        mRenderer.setOnDrawFrameListener(listener);
-    }
-
-    /**
-     * Sets the image on which the filter should be applied.
-     *
-     * @param bitmap the new image
-     */
-    public void setImage(final Bitmap bitmap) {
-        mCurrentBitmap = bitmap;
-        mRenderer.setImageBitmap(bitmap, false);
-        requestRender();
-    }
-
-    /**
-     * This sets the scale type of GPUImage. This has to be run before setting the image.
-     * If image is set and scale type changed, image needs to be reset.
-     *
-     * @param scaleType The new ScaleType
-     */
-    public void setScaleType(ScaleType scaleType) {
-        mRenderer.setScaleType(scaleType);
-        mRenderer.deleteImage();
-        mCurrentBitmap = null;
-        requestRender();
-    }
-
     public void uninit() {
         if (null != mRenderer) {
             mRenderer.uninit();
@@ -232,15 +189,6 @@ public class GPUImage {
         if (null != mFilter) {
             mFilter.releaseNoGLESRes();
         }
-    }
-
-    /**
-     * Runs the given Runnable on the OpenGL thread.
-     *
-     * @param runnable The runnable to be run on the OpenGL thread.
-     */
-    void runOnGLThread(Runnable runnable) {
-        mRenderer.addRunnableOnDrawEnd(runnable);
     }
 
     public enum ScaleType {CENTER_INSIDE, CENTER_CROP}

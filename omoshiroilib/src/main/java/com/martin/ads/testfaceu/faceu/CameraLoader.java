@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.os.Build;
+import android.util.Log;
 import android.view.Surface;
 
 import com.lemon.faceu.sdk.platform.ApiLevel;

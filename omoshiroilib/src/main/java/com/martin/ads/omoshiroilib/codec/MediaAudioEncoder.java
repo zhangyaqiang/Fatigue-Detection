@@ -121,8 +121,8 @@ public class MediaAudioEncoder extends MediaEncoder {
     		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
     		try {
 				final int min_buffer_size = AudioRecord.getMinBufferSize(
-					SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO,
-					AudioFormat.ENCODING_PCM_16BIT);
+						SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO,
+						AudioFormat.ENCODING_PCM_16BIT);
 				int buffer_size = SAMPLES_PER_FRAME * FRAMES_PER_BUFFER;
 				if (buffer_size < min_buffer_size)
 					buffer_size = ((min_buffer_size / SAMPLES_PER_FRAME) + 1) * SAMPLES_PER_FRAME * 2;

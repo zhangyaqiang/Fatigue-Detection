@@ -6,12 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.lemon.faceu.openglfilter.common.FilterConstants;
-import com.lemon.faceu.openglfilter.detect.DirectionDetector;
 import com.lemon.faceu.openglfilter.gpuimage.base.FilterFactory;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
@@ -29,8 +26,8 @@ import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceInfo;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceNet;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
 import com.lemon.faceu.sdk.utils.SdkConstants;
-import com.lemon.faceusdkdemo.detect.FaceDetectorType;
 import com.martin.ads.omoshiroilib.R;
+import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
 import com.martin.ads.testfaceu.faceu.FuCameraCompat;
@@ -81,16 +78,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         findViewById(R.id.control_layout).bringToFront();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
-    }
-
 
     @SdkConstants.NotationClockwiseDirection
     protected int mRecordPhoneDirection = SdkConstants.ClockwiseDirection.DEG_0;
@@ -101,7 +88,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
 
     private int mMaxFaceCount = 1;
     private int mCurrentIndex = 0;
-    private FaceDetectorType mDetectType = FaceDetectorType.SENSETIME;
 
     private GPUVideoViewDecorator mGPUVideoView;
 
@@ -111,7 +97,7 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         }
 
         if (null == mDirectionDetector) {
-            mDirectionDetector = new DirectionDetector(false);
+            mDirectionDetector = new DirectionDetector(this,false);
             mDirectionDetector.start();
             mRecordPhoneDirection = mDirectionDetector.getDirection();
         }
@@ -190,12 +176,8 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         }
 
         GPUImageRenderer renderer = mGPUVideoView.getGPUImage().getRenderer();
-        renderer.initFaceDetector(mDetectType);
+        renderer.initFaceDetector();
         renderer.switchDetectMaxFaceCount(mMaxFaceCount);
-
-//        renderer.setOnProcessedFrameListener((byte[] data, int width, int height, long timestamp, Rotation rotation) -> {
-//            deliverVideoFrame(data, width, height, rotation.asInt(), timestamp);
-//        });
     }
 
     public final static int TYPE_CHANGE_FACE       = 0;

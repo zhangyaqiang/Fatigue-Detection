@@ -20,12 +20,6 @@ import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-/**
- * @since 2015年10月28日
- * @author kevinhuang
- *
- * 人脸检测的封装类
- */
 public class SenseTimeDetector implements Runnable, IFaceDetector {
     static final String TAG = "SenseTimeDetector";
 
@@ -33,7 +27,7 @@ public class SenseTimeDetector implements Runnable, IFaceDetector {
         try {
             System.loadLibrary("st_mobile");
         } catch (Exception e) {
-            Log.e(TAG, "can't load megvii");
+            Log.e(TAG, "can't load st_mobile");
         }
     }
 

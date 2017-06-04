@@ -40,6 +40,7 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RunnableFuture;
 
 import static com.martin.ads.omoshiroilib.util.AnimationUtils.displayAnim;
 
@@ -200,6 +201,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
             @Override
             public void onClickEffectButton() {
                 hideTips();
+                showHint("换脸/特效还木有集成进来");
             }
         });
 
@@ -305,12 +307,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
                     });
                     cameraView.getGlRender().startRecording();
                 }else{
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showHint(getString(R.string.not_support_media_codec));
-                        }
-                    });
+                    showHint(getString(R.string.not_support_media_codec));
                 }
                 Log.d(TAG, "onLongClickStart: ");
             }
@@ -330,6 +327,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
             @Override
             public void onClickEffectButton() {
                 appSettingBtn.setSelected(!appSettingBtn.isSelected());
+                showHint("Apps设置还木有做");
             }
         });
         cameraFocusView=(ImageView) findViewById(R.id.iv_focus_anim_view);
@@ -456,10 +454,16 @@ public class CameraPreviewActivity extends AppCompatActivity {
             cameraView.onDestroy();
     }
 
-    private void showHint(String hint){
-        TastyToast.makeText(getApplicationContext(), hint, TastyToast.LENGTH_LONG,
-                TastyToast.INFO);
-        //Toast.makeText(this,hint , Toast.LENGTH_LONG).show();
+    private void showHint(final String hint){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TastyToast.makeText(getApplicationContext(), hint, TastyToast.LENGTH_LONG,
+                        TastyToast.INFO);
+            }
+        });
+
+        Toast.makeText(this,hint ,Toast.LENGTH_LONG).show();
     }
 
     private EffectsButton getEffectsBtn(int id){

@@ -1,18 +1,4 @@
-/*
- * Copyright (C) 2012 CyberAgent
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 package com.martin.ads.testfaceu.faceu;
 
@@ -26,37 +12,25 @@ import android.hardware.Camera;
 import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.opengl.GLES20;
-import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Build;
-import android.os.Environment;
 import android.support.annotation.IntDef;
-import android.util.Pair;
 
 import com.lemon.faceu.openglfilter.common.FilterConstants;
-import com.lemon.faceu.openglfilter.detect.DirectionDetector;
-import com.lemon.faceu.openglfilter.gpuimage.base.FixedFrameBufferQueue;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.lemon.faceu.openglfilter.gpuimage.draw.OpenGlUtils;
 import com.lemon.faceu.openglfilter.gpuimage.draw.Rotation;
-import com.lemon.faceu.openglfilter.gpuimage.util.TextureRotationUtil;
-import com.lemon.faceu.openglfilter.grab.IImageReader;
-import com.lemon.faceu.openglfilter.grab.SyncEGLImageReader;
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.lemon.faceu.sdk.utils.ObjectCacher;
-import com.lemon.faceusdkdemo.detect.FaceDetectorType;
 import com.lemon.faceusdkdemo.detect.IFaceDetector;
+import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.testfaceu.faceu.detect.SenseTimeDetector;
 import com.martin.ads.testfaceu.faceu.fake.Logger;
 import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
 
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
@@ -64,7 +38,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.Semaphore;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -74,38 +47,12 @@ import javax.microedition.khronos.opengles.GL10;
 public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDetector.FaceDetectorListener {
     private final static Logger log = LoggerFactory.getLogger(GPUImageRenderer.class);
 
-    /**
-     * 摄像头数据监听器
-     */
-    public interface OnPrevFrameListener {
-        /**
-         * 一帧数据的回复
-         *
-         * @param data YUV数据，上层不能保存该引用，如果需要保存，则自己复制一份
-         */
-        void onPrevFrame(byte[] data, int width, int height);
-    }
-
-    /**
-     * 绘制相关的回调接口
-     */
-    public interface OnDrawFrameListener {
-        void onDrawFrame();
-    }
-
-    public interface OnProcessedFrameListener {
-        void onProcessedFrame(byte[] data, int width, int height, long timestamp, Rotation rotation);
-    }
-
     @IntDef(value = {
             CMD_PROCESS_FRAME,
             CMD_SETUP_SURFACE_TEXTURE,
             CMD_SET_FILTER,
-            CMD_DELETE_IMAGE,
-            CMD_SET_IMAGE_BITMAP,
             CMD_RERUN_ONDRAW_RUNNABLE,
             CMD_RERUN_DRAWEND_RUNNABLE,
-            CMD_RESET_RS_SIZE
     }
     )
     @Retention(RetentionPolicy.SOURCE)
@@ -115,11 +62,8 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
     final static int CMD_PROCESS_FRAME = 0;
     final static int CMD_SETUP_SURFACE_TEXTURE = 1;
     final static int CMD_SET_FILTER = 2;
-    final static int CMD_DELETE_IMAGE = 3;
-    final static int CMD_SET_IMAGE_BITMAP = 4;
     final static int CMD_RERUN_ONDRAW_RUNNABLE = 5;
     final static int CMD_RERUN_DRAWEND_RUNNABLE = 6;
-    final static int CMD_RESET_RS_SIZE = 7;
 
     /**
      * 命令的一项
@@ -161,18 +105,10 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
     boolean mFlipVertical;
     GPUImage.ScaleType mScaleType = GPUImage.ScaleType.CENTER_CROP;
 
-    OnPrevFrameListener mPrevFrameLsn;
-    OnDrawFrameListener mDrawFrameLsn;
-    OnProcessedFrameListener mProcessedFrameLsn;
-
     // 用来缓存当前摄像头的信息，这里假设了一个camera的实例的预览大小一旦设置了，就不会再变
     Camera mCacheCamera = null;
     Point mCachePrevSize;
     DirectionDetector mDirectionDetector;
-
-    //RsYuv mRsYuv;
-    FixedFrameBufferQueue mFrameBufferQueue;
-    SyncEGLImageReader mSyncEGLImageReader;
 
     final Object mFaceDetectorLock = new Object();
     IFaceDetector mFaceDetector;
@@ -181,9 +117,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
     PointF[][] mFaceDetectResultLst;
 
     boolean mSurfaceCreated = false; // surface是否创建了，如果surface没有创建，意味着render线程还没开始执行
-
-    int mOutputTextureId[] = new int[]{OpenGlUtils.NO_TEXTURE};
-    int mOutputFrameBufferId[] = new int[]{OpenGlUtils.NO_TEXTURE};
 
     GPUImageFilter mNormalFilter = new GPUImageFilter();
     GLSurfaceView mSurfaceView;
@@ -220,13 +153,10 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         mGLCubeBuffer.put(CUBE).position(0);
 
-        mGLTextureBuffer = ByteBuffer.allocateDirect(TextureRotationUtil.TEXTURE_NO_ROTATION.length * 4)
+        mGLTextureBuffer = ByteBuffer.allocateDirect(PlaneTextureRotationUtils.TEXTURE_NO_ROTATION.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         setRotation(Rotation.NORMAL, false, false);
 
-//        if (FuCore.getCore().canUseRs()) {
-//            mRsYuv = new RsYuv(FuCore.getCore().getGlobalRs());
-//        }
 
         mFaceDetectResultLst = new PointF[FilterConstants.MAX_FACE_COUNT][106];
         for (int i = 0; i < FilterConstants.MAX_FACE_COUNT; ++i) {
@@ -241,22 +171,20 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
                 .asFloatBuffer();
         mNormalCubeBuffer.put(FilterConstants.CUBE).position(0);
 
-        float[] flipTexture = TextureRotationUtil.getRotation(Rotation.NORMAL, false, true);
+        float[] flipTexture = PlaneTextureRotationUtils.getRotation(com.martin.ads.omoshiroilib.constant.Rotation.ROTATION_270, false, true);
         mNormalTextureFlipBuffer = ByteBuffer.allocateDirect(flipTexture.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
         mNormalTextureFlipBuffer.put(flipTexture).position(0);
     }
 
-    public void initFaceDetector(FaceDetectorType type) {
+    public void initFaceDetector() {
         synchronized (mFaceDetectorLock) {
             if (null != mFaceDetector) {
                 return;
             }
 
-            if (type == FaceDetectorType.SENSETIME) {
-                mFaceDetector = new SenseTimeDetector(this);
-            }
+            mFaceDetector = new SenseTimeDetector(this);
             mFaceDetector.init(FuCore.getCore().getContext());
         }
     }
@@ -291,10 +219,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         mGroupBase.init();
         mNormalFilter.init();
 
-        if (null != mFrameBufferQueue) {
-            mFrameBufferQueue.destroy();
-            mFrameBufferQueue = null;
-        }
     }
 
     @Override
@@ -308,44 +232,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         mGroupBase.onOutputSizeChanged(width, height);
 
         adjustImageScaling();
-
-        if (null != mSyncEGLImageReader) {
-            mSyncEGLImageReader.stopRecording();
-            mSyncEGLImageReader = null;
-        }
-
-        mSyncEGLImageReader = new SyncEGLImageReader();
-        mSyncEGLImageReader.startRecording(null, width, height);
-        mSyncEGLImageReader.setImageReaderCallback(new IImageReader.ImageReaderCallback() {
-            @Override
-            public void onReadData(long timestamp, ByteBuffer pixelBuf, int height, int width, Rotation rotation) {
-//                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//                bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(pixelBuf.array()));
-//                saveBmpToFile(bitmap, new File(Environment.getExternalStorageDirectory()+"/Omoshiroi/" + timestamp + ".jpg"));
-                if (mProcessedFrameLsn != null) {
-                    mProcessedFrameLsn.onProcessedFrame(pixelBuf.array(), width, height, timestamp, rotation);
-                }
-            }
-        });
-
-        // 大小变化的时候，并且正在录制，则需要重新初始化 FrameBuffer
-        if (null != mSyncEGLImageReader) {
-            if (null != mFrameBufferQueue) {
-                mFrameBufferQueue.destroy();
-            }
-            mFrameBufferQueue = new FixedFrameBufferQueue();
-            mFrameBufferQueue.init(width, height);
-        }
-
-        if (mOutputTextureId[0] == OpenGlUtils.NO_TEXTURE) { // first time
-            GLES20.glGenTextures(1, mOutputTextureId, 0);
-        }
-
-        if (mOutputFrameBufferId[0] == OpenGlUtils.NO_TEXTURE) { // first time
-            GLES20.glGenFramebuffers(1, mOutputFrameBufferId, 0);
-
-            bindFrameBuffer(mOutputFrameBufferId[0], mOutputTextureId[0], width, height);
-        }
 
         mNormalFilter.onOutputSizeChanged(width, height);
     }
@@ -366,65 +252,16 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
             timestamp = mSurfaceTexture.getTimestamp();
         }
 
-        Pair<Integer, Integer> fbo = null;
-        if (null != mFrameBufferQueue) {
-            fbo = (Pair<Integer, Integer>) mFrameBufferQueue.getFrameBufferId(); // frame buffer -- texture id
-        }
-
         // 坐标已经规范到了屏幕范围内了
         mGroupBase.setFaceDetResult(mFaceCount, mFaceDetectResultLst, mOutputWidth, mOutputHeight);
 
-        if (null != fbo) {
-            // 如果上层没有设置绘制到屏幕时使用的filter，则创建一个普通的filter
-            if (null == mNormalFilter) {
-                mNormalFilter = new GPUImageFilter();
-                mNormalFilter.init();
-                mNormalFilter.onOutputSizeChanged(mOutputWidth, mOutputHeight);
-            }
-
-            // textureId：图像输入
-            // outFrameBufferId：需要绘制到哪里。如果为-1，表示需要绘制到屏幕；如果不为-1，则必须先行绑定好Texture等。
-            // cubeBuffer：绘制的矩阵
-            // textureBuffer：需要使用图像的哪一部分作为输入
-            // timestamp：时间戳，目前传为0即可
-            mGroupBase.draw(mGLTextureId, fbo.first, mGLCubeBuffer, mGLTextureBuffer);
-            mNormalFilter.onDraw(fbo.second, mNormalCubeBuffer, mNormalTextureFlipBuffer);
-        } else {
-            mGroupBase.draw(mGLTextureId, OpenGlUtils.NO_TEXTURE, mGLCubeBuffer, mGLTextureBuffer);
-        }
-
-        // 使用 mVideoRecorder 需要加锁
-        if (null != mSyncEGLImageReader && null != mSurfaceTexture && null != fbo) {
-            Semaphore semaphore = mSyncEGLImageReader.frameAvailable(fbo.second, timestamp, true);
-            mFrameBufferQueue.markCurrentTextureBeenUsed(fbo.second, semaphore);
-        }
-
-        if (null != mDrawFrameLsn) {
-            mDrawFrameLsn.onDrawFrame();
-        }
+        mGroupBase.draw(mGLTextureId, OpenGlUtils.NO_TEXTURE, mGLCubeBuffer, mGLTextureBuffer);
 
         runAll(mRunOnDrawEnd);
     }
 
     public void uninit() {
         stopFaceDetector();
-
-        if (null != mSyncEGLImageReader) {
-            mSyncEGLImageReader.stopRecording();
-            mSyncEGLImageReader = null;
-        }
-    }
-
-    public void setOnPrevFrameListener(OnPrevFrameListener listener) {
-        mPrevFrameLsn = listener;
-    }
-
-    public void setOnDrawFrameListener(OnDrawFrameListener listener) {
-        mDrawFrameLsn = listener;
-    }
-
-    public void setOnProcessedFrameListener(OnProcessedFrameListener listener) {
-        mProcessedFrameLsn = listener;
     }
 
     void runAll(Queue<CmdItem> queue) {
@@ -442,20 +279,11 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
                     case CMD_SET_FILTER:
                         setFilterInternal((GPUImageFilterGroupBase) cmdItem.param1);
                         break;
-                    case CMD_DELETE_IMAGE:
-                        deleteImageInternal();
-                        break;
-                    case CMD_SET_IMAGE_BITMAP:
-                        setImageBitmapInternal((Bitmap) cmdItem.param1, (Boolean) cmdItem.param2);
-                        break;
                     case CMD_RERUN_ONDRAW_RUNNABLE:
                         ((Runnable) cmdItem.param1).run();
                         break;
                     case CMD_RERUN_DRAWEND_RUNNABLE:
                         ((Runnable) cmdItem.param1).run();
-                        break;
-                    case CMD_RESET_RS_SIZE:
-                        resetRsSize((Integer) cmdItem.param1, (Integer) cmdItem.param2);
                         break;
                     default:
                         throw new RuntimeException("can't find command");
@@ -465,17 +293,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
                 mCmdItemCacher.cache(cmdItem);
             }
         }
-    }
-
-    void resetRsSize(int width, int height) {
-//        if (null != mRsYuv) {
-//            mRsYuv.reset(width, height);
-//        }
-    }
-
-    void deleteImageInternal() {
-        GLES20.glDeleteTextures(1, new int[]{mGLTextureId}, 0);
-        mGLTextureId = OpenGlUtils.NO_TEXTURE;
     }
 
     void processFrame(final byte[] data, final Camera camera) {
@@ -498,11 +315,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
             }
         }
 
-//        if (!FuCore.getCore().canUseRs()) {
-            JniEntry.YUVtoRBGA(data, mCachePrevSize.x, mCachePrevSize.y, mGLRgbBuffer.array());
-//        }else {
-//            mRsYuv.execute(data, mGLRgbBuffer.array());
-//        }
+        JniEntry.YUVtoRBGA(data, mCachePrevSize.x, mCachePrevSize.y, mGLRgbBuffer.array());
 
         mGLTextureId = OpenGlUtils.loadTexture(mGLRgbBuffer, mCachePrevSize, mGLTextureId);
         camera.addCallbackBuffer(data);
@@ -554,25 +367,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         });
     }
 
-    void setImageBitmapInternal(final Bitmap bitmap, final boolean recycle) {
-        Bitmap resizedBitmap = null;
-        if (bitmap.getWidth() % 2 == 1) {
-            resizedBitmap = Bitmap.createBitmap(bitmap.getWidth() + 1, bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas can = new Canvas(resizedBitmap);
-            can.drawARGB(0x00, 0x00, 0x00, 0x00);
-            can.drawBitmap(bitmap, 0, 0, null);
-        }
-
-        mGLTextureId = OpenGlUtils.loadTexture(resizedBitmap != null ? resizedBitmap : bitmap,
-                mGLTextureId, recycle);
-        if (resizedBitmap != null) {
-            resizedBitmap.recycle();
-        }
-        mImageWidth = bitmap.getWidth();
-        mImageHeight = bitmap.getHeight();
-        adjustImageScaling();
-    }
-
     @Override
     public void onPreviewFrame(final byte[] data, final Camera camera) {
         // 如果还没到下一帧所要求的时间点,则丢弃这一帧
@@ -593,10 +387,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
             mCachePrevSize = new Point(previewSize.width, previewSize.height);
         }
 
-        if (null != mPrevFrameLsn) {
-            mPrevFrameLsn.onPrevFrame(data, mCachePrevSize.x, mCachePrevSize.y);
-        }
-
         if (mGLRgbBuffer == null || mGLRgbBuffer.capacity() != mCachePrevSize.x * mCachePrevSize.y * 4) {
             mGLRgbBuffer = ByteBuffer.allocate(mCachePrevSize.x * mCachePrevSize.y * 4);
         }
@@ -613,28 +403,9 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         runOnDraw(CMD_SET_FILTER, filter, null);
     }
 
-    public void deleteImage() {
-        runOnDraw(CMD_DELETE_IMAGE, null, null);
-    }
-
-    public void setImageBitmap(final Bitmap bitmap) {
-        setImageBitmap(bitmap, true);
-    }
-
-    public void setImageBitmap(final Bitmap bitmap, final boolean recycle) {
-        if (bitmap == null) {
-            return;
-        }
-
-        runOnDraw(CMD_SET_IMAGE_BITMAP, bitmap, recycle);
-    }
 
     public void addRunnableOnDrawEnd(Runnable runnable) {
         runOnDrawEnd(CMD_RERUN_DRAWEND_RUNNABLE, runnable, null);
-    }
-
-    public void setScaleType(GPUImage.ScaleType scaleType) {
-        mScaleType = scaleType;
     }
 
     public void setGlSurfaceView(GLSurfaceView surfaceView) {
@@ -665,7 +436,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         float ratioHeight = imageHeightNew / outputHeight;
 
         float[] cube = CUBE;
-        float[] textureCords = TextureRotationUtil.getRotation(mRotation,
+        float[] textureCords = PlaneTextureRotationUtils.getRotation(com.martin.ads.omoshiroilib.constant.Rotation.ROTATION_270,
                 mFlipHorizontal, mFlipVertical);
         if (mScaleType == GPUImage.ScaleType.CENTER_CROP) {
             float distHorizontal = (1 - 1 / ratioWidth) / 2;
@@ -773,47 +544,4 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, SenseTimeDet
         }
     }
 
-    private void bindFrameBuffer(int fbBufferId, int fbTextureId, int width, int height) {
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, fbTextureId);
-        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height, 0,
-                GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
-
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fbBufferId);
-        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                GLES20.GL_TEXTURE_2D, fbTextureId, 0);
-
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-    }
-
-    public static boolean saveBmpToFile(Bitmap bmp, File file) {
-        if (null == bmp || null == file) {
-            log.error("bmp or file is null");
-            return false;
-        }
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        return writeToFile(baos.toByteArray(), file);
-    }
-
-    public static boolean writeToFile(byte[] data, File file) {
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write(data);
-            fos.flush();
-            fos.close();
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
 }
