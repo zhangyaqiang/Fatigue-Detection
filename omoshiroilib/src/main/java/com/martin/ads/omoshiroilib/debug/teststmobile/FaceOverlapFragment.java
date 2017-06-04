@@ -134,6 +134,7 @@ public class FaceOverlapFragment extends CameraOverlapFragment {
 					 */
 					long start_track = System.currentTimeMillis();
 //					STMobile106[] faces = tracker.track(tmp, dir,PREVIEW_WIDTH,PREVIEW_HEIGHT);
+					Log.d("lalala", "dir st-test: "+dir);
 					STMobileFaceAction[] faceActions = tracker.trackFaceAction(tmp, dir, PREVIEW_WIDTH, PREVIEW_HEIGHT);
 					long end_track = System.currentTimeMillis();
 					Log.i("track106", "track cost "+(end_track - start_track)+" ms");

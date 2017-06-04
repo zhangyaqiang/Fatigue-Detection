@@ -3,6 +3,7 @@ package com.martin.ads.omoshiroilib.flyu;
 import android.content.Context;
 import android.util.Log;
 import android.view.OrientationEventListener;
+import android.view.Surface;
 
 /**
  * Created by Ads on 2017/6/4.
@@ -15,11 +16,15 @@ public class DirectionDetector {
     private boolean lockDirection;
     private boolean started;
 
+    //手机左转90度或画面右转90度
+    //Surface.ROTATION_90
     public static final int ROTATION_LANDSCAPE = 0;
     //Surface.ROTATION_0
+    // (natural orientation) 平板横屏 手机竖屏
     public static final int ROTATION_PORTRAIT = 1;
     //Surface.ROTATION_270
     public static final int ROTATION_SEASCAPE = 2;
+    //Surface.ROTATION_180
     public static final int ROTATION_UPSIDE_DOWN = 3;
 
 

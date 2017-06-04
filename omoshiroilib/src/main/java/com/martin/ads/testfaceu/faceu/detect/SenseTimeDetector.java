@@ -1,9 +1,7 @@
 package com.martin.ads.testfaceu.faceu.detect;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -12,8 +10,8 @@ import android.util.Log;
 
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.constant.Rotation;
+import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
-import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.sensetime.stmobileapi.STImageFormat;
 import com.sensetime.stmobileapi.STMobile106;
 import com.sensetime.stmobileapi.STMobileMultiTrack106;
@@ -239,13 +237,6 @@ public class SenseTimeDetector implements Runnable ,IFaceDetector{
         mFaceTrack = null;
     }
 
-    public interface ClockwiseDirection{
-        int DEG_0 = 0;
-        int DEG_90 = 1;
-        int DEG_180 = 2;
-        int DEG_270 = 3;
-    }
-
     @WorkerThread
     void handleDetect(ByteBuffer sampleData, int direction) {
         mDetecting = true;
@@ -258,22 +249,23 @@ public class SenseTimeDetector implements Runnable ,IFaceDetector{
         // 人脸识别的方向定义有些特殊
         int faceDirection = 0;
         switch (direction) {
-            case ClockwiseDirection.DEG_0:
+            case DirectionDetector.ROTATION_LANDSCAPE:
                 faceDirection = 3;
                 break;
-            case ClockwiseDirection.DEG_90:
+            case DirectionDetector.ROTATION_PORTRAIT:
                 faceDirection = 0;
                 break;
-            case ClockwiseDirection.DEG_180:
+            case DirectionDetector.ROTATION_SEASCAPE:
                 faceDirection = 1;
                 break;
-            case ClockwiseDirection.DEG_270:
+            case DirectionDetector.ROTATION_UPSIDE_DOWN:
                 faceDirection = 2;
                 break;
         }
 
         long startTick = System.currentTimeMillis();
 
+        Log.d("lalala", "dir std-test: "+faceDirection);
         STMobile106[] faces = mFaceTrack.track(sampleData.array(), STImageFormat.ST_PIX_FMT_GRAY8,
                 mSampleWidth, mSampleHeight, mSampleWidth, faceDirection);
         Log.d(TAG, "cost: " + (System.currentTimeMillis() - startTick));
