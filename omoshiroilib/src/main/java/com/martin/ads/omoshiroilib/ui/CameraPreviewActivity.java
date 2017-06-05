@@ -36,6 +36,7 @@ import com.martin.ads.omoshiroilib.util.BitmapUtils;
 import com.martin.ads.omoshiroilib.util.DisplayUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 import com.martin.ads.omoshiroilib.encoder.MediaCodecUtils;
+import com.martin.ads.testfaceu.faceu.ui.TestFaceUActivity;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import java.util.ArrayList;

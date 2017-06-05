@@ -9,6 +9,7 @@ import android.support.annotation.WorkerThread;
 import android.util.Log;
 
 import com.lemon.faceu.sdk.utils.JniEntry;
+
 import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;

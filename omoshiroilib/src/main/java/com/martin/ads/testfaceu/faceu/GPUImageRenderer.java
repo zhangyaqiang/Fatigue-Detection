@@ -14,17 +14,19 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Build;
 import android.support.annotation.IntDef;
+import android.util.Log;
 
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.lemon.faceu.sdk.utils.JniEntry;
-import com.lemon.faceu.sdk.utils.ObjectCacher;
 
 import com.martin.ads.omoshiroilib.constant.GLEtc;
 import com.martin.ads.omoshiroilib.constant.Rotation;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.FilterConstants;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
+import com.martin.ads.omoshiroilib.flyu.ObjectCache;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
 import com.martin.ads.testfaceu.faceu.detect.SenseTimeDetector;
@@ -80,9 +82,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
     GPUImageFilterGroupBase mGroupBase;
     int mGLTextureId;
 
-    final FloatBuffer mNormalCubeBuffer;
-    final FloatBuffer mNormalTextureFlipBuffer;
-
     SurfaceTexture mSurfaceTexture = null;
     final FloatBuffer mGLCubeBuffer;
     final FloatBuffer mGLTextureBuffer;
@@ -118,7 +117,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
 
     boolean mSurfaceCreated = false; // surface是否创建了，如果surface没有创建，意味着render线程还没开始执行
 
-    GPUImageFilter mNormalFilter = new GPUImageFilter();
     GLSurfaceView mSurfaceView;
 
     int mCameraFrameRate = 30; // 录制的时候,不好改变摄像头的帧率,所以需要在收到数据的时候丢帧
@@ -129,7 +127,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         mDirectionDetector = detector;
     }
 
-    ObjectCacher<CmdItem> mCmdItemCacher = new ObjectCacher<CmdItem>(20) {
+    ObjectCache<CmdItem> mCmdItemCacher = new ObjectCache<CmdItem>(20) {
         @Override
         public CmdItem newInstance() {
             return new CmdItem();
@@ -164,17 +162,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
                 pointFs[j] = new PointF(0, 0);
             }
         }
-
-        mNormalCubeBuffer = ByteBuffer.allocateDirect(FilterConstants.CUBE.length * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        mNormalCubeBuffer.put(FilterConstants.CUBE).position(0);
-
-        float[] flipTexture = PlaneTextureRotationUtils.getRotation(Rotation.ROTATION_270, false, true);
-        mNormalTextureFlipBuffer = ByteBuffer.allocateDirect(flipTexture.length * 4)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        mNormalTextureFlipBuffer.put(flipTexture).position(0);
     }
 
     public void initFaceDetector() {
@@ -184,7 +171,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
             }
 
             mFaceDetector = new SenseTimeDetector(this);
-            mFaceDetector.init(FuCore.getCore().getContext());
+            mFaceDetector.init(GlobalConfig.context);
         }
     }
 
@@ -216,8 +203,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         GLES20.glClearColor(0, 0, 0, 1);
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         mGroupBase.init();
-        mNormalFilter.init();
-
     }
 
     @Override
@@ -231,8 +216,6 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         mGroupBase.onOutputSizeChanged(width, height);
 
         adjustImageScaling();
-
-        mNormalFilter.onOutputSizeChanged(width, height);
     }
 
     @Override
@@ -356,6 +339,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
         mGroupBase.setFilterDrawListener(new GPUImageFilterGroupBase.IFilterDrawListener() {
             @Override
             public void onSingleFilterDrawed(int width, int height) {
+                Log.d("lalala", "onSingleFilterDrawed: ");
                 /*
                 ByteBuffer buffer = ByteBuffer.allocateDirect(width * height * 4);
                 GLES20.glReadPixels(0, 0, width, height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, buffer);

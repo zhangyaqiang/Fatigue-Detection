@@ -3,7 +3,6 @@ package com.martin.ads.testfaceu.faceu.ui;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -25,12 +24,12 @@ import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceNet;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
 import com.lemon.faceu.sdk.mediaplayer.AudioFocusCore;
 import com.martin.ads.omoshiroilib.R;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.EffectAdapter;
 import com.martin.ads.omoshiroilib.flyu.FilterConstants;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
-import com.martin.ads.testfaceu.faceu.FuCore;
 import com.martin.ads.testfaceu.faceu.GPUImageRenderer;
 import com.martin.ads.testfaceu.faceu.GPUVideoViewDecorator;
 import com.martin.ads.testfaceu.faceu.HardCodeData;
@@ -222,7 +221,7 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
 
     protected void initUIandEvent() {
         // init faceu related
-        FuCore.initialize(getApplicationContext());
+        GlobalConfig.context=getApplicationContext();
         AudioFocusCore.initialize(getApplicationContext());
         mCurrentFilter = new GPUImageFilterGroup();
         mCurrentFilter.addFilter(new GPUImageFilter());
