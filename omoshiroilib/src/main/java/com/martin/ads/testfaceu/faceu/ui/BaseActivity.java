@@ -31,8 +31,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         mkdirs(DemoConstants.APPDIR);
         makeNoMediaFile(DemoConstants.APPDIR);
 
-        for (HardCodeData.EffectItem item : HardCodeData.sItems) {
-            uncompressAsset(this, item.name, item.unzipPath);
+        HardCodeData.initHardCodeData();
+        for (HardCodeData.EffectItem item : HardCodeData.itemList) {
+            uncompressAsset(this, item.zipFilePath, item.unzipPath);
         }
 
         int ret = FilterCore.initialize(this, null);

@@ -1,15 +1,26 @@
 package com.martin.ads.testfaceu.faceu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HardCodeData {
     public static class EffectItem {
         public String name;
+        public String zipFilePath;
         public int type;
         public String unzipPath;
+        public String description;
 
-        public EffectItem(String name, int type, String unzipPath) {
+        public EffectItem(String name, int type, String unzipPath, String description) {
             this.name = name;
+            this.zipFilePath = "faceu_effects/res/"+name+".zip";
             this.type = type;
             this.unzipPath = unzipPath;
+            this.description = description;
+        }
+
+        public String getThumbFilePath(){
+            return "faceu_effects/thumbs/"+name+".png";
         }
     }
 
@@ -20,15 +31,19 @@ public class HardCodeData {
 //    public final static int TYPE_MULTI_TRIANGLE    = 4;  // 注意强制更新的内容
 //    public final static int TYPE_TWO_PEOPLE_SWITCH = 5;
 //    public final static int TYPE_CLONE_PEOPLE_FACE = 6;
-    public static EffectItem[] sItems = new EffectItem[]{
-        new EffectItem("faceu_effects/900029_5.zip", 3, "900029_5"), //smallmouth
-        new EffectItem("faceu_effects/50291_3.zip", 3, "50291_3"), //fatface
-        new EffectItem("faceu_effects/170009_2.zip", 2, "170009_2"), //bigeye
-        new EffectItem("faceu_effects/170010_1.zip", 2, "mirrorface"),
-        new EffectItem("faceu_effects/50109_2.zip", 1, "weisuo"),
-        new EffectItem("faceu_effects/20088_1_b.zip", 3, "animal_catfoot_b"),
-        //new EffectItem("faceu_effects/10007_1_sb.zip", 0, "10007_1_sb"),
-        new EffectItem("faceu_effects/900317_1_tiger.zip", 3, "900317_1_tiger"),
-    };
+    public static List<EffectItem> itemList;
 
+    public static void initHardCodeData(){
+        itemList=new ArrayList<>();
+        itemList.add(new EffectItem("10012_2", 0, "10012_2","rainbow"));
+        itemList.add(new EffectItem("50109_2", 1, "50109_2","weisuo / xieyan"));
+        itemList.add(new EffectItem("50291_3", 3, "50291_3","fatface"));
+        itemList.add(new EffectItem("20088_1_b", 3, "20088_1_b","animal_catfoot_b"));
+        itemList.add(new EffectItem("900029_5", 3, "900029_5","smallmouth"));
+        itemList.add(new EffectItem("50216_1", 1, "50216_1","zhibo"));
+        itemList.add(new EffectItem("170009_2", 2, "170009_2","slim face"));
+        itemList.add(new EffectItem("170010_1", 2, "170010_1","mirrorface"));
+        itemList.add(new EffectItem("10007_1_sb", 0, "10007_1_sb","shabi"));
+        itemList.add(new EffectItem("900317_1_tiger", 3, "900317_1_tiger","tiger"));
+    }
 }

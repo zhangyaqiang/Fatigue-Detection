@@ -1,6 +1,5 @@
 package com.martin.ads.omoshiroilib.debug.lab;
 
-import android.Manifest;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -52,7 +51,7 @@ public class FilterThumbActivity extends AppCompatActivity {
 
     private void updateThumb(){
         imageView.setImageBitmap(
-                FilterResourceHelper.getFilterThumbFromFiles(this,filterTypes[currentPos]));
+                FilterResourceHelper.getFilterThumbFromFile(this,filterTypes[currentPos]));
         currentFilterText.setText(filterTypes[currentPos].name().toUpperCase());
         currentPos=(currentPos+1)%filterSize;
     }

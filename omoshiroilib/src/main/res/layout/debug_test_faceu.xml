@@ -2,31 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_view"
     android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:id="@+id/control_layout"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/swtich_filter_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:background="#44000000"
-            android:textColor="#dddddd"
-            android:text="swtich_filter"
-            android:visibility="visible"/>
-
-        <Button
-            android:id="@+id/swtich_camera_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            android:background="#44000000"
-            android:textColor="#dddddd"
-            android:text="swtich_camera"
-            android:visibility="invisible"/>
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/effect_list"
+        android:layout_width="match_parent"
+        android:layout_height="76.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="#88000000"
+        android:padding="5.0dip"
+        android:scrollbars="none"/>
 </RelativeLayout>

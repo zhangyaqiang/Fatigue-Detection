@@ -3,7 +3,6 @@ package com.martin.ads.omoshiroilib.ui;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
 
     @Override
     public FilterHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("lalala", "onCreateViewHolder: "+viewType);
         if(viewType == -1){
             View view = LayoutInflater.from(context).inflate(R.layout.filter_division_layout,
                     parent, false);
@@ -61,7 +59,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
     public void onBindViewHolder(FilterHolder holder,final int position) {
         if(position==1) return;
         final FilterType filterType=filterTypeList.get(position);
-        holder.thumbImage.setImageBitmap(FilterResourceHelper.getFilterThumbFromFiles(context,filterType));
+        holder.thumbImage.setImageBitmap(FilterResourceHelper.getFilterThumbFromFile(context,filterType));
         holder.filterName.setText(FilterResourceHelper.getSimpleName(filterType));
         if(position == selected){
             holder.filterImg.setBackgroundResource(R.drawable.effect_item_selected_bg);
@@ -80,7 +78,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
                 selected = position;
                 notifyItemChanged(lastSelected);
                 notifyItemChanged(position);
-                onFilterChangeListener.onFilterChanged(filterTypeList.get(position));
+                if(onFilterChangeListener!=null)
+                    onFilterChangeListener.onFilterChanged(filterTypeList.get(position));
             }
         });
     }

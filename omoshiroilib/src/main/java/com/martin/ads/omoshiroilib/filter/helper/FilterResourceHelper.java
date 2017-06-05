@@ -72,7 +72,7 @@ public class FilterResourceHelper {
         return ret.toUpperCase();
     }
 
-    public static Bitmap getFilterThumbFromFiles(Context context,FilterType filterType){
+    public static Bitmap getFilterThumbFromFile(Context context, FilterType filterType){
         return BitmapUtils.loadBitmapFromFile(new File(context.getFilesDir().getAbsolutePath(),"thumbs").getAbsolutePath()+"/"+filterType.name().toLowerCase()+".jpg");
     }
 

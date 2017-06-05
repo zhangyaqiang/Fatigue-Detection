@@ -1,8 +1,9 @@
 package com.martin.ads.testfaceu.faceu.ui;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -22,8 +23,10 @@ import com.lemon.faceu.openglfilter.gpuimage.switchface.CloneFaceFilter;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceInfo;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceNet;
 import com.lemon.faceu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
+import com.lemon.faceu.sdk.mediaplayer.AudioFocusCore;
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.EffectAdapter;
 import com.martin.ads.omoshiroilib.flyu.FilterConstants;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
@@ -44,6 +47,8 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     private final static Logger log = LoggerFactory.getLogger();
 
     protected boolean mUseFrontFace = true;
+    private RecyclerView effectListView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,22 +61,24 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         mGPUVideoView.setLayoutParams(layoutParams);
         RelativeLayout relativeLayout= (RelativeLayout) findViewById(R.id.root_view);
         relativeLayout.addView(mGPUVideoView);
-        findViewById(R.id.swtich_filter_btn).setOnClickListener(new View.OnClickListener() {
+
+        effectListView= (RecyclerView) findViewById(R.id.effect_list);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        effectListView.setLayoutManager(linearLayoutManager);
+
+        EffectAdapter effectAdapter=new EffectAdapter(this,HardCodeData.itemList);
+        effectListView.setAdapter(effectAdapter);
+        effectAdapter.setOnEffectChangeListener(new EffectAdapter.OnEffectChangeListener() {
             @Override
-            public void onClick(View v) {
-                mCurrentIndex = (mCurrentIndex + 1) % HardCodeData.sItems.length;
-                doUpdateFilter();
+            public void onFilterChanged(HardCodeData.EffectItem effectItem) {
+                doUpdateFilter(effectItem);
                 if(mCameraLoader.getCamera()!=null)
                     mCameraLoader.getCamera().autoFocus(null);
             }
         });
-        findViewById(R.id.swtich_camera_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCameraLoader.switchCamera();
-            }
-        });
-        findViewById(R.id.control_layout).bringToFront();
+        effectListView.bringToFront();
     }
 
 
@@ -81,7 +88,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     protected GPUImageFilterGroupBase mCurrentFilter;
 
     private int mMaxFaceCount = 1;
-    private int mCurrentIndex = 0;
 
     private GPUVideoViewDecorator mGPUVideoView;
 
@@ -112,7 +118,7 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         mGPUVideoView.getGPUImage().setUpCamera(mCameraLoader.getCamera(), mCameraLoader.getDisplayRotate(),
                 mCameraLoader.isUseFrontFace(), false);
 
-        doUpdateFilter();
+        doUpdateFilter(HardCodeData.itemList.get(0));
         doUpdateFaceDetector();
     }
 
@@ -135,8 +141,7 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         mCurrentFilter = null;
     }
 
-    private void doUpdateFilter() {
-        HardCodeData.EffectItem item = HardCodeData.sItems[mCurrentIndex];
+    private void doUpdateFilter(HardCodeData.EffectItem item) {
         GPUImageFilterGroupBase filterGroup = parseEffect(item.type, DemoConstants.APPDIR + "/" + item.unzipPath);
 
         filterGroup.setGroupStateChangedListener(this);
@@ -219,7 +224,7 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     protected void initUIandEvent() {
         // init faceu related
         FuCore.initialize(getApplicationContext());
-
+        AudioFocusCore.initialize(getApplicationContext());
         mCurrentFilter = new GPUImageFilterGroup();
         mCurrentFilter.addFilter(new GPUImageFilter());
         // SETUP SurfaceView
