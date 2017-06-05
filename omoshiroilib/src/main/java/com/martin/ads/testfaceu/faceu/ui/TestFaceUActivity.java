@@ -187,9 +187,9 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     public final static int TYPE_CLONE_PEOPLE_FACE = 6;
 
     protected GPUImageFilterGroupBase parseEffect(int type, String unzipPath) {
-        Log.d("lalala", "parseEffect: "+type+" "+unzipPath);
         GPUImageFilterGroupBase groupBase = new GPUImageFilterGroup();
         groupBase.addFilter(new GPUImageFilter());
+        if(type<0) return groupBase;
         try {
             if (type == TYPE_CHANGE_FACE) {
                 ChangeFaceInfo changeFaceInfo = FilterFactory.readChangeFaceInfo(unzipPath);
@@ -217,7 +217,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         } catch (JSONException e) {
             log.error("parse effect filter data failed, " + e.getMessage());
         }
-
         return groupBase;
     }
 

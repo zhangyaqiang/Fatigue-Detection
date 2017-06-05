@@ -55,7 +55,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
     public static void uncompressAsset(Context context, String assetName, String unzipDirName) {
         AssetManager assManager = context.getAssets();
         InputStream is;

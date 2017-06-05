@@ -35,6 +35,7 @@ public class HardCodeData {
 
     public static void initHardCodeData(){
         itemList=new ArrayList<>();
+        itemList.add(new EffectItem("none", -1, "none","passthrough"));
         itemList.add(new EffectItem("10012_2", 0, "10012_2","rainbow"));
         itemList.add(new EffectItem("50109_2", 1, "50109_2","weisuo / xieyan"));
         itemList.add(new EffectItem("50291_3", 3, "50291_3","fatface"));
