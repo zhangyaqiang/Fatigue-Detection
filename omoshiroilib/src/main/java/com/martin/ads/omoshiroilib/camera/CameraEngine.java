@@ -182,7 +182,7 @@ public class CameraEngine
 
     //Camera.CameraInfo.CAMERA_FACING_FRONT
     //Camera.CameraInfo.CAMERA_FACING_BACK
-    private int getCameraIdWithFacing(int facing){
+    public static int getCameraIdWithFacing(int facing){
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         int cameraCount = Camera.getNumberOfCameras();
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
@@ -192,6 +192,10 @@ public class CameraEngine
             }
         }
         return 0;
+    }
+
+    public static int getNumberOfCameras(){
+        return Camera.getNumberOfCameras();
     }
 
 

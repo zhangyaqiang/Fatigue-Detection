@@ -6,6 +6,7 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.view.Surface;
 
+import com.martin.ads.omoshiroilib.camera.CameraEngine;
 import com.martin.ads.omoshiroilib.flyu.ApiLevel;
 import com.martin.ads.testfaceu.faceu.fake.Logger;
 import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
@@ -25,8 +26,6 @@ public class CameraLoader {
 
     final static int HIGH_PHONE_WIDTH = 720;
     final static int HIGH_PHONE_HEIGH = 1280;
-    final static int LOW_PHONE_WIDTH = 480;
-    final static int LOW_PHONE_HEIGHT = 864;
 
     // 分辨率系数，选取摄像头预览和图片大小的时候，需要与预期值进行比例和差距加权求出差异值，然后取差异最小的
     final static double COEFFICIENT = 1000.0d;
@@ -52,9 +51,8 @@ public class CameraLoader {
     int mDisplayRotate;
     int mMaxWidth;
     int mMaxHeight;
-
-    public CameraLoader(Activity activity, boolean useFrontFace, int highPhoneWidth, int highPhoneHeigt,
-                        int lowPhoneWidth, int lowPhoneHeight) {
+    private int useCamId=0;
+    public CameraLoader(Activity activity, boolean useFrontFace, int highPhoneWidth, int highPhoneHeigt) {
         int maxWidth = highPhoneWidth;
         int maxHeight = highPhoneHeigt;
 
@@ -62,7 +60,7 @@ public class CameraLoader {
     }
 
     public CameraLoader(Activity activity, boolean useFrontFace) {
-        this(activity, useFrontFace, HIGH_PHONE_WIDTH, HIGH_PHONE_HEIGH, LOW_PHONE_WIDTH, LOW_PHONE_HEIGHT);
+        this(activity, useFrontFace, HIGH_PHONE_WIDTH, HIGH_PHONE_HEIGH);
     }
 
     void init(Activity activity, boolean useFrontFace, int maxWidth, int maxHeight) {
@@ -149,7 +147,7 @@ public class CameraLoader {
     }
 
     Camera openCameraByHighApiLvl(boolean useFrontFace) {
-        if (FuCameraCompat.gCameraInfo.getCameraNum() <= 0) {
+        if (CameraEngine.getNumberOfCameras() <= 0) {
             log.info("CameraNum is 0");
             return null;
         }
@@ -157,10 +155,11 @@ public class CameraLoader {
         Camera camera = null;
         try {
             if (true == useFrontFace) {
-                camera = Camera.open(FuCameraCompat.gCameraInfo.getFrontId());
+                useCamId=CameraEngine.getCameraIdWithFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
             } else {
-                camera = Camera.open(FuCameraCompat.gCameraInfo.getBackId());
+                useCamId=CameraEngine.getCameraIdWithFacing(Camera.CameraInfo.CAMERA_FACING_BACK);
             }
+            camera = Camera.open(useCamId);
         } catch (Exception e) {
             log.error("openCamera by high api level failed, " + e.getMessage());
         }
@@ -369,8 +368,7 @@ public class CameraLoader {
             return false;
         }
 
-        int cameraId = useFrontFace ? FuCameraCompat.gCameraInfo.getFrontId() : FuCameraCompat.gCameraInfo.getBackId();
-        initRotateDegree(cameraId);
+        initRotateDegree(useCamId);
 
         try {
             safeSetPreviewFrameRate(mCamera);

@@ -27,7 +27,6 @@ import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.FilterConstants;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
-import com.martin.ads.testfaceu.faceu.FuCameraCompat;
 import com.martin.ads.testfaceu.faceu.FuCore;
 import com.martin.ads.testfaceu.faceu.GPUImageRenderer;
 import com.martin.ads.testfaceu.faceu.GPUVideoViewDecorator;
@@ -221,7 +220,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
         // init faceu related
         FuCore.initialize(getApplicationContext());
 
-        FuCameraCompat.initCameraInfo();
         mCurrentFilter = new GPUImageFilterGroup();
         mCurrentFilter.addFilter(new GPUImageFilter());
         // SETUP SurfaceView
