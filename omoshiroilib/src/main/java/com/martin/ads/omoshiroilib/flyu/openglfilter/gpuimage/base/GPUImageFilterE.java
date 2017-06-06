@@ -2,12 +2,17 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base;
 
 import android.graphics.Bitmap;
 
+import com.lemon.faceu.sdk.utils.IOUtils;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.common.BitmapLoader;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCore;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.ImageLoader;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
 import com.martin.ads.omoshiroilib.flyu.sdk.commoninterface.IImageLoader;
+import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.PointF;
+import android.media.Image;
 import android.opengl.GLES20;
 import android.support.annotation.CallSuper;
 import android.util.Log;
@@ -99,7 +104,7 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                 this.bu[var1] = -1;
             }
 
-            this.bv.set(var1, (Object)null);
+            this.bv.set(var1, null);
         }
 
         if(null != this.bw) {
@@ -185,7 +190,7 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                     if (((String)this.bw.get(i)).startsWith("assets://"))
                     {
                         str = ((String)this.bw.get(i)).substring("assets://".length());
-                        localObject = a.b(str);
+                        localObject = BitmapLoader.b(str);
                     }
                     else if (((String)this.bw.get(i)).startsWith("file://"))
                     {
@@ -193,7 +198,7 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                         if (null != this.by) {
                             localObject = this.by.loadBitmapForName(IOUtils.extractFileName(str));
                         } else {
-                            localObject = a.a(str);
+                            localObject = BitmapLoader.a(str);
                         }
                     }
                     else if (((String)this.bw.get(i)).startsWith("http://"))
@@ -205,7 +210,7 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                         }
                         else
                         {
-                            localObject = b.a().syncLoadFromDiskcache(FilterCore.getCore().getFilterResCache(),
+                            localObject = ImageLoader.a().syncLoadFromDiskcache(FilterCore.getCore().getFilterResCache(),
                                     (String)this.bw.get(i));
                         }
                     }
@@ -229,13 +234,13 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                         }
                         Pair localPair = this.by.getOffsetAndLength(IOUtils.extractFileName(str));
                         if (null != localPair) {
-                            b.a().asyncLoadImage((String)this.bw.get(i), (byte[])localObject, ((Integer)localPair.first)
+                            ImageLoader.a().asyncLoadImage((String)this.bw.get(i), (byte[])localObject, ((Integer)localPair.first)
                                     .intValue(), ((Integer)localPair.second).intValue(), this);
                         }
                     }
                     else
                     {
-                        b.a().asyncLoadImage((String)this.bw.get(i), this);
+                        ImageLoader.a().asyncLoadImage((String)this.bw.get(i), this);
                     }
                 }
             }
@@ -264,6 +269,31 @@ public class GPUImageFilterE extends GPUImageAudioFilter
 
     public void onLoadFinish(String paramString, Bitmap paramBitmap)
     {
-        a(new e(this, paramString, paramBitmap));
+        addTask(new e(this, paramString, paramBitmap));
+    }
+
+    class e implements Runnable {
+        private GPUImageFilterE bC;
+        private String bA;
+        Bitmap bB;
+        e(GPUImageFilterE var1, String var2, Bitmap var3) {
+            this.bC = var1;
+            this.bA = var2;
+            this.bB = var3;
+        }
+
+        public void run() {
+            for(int var1 = 0; var1 < this.bC.bw.size(); ++var1) {
+                if(((String)this.bC.bw.get(var1)).equals(this.bA)) {
+                    this.bC.bv.set(var1, new SoftReference(this.bB));
+                    if(null != this.bB) {
+                        int[] var2 = new int[]{this.bC.bu[var1]};
+                        GLES20.glDeleteTextures(1, var2, 0);
+                        this.bC.bu[var1] = OpenGlUtils.loadTexture(this.bB, -1, false);
+                    }
+                }
+            }
+
+        }
     }
 }

@@ -3,7 +3,6 @@ package com.martin.ads.omoshiroilib.flyu.sdk.mediaplayer;
 import android.media.MediaPlayer;
 import android.util.Log;
 
-import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageAudioFilter;
 
 /**
  * Created by Ads on 2017/6/6.
