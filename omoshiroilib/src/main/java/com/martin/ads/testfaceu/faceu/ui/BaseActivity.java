@@ -9,8 +9,8 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.lemon.faceu.openglfilter.common.FilterCore;
-import com.lemon.faceu.openglfilter.gpuimage.base.MResFileReaderBase;
-import com.martin.ads.omoshiroilib.flyu.MiscUtils;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.MResFileReaderBase;
+import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
 import com.martin.ads.testfaceu.faceu.HardCodeData;
 import com.martin.ads.testfaceu.faceu.fake.Logger;
@@ -33,7 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         HardCodeData.initHardCodeData();
         for (HardCodeData.EffectItem item : HardCodeData.itemList) {
-            uncompressAsset(this, item.zipFilePath, item.unzipPath);
+            if(item.type>=0)
+                uncompressAsset(this, item.zipFilePath, item.unzipPath);
         }
 
         int ret = FilterCore.initialize(this, null);

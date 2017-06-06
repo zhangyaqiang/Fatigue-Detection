@@ -1,4 +1,4 @@
-package com.martin.ads.omoshiroilib.flyu;
+package com.martin.ads.omoshiroilib.flyu.openglfilter.common;
 
 /**
  * Created by Ads on 2017/6/4.

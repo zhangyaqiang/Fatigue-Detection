@@ -8,10 +8,10 @@ import android.os.Message;
 import android.support.annotation.WorkerThread;
 import android.util.Log;
 
-import com.lemon.faceu.sdk.utils.JniEntry;
 
+import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.constant.Rotation;
-import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
 import com.sensetime.stmobileapi.STImageFormat;
 import com.sensetime.stmobileapi.STMobile106;
@@ -160,7 +160,7 @@ public class SenseTimeDetector implements Runnable ,IFaceDetector{
 
             updatePreviewSize(width, height, rotate, mirror);
 
-            JniEntry.YuvToGrayAndScale(yuvData, mInputWidth, mInputHeight, mRotation, mMirror,
+            JniEntry.YuvToGrayAndScaleJava(yuvData, mInputWidth, mInputHeight, mRotation, mMirror,
                     mSampleData.array(), mSampleWidth, mSampleHeight);
             Log.d(TAG, "onFrameAvailable: "+mInputWidth+ " "+mInputHeight+" "+mSampleWidth+" "+mSampleHeight);
             // 将灰度数组生成bitmap的代码,用于测试

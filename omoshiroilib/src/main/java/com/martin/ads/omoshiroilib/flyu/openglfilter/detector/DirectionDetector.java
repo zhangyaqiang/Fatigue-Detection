@@ -1,9 +1,7 @@
-package com.martin.ads.omoshiroilib.flyu;
+package com.martin.ads.omoshiroilib.flyu.openglfilter.detector;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.OrientationEventListener;
-import android.view.Surface;
 
 /**
  * Created by Ads on 2017/6/4.

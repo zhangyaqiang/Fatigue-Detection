@@ -16,7 +16,7 @@ import android.view.ViewTreeObserver;
 import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.lemon.faceu.openglfilter.gpuimage.filtergroup.GPUImageFilterGroup;
 import com.martin.ads.omoshiroilib.constant.Rotation;
-import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
 
 import java.nio.ByteBuffer;
 

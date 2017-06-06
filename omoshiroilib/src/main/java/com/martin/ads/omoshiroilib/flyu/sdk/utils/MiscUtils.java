@@ -1,4 +1,4 @@
-package com.martin.ads.omoshiroilib.flyu;
+package com.martin.ads.omoshiroilib.flyu.sdk.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -29,13 +29,11 @@ public class MiscUtils {
     }
 
     public static void initSeedWithLong(long var0) {
-        Class var2 = MiscUtils.class;
         synchronized(MiscUtils.class) {
             if(null == sRandom) {
                 sRandom = new Random();
             }
         }
-
         sRandom.setSeed(var0);
     }
 
@@ -43,7 +41,6 @@ public class MiscUtils {
         if(!isNilOrNull(var0)) {
             var0 = var0.split("@")[0];
         }
-
         long var1 = safeParseLong(var0, 0L);
         long var3 = getRandom().nextLong() + var1;
         getRandom().setSeed(var3);
@@ -57,11 +54,11 @@ public class MiscUtils {
         }
     }
 
-    public static String formatTimeMills(int var0) {
-        var0 /= 1000;
-        int var1 = var0 / 60;
+    public static String formatTimeMills(int mil) {
+        mil /= 1000;
+        int var1 = mil / 60;
         int var2 = var1 / 60;
-        int var3 = var0 % 60;
+        int var3 = mil % 60;
         var1 %= 60;
         return var2 > 0?String.format("%02d:%02d:%02d", new Object[]{Integer.valueOf(var2), Integer.valueOf(var1), Integer.valueOf(var3)}):String.format("%02d:%02d", new Object[]{Integer.valueOf(var1), Integer.valueOf(var3)});
     }
@@ -87,15 +84,14 @@ public class MiscUtils {
         return true;
     }
 
-    public static String getProcessNameByPid(Context var0, int var1) {
-        if(var0 != null && var1 > 0) {
+    public static String getProcessNameByPid(Context context, int pid) {
+        if(context != null && pid > 0) {
             try {
-                ActivityManager var2 = (ActivityManager)var0.getSystemService("activity");
+                ActivityManager var2 = (ActivityManager)context.getSystemService("activity");
                 Iterator var3 = var2.getRunningAppProcesses().iterator();
-
                 while(var3.hasNext()) {
                     ActivityManager.RunningAppProcessInfo var4 = (ActivityManager.RunningAppProcessInfo)var3.next();
-                    if(var4.pid == var1 && !isNilOrNull(var4.processName)) {
+                    if(var4.pid == pid && !isNilOrNull(var4.processName)) {
                         return var4.processName;
                     }
                 }
@@ -106,7 +102,7 @@ public class MiscUtils {
             byte[] var8 = new byte[128];
 
             try {
-                FileInputStream var9 = new FileInputStream("/proc/" + var1 + "/cmdline");
+                FileInputStream var9 = new FileInputStream("/proc/" + pid + "/cmdline");
                 int var10 = var9.read(var8);
                 var9.close();
                 if(var10 > 0) {

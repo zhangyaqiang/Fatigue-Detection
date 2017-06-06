@@ -1,4 +1,4 @@
-package com.martin.ads.omoshiroilib.flyu;
+package com.martin.ads.omoshiroilib.flyu.sdk.utils;
 
 import java.util.Stack;
 
