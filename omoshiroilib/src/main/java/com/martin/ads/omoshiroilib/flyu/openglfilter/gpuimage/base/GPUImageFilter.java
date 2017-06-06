@@ -18,8 +18,6 @@ import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
  */
 
 public class GPUImageFilter {
-    public static final String aI = "attribute vec4 position;\nattribute vec4 inputTextureCoordinate;\n \nvarying vec2 textureCoordinate;\n \nvoid main()\n{\n    gl_Position = position;\n    textureCoordinate = inputTextureCoordinate.xy;\n}";
-    public static final String aJ = "varying highp vec2 textureCoordinate;\n \nuniform sampler2D inputImageTexture;\n \nvoid main()\n{\n     gl_FragColor = texture2D(inputImageTexture, textureCoordinate);\n}";
     protected static final Bitmap aK = BitmapFactory.decodeResource(FilterCore.getContext().getResources(), R.drawable.filter_res_hold);
     private final LinkedList<Runnable> aL;
     private String aM;

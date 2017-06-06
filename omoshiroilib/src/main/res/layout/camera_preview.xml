@@ -42,7 +42,8 @@
             android:layout_width="55.0dip"
             android:layout_height="55.0dip"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/app_setting" />
+            android:background="@drawable/app_setting"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <RelativeLayout

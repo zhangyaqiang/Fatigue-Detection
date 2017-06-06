@@ -1,6 +1,7 @@
 package com.martin.ads.omoshiroilib.flyu.openglfilter.common;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.flyu.sdk.commoninterface.IDiskCache;
@@ -21,7 +22,9 @@ public class FilterCore {
             return 0;
         }
         theCore = new FilterCore();
-        return theCore.init(paramContext, paramIDiskCache);
+        int ret=theCore.init(paramContext, paramIDiskCache);
+        Log.d("lalala", "initialize: "+System.currentTimeMillis()+" "+ret);
+        return ret;
     }
 
     public static FilterCore getCore()
