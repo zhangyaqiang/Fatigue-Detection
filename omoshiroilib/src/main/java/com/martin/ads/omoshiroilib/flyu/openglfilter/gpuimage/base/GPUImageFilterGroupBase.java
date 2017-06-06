@@ -6,8 +6,10 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 import com.martin.ads.omoshiroilib.constant.Rotation;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCompat;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterConstants;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
+import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 
 import java.nio.ByteBuffer;
@@ -117,12 +119,11 @@ public abstract class GPUImageFilterGroupBase extends GPUImageAudioFilter
         {
             this.bD = new int[2];
             this.bE = new int[2];
-            for (j = 0; j < this.bD.length; j++)
+            for (int j = 0; j < this.bD.length; j++)
             {
                 GLES20.glGenFramebuffers(1, this.bD, j);
                 GLES20.glGenTextures(1, this.bE, j);
                 OpenGlUtils.bindTextureToFrameBuffer(this.bD[j], this.bE[j], paramInt1, paramInt2);
-                Log.d("GPUImageAudioFilter", "new textureId: %d, fbId: %d", new Object[] { Integer.valueOf(this.bE[j]), Integer.valueOf(this.bD[j]) });
             }
         }
     }
@@ -208,8 +209,7 @@ public abstract class GPUImageFilterGroupBase extends GPUImageAudioFilter
 
     public int J()
     {
-        List localList = H();
-        for (GPUImageFilter localGPUImageFilter : localList) {
+        for (GPUImageFilter localGPUImageFilter : H()) {
             if (b(localGPUImageFilter))
             {
                 if (((localGPUImageFilter instanceof ShapeChangeFilter)) && (((ShapeChangeFilter)localGPUImageFilter).R())) {
@@ -225,8 +225,7 @@ public abstract class GPUImageFilterGroupBase extends GPUImageAudioFilter
 
     public void a(int paramInt1, int paramInt2, int paramInt3)
     {
-        List localList = H();
-        for (GPUImageFilter localGPUImageFilter : localList) {
+        for (GPUImageFilter localGPUImageFilter : H()) {
             if (b(localGPUImageFilter))
             {
                 localGPUImageFilter.a(paramInt1, paramInt2, paramInt3);
@@ -237,8 +236,7 @@ public abstract class GPUImageFilterGroupBase extends GPUImageAudioFilter
 
     public void f(int paramInt)
     {
-        List localList = H();
-        for (GPUImageFilter localGPUImageFilter : localList) {
+        for (GPUImageFilter localGPUImageFilter : H()) {
             if (b(localGPUImageFilter))
             {
                 localGPUImageFilter.f(paramInt);
@@ -249,8 +247,7 @@ public abstract class GPUImageFilterGroupBase extends GPUImageAudioFilter
 
     public int[] D()
     {
-        List localList = H();
-        for (GPUImageFilter localGPUImageFilter : localList) {
+        for (GPUImageFilter localGPUImageFilter : H()) {
             if (b(localGPUImageFilter)) {
                 return localGPUImageFilter.D();
             }
@@ -266,13 +263,11 @@ public abstract class GPUImageFilterGroupBase extends GPUImageAudioFilter
         return FilterCompat.nameOfEditing.equals(paramGPUImageFilter.x());
     }
 
-    public static abstract interface IGroupStateChanged
-    {
-        public abstract void onTipsAndCountChanged(int paramInt1, String paramString, int paramInt2);
+    public interface IGroupStateChanged {
+        void onTipsAndCountChanged(int paramInt1, String paramString, int paramInt2);
     }
 
-    public static abstract interface IFilterDrawListener
-    {
-        public abstract void onSingleFilterDrawed(int paramInt1, int paramInt2);
+    public interface IFilterDrawListener {
+        void onSingleFilterDrawed(int paramInt1, int paramInt2);
     }
 }
