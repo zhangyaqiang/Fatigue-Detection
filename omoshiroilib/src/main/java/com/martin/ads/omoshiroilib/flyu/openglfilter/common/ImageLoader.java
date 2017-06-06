@@ -35,9 +35,9 @@ public class ImageLoader {
             if (paramString.startsWith("http://")) {
                 Log.e("DefaultImageLoader", "no support http load");
             } else if (paramString.startsWith("file://")) {
-                localBitmap = BitmapLoader.a(paramString.substring("file://".length()));
+                localBitmap = BitmapLoader.loadBitmapFromFile(paramString.substring("file://".length()));
             } else if (paramString.startsWith("assets://")) {
-                localBitmap = BitmapLoader.b(paramString.substring("assets://".length()));
+                localBitmap = BitmapLoader.loadBitmapFromAssets(paramString.substring("assets://".length()));
             }
             paramIAsyncLoadImgListener.onLoadFinish(paramString, localBitmap);
         }

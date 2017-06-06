@@ -14,39 +14,33 @@ import java.io.IOException;
 public class BitmapLoader {
     static final String TAG = "BitmapLoader";
 
-    public static Bitmap a(String paramString)
-    {
-        Bitmap localBitmap = null;
-        File localFile = new File(paramString);
-        if (!localFile.exists())
-        {
+    public static Bitmap loadBitmapFromFile(String filePath) {
+        Bitmap bitmap;
+        File resFile = new File(filePath);
+        if (!resFile.exists()) {
             Log.d("BitmapLoader", "file not exists");
             return null;
         }
-        try
-        {
-            localBitmap = BitmapFactory.decodeFile(paramString);
+        try {
+            bitmap = BitmapFactory.decodeFile(filePath);
         }
-        catch (Exception localException)
-        {
+        catch (Exception localException) {
             Log.e("BitmapLoader", "exception on load from file, " + localException.getMessage());
-            localBitmap = null;
+            bitmap = null;
         }
-        return localBitmap;
+        return bitmap;
     }
 
-    public static Bitmap b(String paramString)
+    public static Bitmap loadBitmapFromAssets(String filePath)
     {
-        Bitmap localBitmap = null;
+        Bitmap bitmap = null;
         AssetManager localAssetManager = FilterCore.getContext().getAssets();
-        try
-        {
-            localBitmap = BitmapFactory.decodeStream(localAssetManager.open(paramString));
+        try {
+            bitmap = BitmapFactory.decodeStream(localAssetManager.open(filePath));
         }
-        catch (IOException localIOException)
-        {
+        catch (IOException localIOException) {
             Log.e("BitmapLoader", "load assert failed, " + localIOException.getMessage());
         }
-        return localBitmap;
+        return bitmap;
     }
 }

@@ -189,8 +189,8 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                     localObject = aK;
                     if (((String)this.bw.get(i)).startsWith("assets://"))
                     {
-                        str = ((String)this.bw.get(i)).substring("assets://".length());
-                        localObject = BitmapLoader.b(str);
+                        str = (bw.get(i)).substring("assets://".length());
+                        localObject = BitmapLoader.loadBitmapFromAssets(str);
                     }
                     else if (((String)this.bw.get(i)).startsWith("file://"))
                     {
@@ -198,7 +198,7 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                         if (null != this.by) {
                             localObject = this.by.loadBitmapForName(IOUtils.extractFileName(str));
                         } else {
-                            localObject = BitmapLoader.a(str);
+                            localObject = BitmapLoader.loadBitmapFromFile(str);
                         }
                     }
                     else if (((String)this.bw.get(i)).startsWith("http://"))

@@ -14,13 +14,11 @@ public class FilterCompat {
     public static String nameOfEditing = null;
     public static boolean useReflectionToCreateBuffer = Build.VERSION.SDK_INT >= 24;
 
-    public static void useMultipleOf16ForRecord(boolean paramBoolean)
-    {
+    public static void useMultipleOf16ForRecord(boolean paramBoolean) {
         useMultipleOf16 = paramBoolean;
     }
 
-    public static void setUseXiaomiCompatFilter(boolean paramBoolean)
-    {
+    public static void setUseXiaomiCompatFilter(boolean paramBoolean) {
         useXiaomiCompatFilter = paramBoolean;
     }
 
@@ -29,8 +27,7 @@ public class FilterCompat {
         noFaceuAssist = paramBoolean;
     }
 
-    public static void setSaveParamsOnRelease(boolean paramBoolean)
-    {
+    public static void setSaveParamsOnRelease(boolean paramBoolean) {
         saveParamsOnRelease = paramBoolean;
     }
 

@@ -159,7 +159,7 @@ public class DynamicStickerBase extends GPUImageFilterE
             {
                 String str2 = this.cE.substring("file://".length()) + "/" + str1;
 
-                localBitmap = BitmapLoader.a(str2);
+                localBitmap = BitmapLoader.loadBitmapFromFile(str2);
             }
             else
             {

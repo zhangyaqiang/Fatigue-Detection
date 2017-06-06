@@ -102,8 +102,8 @@ public class CustomizedBoxBlurFilter extends AbsFilter {
         for (int currentOptimizedOffset = 0; currentOptimizedOffset < numberOfOptimizedOffsets; currentOptimizedOffset++){
             double optimizedOffset = (currentOptimizedOffset * 2) + 1.5;
             stringBuilder.append(String.format(
-                    "\tblurCoordinates[%d] = aTextureCoord.xy + singleStepOffset * %FilterItemComparator;\n"+
-                            "\tblurCoordinates[%d] = aTextureCoord.xy - singleStepOffset * %FilterItemComparator;\n",
+                    "\tblurCoordinates[%d] = aTextureCoord.xy + singleStepOffset * %f;\n"+
+                            "\tblurCoordinates[%d] = aTextureCoord.xy - singleStepOffset * %f;\n",
                     (currentOptimizedOffset * 2) + 1,
                     optimizedOffset,
                     (currentOptimizedOffset * 2) + 2,
@@ -137,15 +137,15 @@ public class CustomizedBoxBlurFilter extends AbsFilter {
                 .append("void main(){\n")
                 .append("\tlowp vec4 sum = vec4(0.0);\n")
                 .append(String.format(
-                        "\tsum += texture2D(sTexture, blurCoordinates[0]) * %FilterItemComparator;\n",
+                        "\tsum += texture2D(sTexture, blurCoordinates[0]) * %f;\n",
                         boxWeight
                         )
                 );
 
         for (int currentBlurCoordinateIndex = 0; currentBlurCoordinateIndex < numberOfOptimizedOffsets; currentBlurCoordinateIndex++) {
             stringBuilder.append(String.format(
-                    "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %FilterItemComparator;\n"+
-                            "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %FilterItemComparator;\n",
+                    "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %f;\n"+
+                            "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %f;\n",
                     (currentBlurCoordinateIndex * 2) + 1, boxWeight * 2.0,
                     (currentBlurCoordinateIndex * 2) + 2, boxWeight * 2.0
                     )
@@ -158,8 +158,8 @@ public class CustomizedBoxBlurFilter extends AbsFilter {
             for (int currentOverlowTextureRead = numberOfOptimizedOffsets; currentOverlowTextureRead < trueNumberOfOptimizedOffsets; currentOverlowTextureRead++) {
                 double optimizedOffset = (double)(currentOverlowTextureRead * 2) + 1.5;
                 stringBuilder.append(String.format(
-                        "\tsum += texture2D(sTexture, blurCoordinates[0] + singleStepOffset * %FilterItemComparator) * %FilterItemComparator;\n"+
-                                "\tsum += texture2D(sTexture, blurCoordinates[0] - singleStepOffset * %FilterItemComparator) * %FilterItemComparator;\n",
+                        "\tsum += texture2D(sTexture, blurCoordinates[0] + singleStepOffset * %f) * %f;\n"+
+                                "\tsum += texture2D(sTexture, blurCoordinates[0] - singleStepOffset * %f) * %f;\n",
                         optimizedOffset, boxWeight * 2.0,
                         optimizedOffset, boxWeight * 2.0
                         )

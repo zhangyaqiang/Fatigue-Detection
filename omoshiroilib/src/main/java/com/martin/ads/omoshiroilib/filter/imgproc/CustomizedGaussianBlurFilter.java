@@ -135,8 +135,8 @@ public class CustomizedGaussianBlurFilter extends AbsFilter {
                 .append("\tblurCoordinates[0] = aTextureCoord.xy;\n");
         for (int currentOptimizedOffset = 0; currentOptimizedOffset < numberOfOptimizedOffsets; currentOptimizedOffset++){
             stringBuilder.append(String.format(
-                    "\tblurCoordinates[%d] = aTextureCoord.xy + singleStepOffset * %FilterItemComparator;\n"+
-                            "\tblurCoordinates[%d] = aTextureCoord.xy - singleStepOffset * %FilterItemComparator;\n",
+                    "\tblurCoordinates[%d] = aTextureCoord.xy + singleStepOffset * %f;\n"+
+                            "\tblurCoordinates[%d] = aTextureCoord.xy - singleStepOffset * %f;\n",
                     (currentOptimizedOffset * 2) + 1,
                     optimizedGaussianOffsets[currentOptimizedOffset],
                     (currentOptimizedOffset * 2) + 2,
@@ -190,7 +190,7 @@ public class CustomizedGaussianBlurFilter extends AbsFilter {
                 .append("void main(){\n")
                 .append("\tlowp vec4 sum = vec4(0.0);\n")
                 .append(String.format(
-                        "\tsum += texture2D(sTexture, blurCoordinates[0]) * %FilterItemComparator;\n",
+                        "\tsum += texture2D(sTexture, blurCoordinates[0]) * %f;\n",
                         standardGaussianWeights[0]
                         )
                 );
@@ -200,8 +200,8 @@ public class CustomizedGaussianBlurFilter extends AbsFilter {
             double secondWeight = standardGaussianWeights[currentBlurCoordinateIndex * 2 + 2];
             double optimizedWeight = firstWeight + secondWeight;
             stringBuilder.append(String.format(
-                    "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %FilterItemComparator;\n"+
-                            "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %FilterItemComparator;\n",
+                    "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %f;\n"+
+                            "\tsum += texture2D(sTexture, blurCoordinates[%d]) * %f;\n",
                     (currentBlurCoordinateIndex * 2) + 1, optimizedWeight,
                     (currentBlurCoordinateIndex * 2) + 2, optimizedWeight
                     )
@@ -217,8 +217,8 @@ public class CustomizedGaussianBlurFilter extends AbsFilter {
                 double optimizedWeight = firstWeight + secondWeight;
                 double optimizedOffset = (firstWeight * (currentOverlowTextureRead * 2 + 1) + secondWeight * (currentOverlowTextureRead * 2 + 2)) / optimizedWeight;
                 stringBuilder.append(String.format(
-                        "\tsum += texture2D(sTexture, blurCoordinates[0] + singleStepOffset * %FilterItemComparator) * %FilterItemComparator;\n"+
-                                "\tsum += texture2D(sTexture, blurCoordinates[0] - singleStepOffset * %FilterItemComparator) * %FilterItemComparator;\n",
+                        "\tsum += texture2D(sTexture, blurCoordinates[0] + singleStepOffset * %f) * %f;\n"+
+                                "\tsum += texture2D(sTexture, blurCoordinates[0] - singleStepOffset * %f) * %f;\n",
                         optimizedOffset, optimizedWeight,
                         optimizedOffset, optimizedWeight
                         )
