@@ -16,8 +16,6 @@ import android.os.Build;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
-import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
-import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.lemon.faceu.sdk.utils.JniEntry;
 
 import com.martin.ads.omoshiroilib.constant.GLEtc;
@@ -26,6 +24,8 @@ import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterConstants;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.ObjectCache;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;

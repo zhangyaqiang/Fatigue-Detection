@@ -3,7 +3,7 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers;
 /**
  * Created by Ads on 2017/6/6.
  */
-public class a
+public class DstickerDataBean
 {
     public int cN;
     public int width;

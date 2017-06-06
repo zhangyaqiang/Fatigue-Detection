@@ -2,12 +2,12 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base;
 
 import android.graphics.Bitmap;
 
-import com.lemon.faceu.sdk.utils.IOUtils;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.BitmapLoader;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCore;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.ImageLoader;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
 import com.martin.ads.omoshiroilib.flyu.sdk.commoninterface.IImageLoader;
+import com.martin.ads.omoshiroilib.flyu.sdk.utils.IOUtils;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 
 import android.graphics.Bitmap;

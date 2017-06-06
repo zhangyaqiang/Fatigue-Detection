@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.lemon.faceu.openglfilter.common.FilterCore;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCore;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.MResFileReaderBase;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 import com.martin.ads.testfaceu.faceu.DemoConstants;

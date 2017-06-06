@@ -3,7 +3,7 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base;
 import android.util.Log;
 import android.util.Pair;
 
-import com.lemon.faceu.sdk.utils.IOUtils;
+import com.martin.ads.omoshiroilib.flyu.sdk.utils.IOUtils;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 
 import java.io.BufferedInputStream;

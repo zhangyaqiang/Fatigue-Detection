@@ -3,12 +3,13 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base;
 
 import android.graphics.PointF;
 import android.opengl.GLES20;
-import android.util.Log;
 
 import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCompat;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterConstants;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.ShapeChangeFilter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DynamicStickerDot;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 
@@ -92,9 +93,6 @@ public abstract class GPUImageFilterGroupBase extends GPUImageAudioFilter
     {
         if (this.bE != null)
         {
-            for (int i = 0; i < this.bD.length; i++) {
-                Log.d("GPUImageAudioFilter", "delete textureId: %d, fbId: %d", new Object[] { Integer.valueOf(this.bE[i]), Integer.valueOf(this.bD[i]) });
-            }
             GLES20.glDeleteTextures(this.bE.length, this.bE, 0);
             this.bE = null;
             GLES20.glDeleteFramebuffers(this.bD.length, this.bD, 0);

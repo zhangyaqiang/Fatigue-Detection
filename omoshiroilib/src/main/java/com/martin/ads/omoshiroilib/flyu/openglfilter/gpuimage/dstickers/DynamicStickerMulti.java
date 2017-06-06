@@ -1,5 +1,13 @@
 package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers;
 
+import android.util.Log;
+
+import com.martin.ads.omoshiroilib.flyu.sdk.utils.IOUtils;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCompat;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.GPUImageFilterGroup;
+
+import java.util.ArrayList;
+
 /**
  * Created by Ads on 2017/6/6.
  */
@@ -12,7 +20,7 @@ public class DynamicStickerMulti extends GPUImageFilterGroup {
     public DynamicStickerMulti(String paramString, DynamicStickerData paramDynamicStickerData) {
         this.db = paramString;
         this.dc = paramDynamicStickerData;
-        for (a locala : paramDynamicStickerData.cK) {
+        for (DstickerDataBean locala : paramDynamicStickerData.cK) {
             String str = "file://" + paramString + "/" + locala.name;
             if ((locala instanceof b)) {
                 addFilter(new DynamicStickerDot(str, (b) locala));
@@ -21,18 +29,7 @@ public class DynamicStickerMulti extends GPUImageFilterGroup {
             }
         }
     }
-
     public void releaseNoGLESRes() {
         super.releaseNoGLESRes();
-        if (FilterCompat.saveParamsOnRelease) {
-            try {
-                String str = FilterFactory.writeStickerToJson(this.dc);
-                ArrayList localArrayList = new ArrayList();
-                localArrayList.add(str);
-                IOUtils.writeLinesToFile(this.db, "params.txt", localArrayList);
-            } catch (Exception localException) {
-                Log.e("DynamicStickerMulti", "save failed");
-            }
-        }
     }
 }

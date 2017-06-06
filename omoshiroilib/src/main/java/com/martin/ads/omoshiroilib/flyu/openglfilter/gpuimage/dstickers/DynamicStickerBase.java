@@ -26,13 +26,13 @@ public class DynamicStickerBase extends GPUImageFilterE
     static final int cD = 0;
     static final int K = 1;
     String cE;
-    a cF;
+    DstickerDataBean cF;
     MResFileIndexReader cG = null;
     int cH = -1;
     long cI = -1L;
     int cJ = 0;
 
-    public DynamicStickerBase(a parama, String paramString1, String paramString2, String paramString3)
+    public DynamicStickerBase(DstickerDataBean parama, String paramString1, String paramString2, String paramString3)
     {
         super(paramString2, paramString3);
         this.cE = paramString1;

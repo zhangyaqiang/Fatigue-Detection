@@ -1,7 +1,8 @@
-package com.lemon.faceu.sdk.utils;
-
+package com.martin.ads.omoshiroilib.flyu.sdk.utils;
 
 import android.os.Environment;
+import android.util.Log;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -144,7 +145,6 @@ public class IOUtils {
         if (null != paramFile)
         {
             bool = paramFile.delete();
-            Log.i("IOUtils", "delete file %s, result: %b", new Object[] { paramFile.getPath(), Boolean.valueOf(bool) });
         }
         return bool;
     }
