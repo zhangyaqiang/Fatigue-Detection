@@ -34,4 +34,20 @@ public class OmoshiroiNative {
         return ret;
     }
 
+    public static int loadDStickerVignetteFilter(){
+        int ret= ShaderUtils.createProgram(
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context, "filter/vsh/fu/no_filter.glsl"),
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context, "filter/fsh/fu/DStickerVignetteFilter.glsl"));
+        Log.d(TAG, "loadDStickerVignetteFilter: "+ret);
+        return ret;
+    }
+
+    public static int loadSwitchFilterBase(){
+        int ret= ShaderUtils.createProgram(
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context, "filter/vsh/fu/three_texture_filter.glsl"),
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context, "filter/fsh/fu/SwitchFilterBase.glsl"));
+        Log.d(TAG, "loadSwitchFilterBase: "+ret);
+        return ret;
+    }
+
 }

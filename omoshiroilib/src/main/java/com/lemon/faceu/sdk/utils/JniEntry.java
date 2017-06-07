@@ -13,16 +13,6 @@ import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
 public class JniEntry {
     private static final String TAG = "JniEntry";
-    public JniEntry() {
-    }
-
-    public static native void logInit(String var0, String var1, String var2, byte[] var3);
-
-    public static native void logWrite(String var0);
-
-    public static native void logUninit();
-
-    public static native void XXTea(byte[] var0, byte[] var1, int var2);
 
     public static native void YUVtoRBGA(byte[] var0, int var1, int var2, byte[] var3);
 
@@ -42,37 +32,6 @@ public class JniEntry {
     }
 
     public static native int init(Context var0);
-
-    public static int testInitFilter(){
-//        int ret=ShaderUtils.createProgram(
-//                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
-//                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));
-        int ret= OmoshiroiNative.loadDrawMultiTriangleFilter();
-        Log.d(TAG, "testInitFilter: "+ret);
-        return ret;
-    }
-
-    public static native int LoadDStickerVignetteFilter();
-
-    public static native int LoadSmallModeFirstFilter();
-
-    public static native int LoadSmallModeSecondFilter();
-
-    public static native int LoadSmallModeMergeFilter();
-
-    public static native int LoadLightUpFilter();
-
-    public static native int LoadWarmUpFilter();
-
-    public static native int LoadSwitchFilterBase();
-
-    public static native int LoadDecorateFilter();
-
-    public static native int LoadBeautifyFilter(int var0);
-
-    public static native int LoadBeautifyFilterV2(int var0);
-
-    public static native int LoadDrawFaceFilter();
 
     static {
         System.loadLibrary("fucommon");

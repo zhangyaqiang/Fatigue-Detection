@@ -2,7 +2,7 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers;
 
 import android.opengl.GLES20;
 
-import com.lemon.faceu.sdk.utils.JniEntry;
+import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 
 /**
  * Created by Ads on 2017/6/6.
@@ -25,7 +25,7 @@ public class DynamicStickerVignette extends DynamicStickerBase
 
     protected int k()
     {
-        return JniEntry.LoadDStickerVignetteFilter();
+        return OmoshiroiNative.loadDStickerVignetteFilter();
     }
 
     public void l()

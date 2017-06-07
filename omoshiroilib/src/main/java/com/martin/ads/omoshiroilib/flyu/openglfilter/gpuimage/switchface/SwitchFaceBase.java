@@ -2,9 +2,11 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface;
 
 import android.graphics.PointF;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterE;
+import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -43,7 +45,7 @@ public abstract class SwitchFaceBase  extends GPUImageFilterE
 
     protected int k()
     {
-        return JniEntry.LoadSwitchFilterBase();
+        return OmoshiroiNative.loadSwitchFilterBase();
     }
 
     public void l()

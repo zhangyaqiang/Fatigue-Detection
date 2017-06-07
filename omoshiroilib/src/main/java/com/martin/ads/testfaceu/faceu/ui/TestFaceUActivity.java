@@ -31,6 +31,7 @@ import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.EffectAdapter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterConstants;
+import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
 import com.martin.ads.testfaceu.faceu.GPUImageRenderer;
@@ -50,7 +51,7 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
 
     protected boolean mUseFrontFace = true;
     private RecyclerView effectListView;
-
+    int pos=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,18 +82,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
             }
         });
         effectListView.bringToFront();
-        findViewById(R.id.test_native).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mGPUVideoView.getFilter().addTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        JniEntry.testInitFilter();
-                    }
-                });
-            }
-        });
-        findViewById(R.id.test_native).bringToFront();
     }
 
 
