@@ -12,8 +12,6 @@ public interface IImageLoader
 
     void cancelLoad(String paramString, IAsyncLoadImgListener paramIAsyncLoadImgListener);
 
-    Bitmap syncLoadFromDiskcache(IDiskCache paramIDiskCache, String paramString);
-
     void asyncLoadImage(String paramString, byte[] paramArrayOfByte, int paramInt1, int paramInt2, IAsyncLoadImgListener paramIAsyncLoadImgListener);
 
     public interface IAsyncLoadImgListener {

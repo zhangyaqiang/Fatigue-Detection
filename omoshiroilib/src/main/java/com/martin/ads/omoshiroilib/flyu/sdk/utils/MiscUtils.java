@@ -87,7 +87,7 @@ public class MiscUtils {
     public static String getProcessNameByPid(Context context, int pid) {
         if(context != null && pid > 0) {
             try {
-                ActivityManager var2 = (ActivityManager)context.getSystemService("activity");
+                ActivityManager var2 = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
                 Iterator var3 = var2.getRunningAppProcesses().iterator();
                 while(var3.hasNext()) {
                     ActivityManager.RunningAppProcessInfo var4 = (ActivityManager.RunningAppProcessInfo)var3.next();

@@ -7,7 +7,6 @@ import android.os.Build;
  */
 
 public class FilterCompat {
-    public static boolean useXiaomiCompatFilter = false;
     public static boolean noFaceuAssist = true;
     public static boolean saveParamsOnRelease = false;
     public static String nameOfEditing = null;

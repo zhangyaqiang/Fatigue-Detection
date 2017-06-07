@@ -23,10 +23,8 @@ public class IOUtils {
     public static final String separator = "/";
     public static final char separatorChar = '/';
 
-    public static String getSDPath()
-    {
+    public static String getSDPath() {
         File localFile = null;
-
         boolean bool = Environment.getExternalStorageState().equals("mounted");
         if (bool) {
             localFile = Environment.getExternalStorageDirectory();
@@ -37,15 +35,14 @@ public class IOUtils {
         return "";
     }
 
-    public static String extractFileName(String paramString)
-    {
+    public static String extractFileName(String paramString) {
         int i = paramString.lastIndexOf("/");
         return i < 0 ? paramString : paramString.substring(i + 1, paramString.length());
     }
 
-    public static String extractFileFolder(String paramString)
-    {
-        int i = paramString.length();int j = 0;
+    public static String extractFileFolder(String paramString) {
+        int i = paramString.length();
+        int j = 0;
         int k = paramString.lastIndexOf('/');
         if ((k == -1) || (paramString.charAt(i - 1) == '/')) {
             return paramString;
@@ -58,8 +55,7 @@ public class IOUtils {
     }
 
     public static String convertStreamToString(InputStream paramInputStream)
-            throws IOException
-    {
+            throws IOException {
         BufferedReader localBufferedReader = new BufferedReader(new InputStreamReader(paramInputStream));
 
         StringBuilder localStringBuilder = new StringBuilder();
@@ -71,67 +67,52 @@ public class IOUtils {
     }
 
     public static void writeLinesToFile(String paramString1, String paramString2, List<String> paramList)
-            throws IOException
-    {
+            throws IOException {
         BufferedOutputStream localBufferedOutputStream = null;
-        try
-        {
+        try {
             File localFile = createFile(paramString1, paramString2);
             if (null == localFile) {
                 throw new Exception("create file failed");
             }
             localBufferedOutputStream = new BufferedOutputStream(new FileOutputStream(localFile));
-            for (int i = 0; i < paramList.size(); i++)
-            {
-                localBufferedOutputStream.write(((String)paramList.get(i)).getBytes());
+            for (int i = 0; i < paramList.size(); i++) {
+                localBufferedOutputStream.write(((String) paramList.get(i)).getBytes());
                 localBufferedOutputStream.write("\n".getBytes());
             }
-        }
-        catch (Exception localException)
-        {
+        } catch (Exception localException) {
             Log.e("IOUtils", "writeLinesToFile failed!", localException);
-        }
-        finally
-        {
+        } finally {
             MiscUtils.safeClose(localBufferedOutputStream);
         }
     }
 
     public static List<String> readLinesFromFile(String paramString)
-            throws IOException
-    {
+            throws IOException {
         ArrayList localArrayList = new ArrayList();
         File localFile = new File(paramString);
         if (!localFile.exists()) {
             return localArrayList;
         }
         BufferedReader localBufferedReader = null;
-        try
-        {
+        try {
             localBufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(localFile)));
             String str;
             while ((str = localBufferedReader.readLine()) != null) {
                 localArrayList.add(str);
             }
-        }
-        catch (Exception localException)
-        {
+        } catch (Exception localException) {
             Log.e("IOUtils", "readLinesFromFile failed!", localException);
-        }
-        finally
-        {
+        } finally {
             MiscUtils.safeClose(localBufferedReader);
         }
         return localArrayList;
     }
 
-    public static File createFile(String paramString1, String paramString2)
-    {
+    public static File createFile(String paramString1, String paramString2) {
         if ((paramString1 == null) || (paramString2 == null)) {
             return null;
         }
-        if (!MiscUtils.mkdirs(paramString1))
-        {
+        if (!MiscUtils.mkdirs(paramString1)) {
             Log.e("IOUtils", "create parent directory failed, " + paramString1);
             return null;
         }
@@ -139,18 +120,15 @@ public class IOUtils {
         return new File(str);
     }
 
-    public static boolean safeDeleteFile(File paramFile)
-    {
+    public static boolean safeDeleteFile(File paramFile) {
         boolean bool = true;
-        if (null != paramFile)
-        {
+        if (null != paramFile) {
             bool = paramFile.delete();
         }
         return bool;
     }
 
-    public static boolean safeDeleteFile(String paramString)
-    {
+    public static boolean safeDeleteFile(String paramString) {
         if (MiscUtils.isNilOrNull(paramString)) {
             return false;
         }

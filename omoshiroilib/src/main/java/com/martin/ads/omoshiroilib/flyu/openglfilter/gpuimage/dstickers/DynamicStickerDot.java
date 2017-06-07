@@ -40,8 +40,7 @@ public class DynamicStickerDot extends DynamicStickerBase
 
     protected int k()
     {
-        Log.d("lalala", "k: LoadDStickerDotFilter");
-        return OmoshiroiNative.loadDStickerDotFilter(FilterCompat.useXiaomiCompatFilter);
+        return OmoshiroiNative.loadDStickerDotFilter();
     }
 
     public void l()

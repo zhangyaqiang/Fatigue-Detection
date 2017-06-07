@@ -1,6 +1,5 @@
 package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
@@ -9,7 +8,7 @@ import java.nio.FloatBuffer;
 import java.util.LinkedList;
 
 import com.martin.ads.omoshiroilib.R;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCore;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.a;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
 
@@ -18,7 +17,7 @@ import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
  */
 
 public class GPUImageFilter {
-    protected static final Bitmap aK = BitmapFactory.decodeResource(FilterCore.getContext().getResources(), R.drawable.filter_res_hold);
+    protected static final Bitmap aK = BitmapFactory.decodeResource(GlobalConfig.context.getResources(), R.drawable.filter_res_hold);
     private final LinkedList<Runnable> aL;
     private String aM;
     protected String aN;

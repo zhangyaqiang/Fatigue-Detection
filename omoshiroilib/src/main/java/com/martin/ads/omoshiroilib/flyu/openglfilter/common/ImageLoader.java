@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.martin.ads.omoshiroilib.flyu.sdk.commoninterface.IDiskCache;
 import com.martin.ads.omoshiroilib.flyu.sdk.commoninterface.IImageLoader;
 
 /**
@@ -12,51 +11,37 @@ import com.martin.ads.omoshiroilib.flyu.sdk.commoninterface.IImageLoader;
  */
 
 public class ImageLoader {
-    static IImageLoader a = new ImageLoaderImpl();
+    public static IImageLoader imageLoaderImpl = new ImageLoaderImpl();
 
-    public static void a(IImageLoader paramIImageLoader)
-    {
-        a = paramIImageLoader;
+    public static IImageLoader getImageLoaderImpl() {
+        return imageLoaderImpl;
     }
 
-    public static IImageLoader a()
-    {
-        return a;
+    public static void setImageLoaderImpl(IImageLoader imageLoaderImpl) {
+        ImageLoader.imageLoaderImpl = imageLoaderImpl;
     }
 
-    private static class ImageLoaderImpl
-            implements IImageLoader
-    {
+    private static class ImageLoaderImpl implements IImageLoader {
         static final String TAG = "DefaultImageLoader";
-
-        public void asyncLoadImage(String paramString, IImageLoader.IAsyncLoadImgListener paramIAsyncLoadImgListener)
-        {
-            Bitmap localBitmap = null;
-            if (paramString.startsWith("http://")) {
+        public void asyncLoadImage(String path, IImageLoader.IAsyncLoadImgListener imgListener) {
+            Bitmap bitmap = null;
+            if (path.startsWith("http://")) {
                 Log.e("DefaultImageLoader", "no support http load");
-            } else if (paramString.startsWith("file://")) {
-                localBitmap = BitmapLoader.loadBitmapFromFile(paramString.substring("file://".length()));
-            } else if (paramString.startsWith("assets://")) {
-                localBitmap = BitmapLoader.loadBitmapFromAssets(paramString.substring("assets://".length()));
+            } else if (path.startsWith("file://")) {
+                bitmap = BitmapLoader.loadBitmapFromFile(path.substring("file://".length()));
+            } else if (path.startsWith("assets://")) {
+                bitmap = BitmapLoader.loadBitmapFromAssets(path.substring("assets://".length()));
             }
-            paramIAsyncLoadImgListener.onLoadFinish(paramString, localBitmap);
+            imgListener.onLoadFinish(path, bitmap);
         }
 
-        public void cancelLoad(String paramString, IImageLoader.IAsyncLoadImgListener paramIAsyncLoadImgListener)
-        {
+        public void cancelLoad(String paramString, IImageLoader.IAsyncLoadImgListener paramIAsyncLoadImgListener) {
             Log.d("DefaultImageLoader", "default imageloader ignore cancel");
         }
 
-        public Bitmap syncLoadFromDiskcache(IDiskCache paramIDiskCache, String paramString)
-        {
-            Log.e("DefaultImageLoader", "no support load from cache");
-            return null;
-        }
-
-        public void asyncLoadImage(String paramString, byte[] paramArrayOfByte, int paramInt1, int paramInt2, IImageLoader.IAsyncLoadImgListener paramIAsyncLoadImgListener)
-        {
-            Bitmap localBitmap = BitmapFactory.decodeByteArray(paramArrayOfByte, paramInt1, paramInt2);
-            paramIAsyncLoadImgListener.onLoadFinish(paramString, localBitmap);
+        public void asyncLoadImage(String path, byte[] byteData, int offset, int length, IImageLoader.IAsyncLoadImgListener imgListener) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(byteData, offset, length);
+            imgListener.onLoadFinish(path, bitmap);
         }
     }
 }

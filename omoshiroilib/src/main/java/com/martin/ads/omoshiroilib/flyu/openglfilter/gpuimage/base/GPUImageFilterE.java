@@ -3,16 +3,13 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base;
 import android.graphics.Bitmap;
 
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.BitmapLoader;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCore;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.ImageLoader;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
 import com.martin.ads.omoshiroilib.flyu.sdk.commoninterface.IImageLoader;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.IOUtils;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 
-import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.media.Image;
 import android.opengl.GLES20;
 import android.support.annotation.CallSuper;
 import android.util.Log;
@@ -112,7 +109,7 @@ public class GPUImageFilterE extends GPUImageAudioFilter
 
             while(var3.hasNext()) {
                 String var4 = (String)var3.next();
-                ImageLoader.a().cancelLoad(var4, this);
+                ImageLoader.getImageLoaderImpl().cancelLoad(var4, this);
             }
         }
     }
@@ -208,11 +205,6 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                             str = ((String)this.bw.get(i)).substring("http://".length());
                             localObject = this.by.loadBitmapForName(IOUtils.extractFileName(str));
                         }
-                        else
-                        {
-                            localObject = ImageLoader.a().syncLoadFromDiskcache(FilterCore.getCore().getFilterResCache(),
-                                    (String)this.bw.get(i));
-                        }
                     }
                     if (localObject == null)
                     {
@@ -234,13 +226,13 @@ public class GPUImageFilterE extends GPUImageAudioFilter
                         }
                         Pair localPair = this.by.getOffsetAndLength(IOUtils.extractFileName(str));
                         if (null != localPair) {
-                            ImageLoader.a().asyncLoadImage((String)this.bw.get(i), (byte[])localObject, ((Integer)localPair.first)
+                            ImageLoader.getImageLoaderImpl().asyncLoadImage((String)this.bw.get(i), (byte[])localObject, ((Integer)localPair.first)
                                     .intValue(), ((Integer)localPair.second).intValue(), this);
                         }
                     }
                     else
                     {
-                        ImageLoader.a().asyncLoadImage((String)this.bw.get(i), this);
+                        ImageLoader.getImageLoaderImpl().asyncLoadImage((String)this.bw.get(i), this);
                     }
                 }
             }

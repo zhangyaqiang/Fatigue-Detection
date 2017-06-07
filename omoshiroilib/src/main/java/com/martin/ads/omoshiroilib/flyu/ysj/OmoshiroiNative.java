@@ -12,7 +12,7 @@ import com.martin.ads.omoshiroilib.util.ShaderUtils;
 public class OmoshiroiNative {
     private static final String TAG = "OmoshiroiNative";
 
-    public static int loadDStickerDotFilter(boolean useXM){
+    public static int loadDStickerDotFilter(){
         int ret= ShaderUtils.createProgram(
                 ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
                 ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));

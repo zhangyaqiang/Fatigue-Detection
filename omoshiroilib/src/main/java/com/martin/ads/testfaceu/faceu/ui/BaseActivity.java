@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCore;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.MResFileReaderBase;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
 import com.martin.ads.testfaceu.faceu.DemoConstants;
@@ -37,12 +36,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 uncompressAsset(this, item.zipFilePath, item.unzipPath);
         }
 
-        int ret = FilterCore.initialize(this, null);
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
-        log.debug("FilterCore.initialize ret "+ret);
     }
     protected abstract void deInitUIandEvent();
 

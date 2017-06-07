@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
+
 import java.io.File;
 import java.io.IOException;
 /**
@@ -34,7 +36,7 @@ public class BitmapLoader {
     public static Bitmap loadBitmapFromAssets(String filePath)
     {
         Bitmap bitmap = null;
-        AssetManager localAssetManager = FilterCore.getContext().getAssets();
+        AssetManager localAssetManager = GlobalConfig.context.getAssets();
         try {
             bitmap = BitmapFactory.decodeStream(localAssetManager.open(filePath));
         }

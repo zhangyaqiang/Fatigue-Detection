@@ -1,11 +1,10 @@
 package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base;
 
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.util.Log;
 
-import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCore;
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.sdk.mediaplayer.FMediaPlayer;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class GPUImageAudioFilter extends GPUImageFilter
 
     protected void h(String paramString)
     {
-        a(Uri.parse("android.resource://" + FilterCore.getContext() + "/raw/" + paramString));
+        a(Uri.parse("android.resource://" + GlobalConfig.context + "/raw/" + paramString));
     }
 
     public void a(Uri paramUri)
@@ -149,7 +148,7 @@ public class GPUImageAudioFilter extends GPUImageFilter
         this.P = new b(this);
         try
         {
-            this.P.setDataSource(FilterCore.getContext(), this.L);
+            this.P.setDataSource(GlobalConfig.context, this.L);
             this.P.setOnPreparedListener(new a());
             this.Q.add(this.P);
             this.P.prepareAsync();
