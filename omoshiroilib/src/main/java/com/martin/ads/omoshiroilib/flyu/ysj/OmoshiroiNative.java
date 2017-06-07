@@ -21,9 +21,17 @@ public class OmoshiroiNative {
 
     public static int loadMakeUpFilter(){
         int ret= ShaderUtils.createProgram(
-                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/MakeUpFilter.glsl"),
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context, "filter/vsh/fu/two_texture_filter.glsl"),
                 ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/MakeUpFilter.glsl"));
-        Log.d(TAG, "loadMakeUpFilter: "+ret);
         return ret;
     }
+
+    public static int loadDrawMultiTriangleFilter(){
+        int ret= ShaderUtils.createProgram(
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context, "filter/vsh/fu/two_texture_filter.glsl"),
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context, "filter/fsh/fu/DrawMultiTriangleFilter.glsl"));
+        Log.d(TAG, "loadDrawMultiTriangleFilter: "+ret);
+        return ret;
+    }
+
 }

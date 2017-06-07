@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.*;
 
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
+import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
 /**
@@ -46,7 +47,7 @@ public class JniEntry {
 //        int ret=ShaderUtils.createProgram(
 //                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
 //                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));
-        int ret=0;
+        int ret= OmoshiroiNative.loadDrawMultiTriangleFilter();
         Log.d(TAG, "testInitFilter: "+ret);
         return ret;
     }
@@ -65,11 +66,7 @@ public class JniEntry {
 
     public static native int LoadSwitchFilterBase();
 
-    public static native int LoadDrawMultiTrangleFilter();
-
     public static native int LoadDecorateFilter();
-
-    public static native int LoadBlackWhiteFilter();
 
     public static native int LoadBeautifyFilter(int var0);
 
