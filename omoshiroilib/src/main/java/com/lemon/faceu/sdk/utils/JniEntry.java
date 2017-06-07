@@ -42,21 +42,11 @@ public class JniEntry {
 
     public static native int init(Context var0);
 
-    public static native int LoadDecorateFilter();
-
-    public static native int LoadBlackWhiteFilter();
-
-    public static native int LoadBeautifyFilter(int var0);
-
-    public static native int LoadBeautifyFilterV2(int var0);
-
-    public static native int LoadDrawFaceFilter();
-
-
     public static int testInitFilter(){
-        int ret=ShaderUtils.createProgram(
-                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
-                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));
+//        int ret=ShaderUtils.createProgram(
+//                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
+//                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));
+        int ret=0;
         Log.d(TAG, "testInitFilter: "+ret);
         return ret;
     }
@@ -69,26 +59,26 @@ public class JniEntry {
 
     public static native int LoadSmallModeMergeFilter();
 
-    public static native int LoadSwitchFilterBase();
-
     public static native int LoadLightUpFilter();
 
     public static native int LoadWarmUpFilter();
 
-    public static native int LoadMakeUpFilter();
-
+    public static native int LoadSwitchFilterBase();
 
     public static native int LoadDrawMultiTrangleFilter();
+
+    public static native int LoadDecorateFilter();
+
+    public static native int LoadBlackWhiteFilter();
+
+    public static native int LoadBeautifyFilter(int var0);
+
+    public static native int LoadBeautifyFilterV2(int var0);
+
+    public static native int LoadDrawFaceFilter();
 
     static {
         System.loadLibrary("fucommon");
     }
 
-    public static int loadDStickerDotFilterJava(boolean useXM){
-        int ret=ShaderUtils.createProgram(
-                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
-                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));
-        Log.d(TAG, "loadDStickerDotFilterJava: "+ret);
-        return ret;
-    }
 }

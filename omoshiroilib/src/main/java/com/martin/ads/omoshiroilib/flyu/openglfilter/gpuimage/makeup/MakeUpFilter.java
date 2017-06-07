@@ -6,6 +6,7 @@ import android.opengl.GLES20;
 
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterE;
+import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -71,7 +72,7 @@ public class MakeUpFilter extends GPUImageFilterE {
     }
 
     protected int k() {
-        return JniEntry.LoadMakeUpFilter();
+        return OmoshiroiNative.loadMakeUpFilter();
     }
 
     public void l() {
