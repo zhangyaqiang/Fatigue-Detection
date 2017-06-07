@@ -86,66 +86,6 @@ public class OpenGlUtils
         return arrayOfInt[0];
     }
 
-    public static int loadTextureAsBitmap(IntBuffer paramIntBuffer, Camera.Size paramSize, int paramInt)
-    {
-        Bitmap localBitmap = Bitmap.createBitmap(paramIntBuffer.array(), paramSize.width, paramSize.height, Bitmap.Config.ARGB_8888);
-        return loadTexture(localBitmap, paramInt);
-    }
-
-    public static int loadShader(String paramString, int paramInt)
-    {
-        int[] arrayOfInt = new int[1];
-        int i = GLES20.glCreateShader(paramInt);
-        GLES20.glShaderSource(i, paramString);
-        GLES20.glCompileShader(i);
-        GLES20.glGetShaderiv(i, 35713, arrayOfInt, 0);
-        if (arrayOfInt[0] == 0)
-        {
-            Log.d("Load Shader Failed", "Compilation\n" + GLES20.glGetShaderInfoLog(i));
-            return 0;
-        }
-        return i;
-    }
-
-    public static int loadProgram(String paramString1, String paramString2)
-    {
-        int[] arrayOfInt = new int[1];
-        int i = loadShader(paramString1, 35633);
-        if (i == 0)
-        {
-            Log.d("Load Program", "Vertex Shader Failed");
-            return 0;
-        }
-        int j = loadShader(paramString2, 35632);
-        if (j == 0)
-        {
-            Log.d("Load Program", "Fragment Shader Failed");
-            return 0;
-        }
-        int k = GLES20.glCreateProgram();
-
-        GLES20.glAttachShader(k, i);
-        GLES20.glAttachShader(k, j);
-
-        GLES20.glLinkProgram(k);
-
-        GLES20.glGetProgramiv(k, 35714, arrayOfInt, 0);
-        if (arrayOfInt[0] <= 0)
-        {
-            Log.d("Load Program", "Linking Failed");
-            return 0;
-        }
-        GLES20.glDeleteShader(i);
-        GLES20.glDeleteShader(j);
-        return k;
-    }
-
-    public static float rnd(float paramFloat1, float paramFloat2)
-    {
-        float f = (float)Math.random();
-        return paramFloat1 + (paramFloat2 - paramFloat1) * f;
-    }
-
     public static void deleteTexture(int paramInt)
     {
         int[] arrayOfInt = new int[1];

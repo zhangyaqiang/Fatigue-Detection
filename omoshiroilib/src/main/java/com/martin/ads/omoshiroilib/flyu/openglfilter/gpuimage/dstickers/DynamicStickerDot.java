@@ -2,9 +2,7 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers;
 
 import android.graphics.Matrix;
 import android.opengl.GLES20;
-import android.util.Log;
 
-import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCompat;
 import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 
 /**
@@ -19,7 +17,7 @@ public class DynamicStickerDot extends DynamicStickerBase
     int cR;
     int cS;
     int[] cT = new int[5];
-    b cU;
+    DstickerDataBeanExt cU;
     float[] cV = new float[16];
     float[] cW = new float[16];
     float[] cX = new float[9];
@@ -27,7 +25,7 @@ public class DynamicStickerDot extends DynamicStickerBase
     float cZ;
     float da;
 
-    public DynamicStickerDot(String paramString, b paramb)
+    public DynamicStickerDot(String paramString, DstickerDataBeanExt paramb)
     {
         super(paramb, paramString, "attribute vec4 position;\nattribute vec4 inputTextureCoordinate;\n \nvarying vec2 textureCoordinate;\n \nvoid main()\n{\n    gl_Position = position;\n    textureCoordinate = inputTextureCoordinate.xy;\n}", "varying highp vec2 textureCoordinate;\n \nuniform sampler2D inputImageTexture;\n \nvoid main()\n{\n     gl_FragColor = texture2D(inputImageTexture, textureCoordinate);\n}");
         this.cU = paramb;
@@ -38,8 +36,7 @@ public class DynamicStickerDot extends DynamicStickerBase
         this.bi = (this.bj = this.bk = 50);
     }
 
-    protected int k()
-    {
+    protected int k() {
         return OmoshiroiNative.loadDStickerDotFilter();
     }
 

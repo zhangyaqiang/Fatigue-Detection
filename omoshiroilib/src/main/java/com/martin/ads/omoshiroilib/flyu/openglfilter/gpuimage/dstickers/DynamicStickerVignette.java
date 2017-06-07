@@ -10,14 +10,14 @@ import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 
 public class DynamicStickerVignette extends DynamicStickerBase
 {
-    c dd;
+    DStickerVignetteBean dd;
     int cQ;
     int cR;
     int cS;
     int de;
     int df;
 
-    public DynamicStickerVignette(String paramString, c paramc)
+    public DynamicStickerVignette(String paramString, DStickerVignetteBean paramc)
     {
         super(paramc, paramString, "attribute vec4 position;\nattribute vec4 inputTextureCoordinate;\n \nvarying vec2 textureCoordinate;\n \nvoid main()\n{\n    gl_Position = position;\n    textureCoordinate = inputTextureCoordinate.xy;\n}", "varying highp vec2 textureCoordinate;\n \nuniform sampler2D inputImageTexture;\n \nvoid main()\n{\n     gl_FragColor = texture2D(inputImageTexture, textureCoordinate);\n}");
         this.dd = paramc;

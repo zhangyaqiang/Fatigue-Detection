@@ -18,10 +18,14 @@ public class JniEntry {
 
     public static native void YUVtoARBG(byte[] var0, int var1, int var2, int[] var3);
 
-    public static void YuvToGrayAndScaleJava(byte[] var0, int var1, int var2, int var3, boolean var4, byte[] var5, int var6, int var7){
-        //about 24ms
+    public static void YuvToGrayAndScaleJava(
+            byte[] yuvData, int mInputWidth, int mInputHeight,
+            int mRotation, boolean mMirror,
+            byte[] mSampleData, int mSampleWidth, int mSampleHeight){
+        //about 24ms on mi4
         //Log.d(TAG, "YuvToGrayAndScaleJava: start");
-        YuvToGrayAndScale(var0, var1,  var2, var3, var4, var5, var6,var7);
+        YuvToGrayAndScale(yuvData, mInputWidth, mInputHeight, mRotation, mMirror,
+                mSampleData, mSampleWidth, mSampleHeight);
         //Log.d(TAG, "YuvToGrayAndScaleJava: end");
     }
 

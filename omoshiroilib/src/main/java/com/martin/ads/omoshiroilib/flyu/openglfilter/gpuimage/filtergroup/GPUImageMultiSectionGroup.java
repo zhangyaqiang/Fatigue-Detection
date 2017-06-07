@@ -1,26 +1,18 @@
 package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import org.json.JSONObject;
 
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCompat;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.FilterFactory;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase.IGroupStateChanged;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DynamicStickerDot;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DynamicStickerVignette;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.b;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.c;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DstickerDataBeanExt;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DStickerVignetteBean;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.makeup.MakeUpFilter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.makeup.MakeupData;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
@@ -59,13 +51,13 @@ public class GPUImageMultiSectionGroup  extends GPUImageFilterGroupBase
         {
             Object localObject1 = ((MultiSectionInfo.a)localEntry.getValue()).dQ;
             Object localObject2;
-            if ((localObject1 instanceof b))
+            if ((localObject1 instanceof DstickerDataBeanExt))
             {
-                localObject2 = new DynamicStickerDot("file://" + ((MultiSectionInfo.a)localEntry.getValue()).dP, (b)localObject1);
+                localObject2 = new DynamicStickerDot("file://" + ((MultiSectionInfo.a)localEntry.getValue()).dP, (DstickerDataBeanExt)localObject1);
             }
-            else if ((localObject1 instanceof c))
+            else if ((localObject1 instanceof DStickerVignetteBean))
             {
-                localObject2 = new DynamicStickerVignette("file://" + ((MultiSectionInfo.a)localEntry.getValue()).dP, (c)localObject1);
+                localObject2 = new DynamicStickerVignette("file://" + ((MultiSectionInfo.a)localEntry.getValue()).dP, (DStickerVignetteBean)localObject1);
             }
             else
             {

@@ -39,7 +39,7 @@ public class ShapeChangeFilter extends GPUImageFilterE
         super(paramString, "attribute vec4 position;\nattribute vec4 inputTextureCoordinate;\n \nvarying vec2 textureCoordinate;\n \nvoid main()\n{\n    gl_Position = position;\n    textureCoordinate = inputTextureCoordinate.xy;\n}", parama.bN);
         this.bV = paramString;
         this.dY = parama;
-        this.aN = l(this.aN);
+        this.fragmentSource = l(this.fragmentSource);
         this.bh = this.dY.name;
         for (int i = 0; i < this.dY.ed.size(); i++) {
             j(this.bV + "/" + (String)this.dY.ed.get(i));
@@ -223,7 +223,7 @@ public class ShapeChangeFilter extends GPUImageFilterE
 
     public void S()
     {
-        String str = this.aN.replace("uniform float parameter;", "#define parameter " + this.bi * 0.01F);
+        String str = this.fragmentSource.replace("uniform float parameter;", "#define parameter " + this.bi * 0.01F);
         ArrayList localArrayList = new ArrayList();
         localArrayList.add(str);
         try

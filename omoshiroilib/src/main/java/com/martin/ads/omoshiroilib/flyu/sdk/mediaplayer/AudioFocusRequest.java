@@ -17,90 +17,79 @@ public class AudioFocusRequest {
     private static String TAG = "AudioFocusRequest";
     private AudioManager mAudioManager;
     private Set<FocusRequestChangeListener> mFocusRequestChangeListeners = new HashSet();
-    private int mState = -2;
+    private int mState = AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
+    private static final AudioFocusRequest audioFocusRequest = new AudioFocusRequest();
 
-    public static AudioFocusRequest getInstance()
-    {
-        return iF;
+    public static AudioFocusRequest getInstance() {
+        return audioFocusRequest;
     }
 
-    public static abstract interface FocusRequestChangeListener
-    {
-        public abstract void onFocusChange(int paramInt);
+    public interface FocusRequestChangeListener {
+        void onFocusChange(int state);
     }
 
-    private static final AudioFocusRequest iF = new AudioFocusRequest();
+    private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener = new OnAudioFocusChangeListenerImpl(this);
 
-    private AudioManager.OnAudioFocusChangeListener mAfChangeListener = new a(this);
-
-    public AudioFocusRequest()
-    {
-        this.mAudioManager = ((AudioManager)AudioFocusCore.getCore().getContext().getSystemService(Context.AUDIO_SERVICE));
+    public AudioFocusRequest() {
+        mAudioManager = ((AudioManager)AudioFocusCore.getCore().getContext().getSystemService(Context.AUDIO_SERVICE));
     }
 
-    public synchronized AudioFocusRequest addFocusRequestChangeListener(FocusRequestChangeListener paramFocusRequestChangeListener)
-    {
-        this.mFocusRequestChangeListeners.add(paramFocusRequestChangeListener);
+    public synchronized AudioFocusRequest addFocusRequestChangeListener(FocusRequestChangeListener focusRequestChangeListener) {
+        mFocusRequestChangeListeners.add(focusRequestChangeListener);
         return this;
     }
 
-    public synchronized AudioFocusRequest removeFocusRequestChangeListener(FocusRequestChangeListener paramFocusRequestChangeListener)
-    {
-        this.mFocusRequestChangeListeners.remove(paramFocusRequestChangeListener);
+    public synchronized AudioFocusRequest removeFocusRequestChangeListener(FocusRequestChangeListener paramFocusRequestChangeListener) {
+        mFocusRequestChangeListeners.remove(paramFocusRequestChangeListener);
         return this;
     }
 
-    public synchronized AudioFocusRequest request()
-    {
-        if (this.mState != 1) {
-            this.mState = this.mAudioManager.requestAudioFocus(this.mAfChangeListener, 3, 1);
+    public synchronized AudioFocusRequest request() {
+        if (mState != 1) {
+            mState = mAudioManager.requestAudioFocus(
+                    onAudioFocusChangeListener,
+                    AudioManager.STREAM_MUSIC, // Request permanent focus.
+                    AudioManager.AUDIOFOCUS_GAIN);
         }
         fireFocusChange();
         return this;
     }
 
-    public boolean isFocused()
-    {
-        return this.mState == 1;
+    public boolean isFocused() {
+        return mState == AudioManager.AUDIOFOCUS_GAIN;
     }
 
-    public void release()
-    {
-        this.mState = 2;
-        this.mFocusRequestChangeListeners.clear();
-        this.mAudioManager.abandonAudioFocus(this.mAfChangeListener);
-        this.mAudioManager = null;
+    public void release() {
+        mState = AudioManager.AUDIOFOCUS_GAIN_TRANSIENT;
+        mFocusRequestChangeListeners.clear();
+        mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
+        mAudioManager = null;
     }
 
-    private void fireFocusChange()
-    {
-        HashSet localHashSet;
-        synchronized (this)
-        {
-            localHashSet = new HashSet(this.mFocusRequestChangeListeners);
+    private void fireFocusChange() {
+        HashSet hashSet;
+        synchronized (this) {
+            hashSet = new HashSet(mFocusRequestChangeListeners);
         }
-        for (Iterator it = localHashSet.iterator(); it.hasNext();)
-        {
+        for (Iterator it = hashSet.iterator(); it.hasNext();) {
             FocusRequestChangeListener localFocusRequestChangeListener = (FocusRequestChangeListener)it.next();
             Log.d(TAG, localFocusRequestChangeListener + "fire focus change state:" + this.mState);
-            localFocusRequestChangeListener.onFocusChange(this.mState);
+            localFocusRequestChangeListener.onFocusChange(mState);
         }
     }
 
-    class a implements AudioManager.OnAudioFocusChangeListener {
-        private AudioFocusRequest iE;
-        a(AudioFocusRequest var1) {
-            this.iE = var1;
+    class OnAudioFocusChangeListenerImpl implements AudioManager.OnAudioFocusChangeListener {
+        private AudioFocusRequest audioFocusRequest;
+        OnAudioFocusChangeListenerImpl(AudioFocusRequest audioFocusRequest) {
+            this.audioFocusRequest = audioFocusRequest;
         }
 
-        public void onAudioFocusChange(int var1) {
-            if(var1 == -1) {
+        public void onAudioFocusChange(int focusChange) {
+            if(focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                 Log.d(TAG, "audio focus loss");
                 mAudioManager.abandonAudioFocus(this);
             }
-
-//            AudioFocusRequest.access$302(this.iE, var1);
-//            AudioFocusRequest.access$400(this.iE);
+            audioFocusRequest.fireFocusChange();
         }
     }
 }

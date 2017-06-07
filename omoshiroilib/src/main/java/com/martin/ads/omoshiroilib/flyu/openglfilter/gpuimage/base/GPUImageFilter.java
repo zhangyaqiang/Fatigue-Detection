@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.a;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
+import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
 /**
  * Created by Ads on 2017/6/6.
@@ -19,8 +19,8 @@ import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.draw.OpenGlUtils;
 public class GPUImageFilter {
     protected static final Bitmap aK = BitmapFactory.decodeResource(GlobalConfig.context.getResources(), R.drawable.filter_res_hold);
     private final LinkedList<Runnable> aL;
-    private String aM;
-    protected String aN;
+    private String vertexSource;
+    protected String fragmentSource;
     protected int aO;
     protected int aP;
     protected int aQ;
@@ -53,8 +53,8 @@ public class GPUImageFilter {
     public GPUImageFilter(String paramString1, String paramString2)
     {
         this.aL = new LinkedList();
-        this.aM = paramString1;
-        this.aN = paramString2;
+        this.vertexSource = paramString1;
+        this.fragmentSource = paramString2;
     }
 
     public void setPhoneDirection(int paramInt)
@@ -69,9 +69,8 @@ public class GPUImageFilter {
         w();
     }
 
-    protected int k()
-    {
-        return OpenGlUtils.loadProgram(this.aM, this.aN);
+    protected int k() {
+        return ShaderUtils.createProgram(vertexSource, fragmentSource);
     }
 
     public void c(boolean paramBoolean)

@@ -12,41 +12,34 @@ public class FMediaPlayer extends MediaPlayer
 {
     private static final String TAG = "FMediaPlayer";
     private AudioFocusRequest mAudioFocusRequest;
-    private AudioFocusRequest.FocusRequestChangeListener mFocusRequestChangeListener = new b(this);
+    private AudioFocusRequest.FocusRequestChangeListener mFocusRequestChangeListener = new FocusRequestChangeListenerImpl(this);
 
-    public FMediaPlayer()
-    {
+    public FMediaPlayer() {
         this.mAudioFocusRequest = AudioFocusRequest.getInstance().addFocusRequestChangeListener(this.mFocusRequestChangeListener);
     }
 
-    public void release()
-    {
+    public void release() {
         Log.d("FMediaPlayer", "release");
         this.mAudioFocusRequest.removeFocusRequestChangeListener(this.mFocusRequestChangeListener);
         super.release();
         released();
     }
 
-    public void start()
-            throws IllegalStateException
-    {
-        if (this.mAudioFocusRequest.isFocused())
-        {
+    public void start() throws IllegalStateException {
+        if (mAudioFocusRequest.isFocused()) {
             Log.d("FMediaPlayer", "focus then start");
             super.start();
             started();
         }
-        else
-        {
+        else {
             Log.d("FMediaPlayer", "not focus request focus");
-            this.mAudioFocusRequest.request();
+            mAudioFocusRequest.request();
         }
     }
 
-    protected void audioFocusLoss(boolean paramBoolean)
-    {
-        Log.d("FMediaPlayer", "focus loss and isPlaying:" + paramBoolean);
-        if (paramBoolean) {
+    protected void audioFocusLoss(boolean playing) {
+        Log.d("FMediaPlayer", "focus loss and isPlaying:" + playing);
+        if (playing) {
             pause();
         }
     }

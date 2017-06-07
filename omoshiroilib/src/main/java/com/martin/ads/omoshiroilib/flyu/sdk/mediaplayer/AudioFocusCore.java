@@ -12,25 +12,23 @@ public class AudioFocusCore {
     private Context mContext;
     private static AudioFocusCore mAudioFocusCore;
 
-    public static void initialize(Context paramContext)
-    {
+    public static void initialize(Context paramContext) {
         mAudioFocusCore = new AudioFocusCore();
         mAudioFocusCore.init(paramContext);
     }
 
-    private void init(Context paramContext)
+    private void init(Context context)
     {
-        this.mContext = paramContext;
+        this.mContext = context;
     }
 
-    public static AudioFocusCore getCore()
-    {
+    public static AudioFocusCore getCore() {
         Assert.assertNotNull(mAudioFocusCore);
         return mAudioFocusCore;
     }
 
     public Context getContext()
     {
-        return this.mContext;
+        return mContext;
     }
 }

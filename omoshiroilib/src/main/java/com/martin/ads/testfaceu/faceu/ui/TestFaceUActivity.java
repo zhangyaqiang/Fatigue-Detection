@@ -225,8 +225,8 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
 
     protected void initUIandEvent() {
         // init faceu related
-        GlobalConfig.context=getApplicationContext();
-        AudioFocusCore.initialize(getApplicationContext());
+        GlobalConfig.context=this;
+        AudioFocusCore.initialize(GlobalConfig.context);
         mCurrentFilter = new GPUImageFilterGroup();
         mCurrentFilter.addFilter(new GPUImageFilter());
         // SETUP SurfaceView

@@ -7,8 +7,8 @@ import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.changeface.ChangeF
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.decorateface.DecorateFaceBean;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DstickerDataBean;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DynamicStickerData;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.b;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.c;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DstickerDataBeanExt;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DStickerVignetteBean;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.GroupData;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.MultiSectionInfo;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.makeup.MakeupData;
@@ -53,25 +53,25 @@ public class FilterFactory {
             Object localObject1 = null;
             Object localObject2;
             if ("D".equals(str)) {
-                localObject2 = new b();
+                localObject2 = new DstickerDataBeanExt();
                 localObject1 = localObject2;
                 JSONArray localJSONArray2 = localJSONObject2.getJSONArray("alignIndexLst");
-                ((b) localObject2).dm = new int[localJSONArray2.length()];
+                ((DstickerDataBeanExt) localObject2).dm = new int[localJSONArray2.length()];
                 for (int j = 0; j < localJSONArray2.length(); j++) {
-                    ((b) localObject2).dm[j] = localJSONArray2.getInt(j);
+                    ((DstickerDataBeanExt) localObject2).dm[j] = localJSONArray2.getInt(j);
                 }
-                ((b) localObject2).dn = localJSONObject2.getInt("alignX");
-                ((b) localObject2).jdField_do = localJSONObject2.getInt("alignY");
-                ((b) localObject2).scaleWidth = localJSONObject2.getInt("scaleWidth");
-                ((b) localObject2).dp = localJSONObject2.getInt("leftIndex");
-                ((b) localObject2).dq = localJSONObject2.getInt("rightIndex");
+                ((DstickerDataBeanExt) localObject2).dn = localJSONObject2.getInt("alignX");
+                ((DstickerDataBeanExt) localObject2).jdField_do = localJSONObject2.getInt("alignY");
+                ((DstickerDataBeanExt) localObject2).scaleWidth = localJSONObject2.getInt("scaleWidth");
+                ((DstickerDataBeanExt) localObject2).dp = localJSONObject2.getInt("leftIndex");
+                ((DstickerDataBeanExt) localObject2).dq = localJSONObject2.getInt("rightIndex");
             } else {
                 if (!"V".equals(str)) {
                     continue;
                 }
-                localObject2 = new c();
+                localObject2 = new DStickerVignetteBean();
                 localObject1 = localObject2;
-                ((c) localObject2).dr = (localJSONObject2.getInt("showTop") == 1);
+                ((DStickerVignetteBean) localObject2).dr = (localJSONObject2.getInt("showTop") == 1);
             }
             DstickerDataBean dstickerDataBean= ((DstickerDataBean) localObject1);
             dstickerDataBean.width = localJSONObject2.getInt("width");
@@ -400,22 +400,22 @@ public class FilterFactory {
         DstickerDataBean localObject1 = null;
         DstickerDataBean localObject2;
         if ("D".equals(str)) {
-            localObject2 = new b();
+            localObject2 = new DstickerDataBeanExt();
             localObject1 = localObject2;
             JSONArray localJSONArray = paramJSONObject.getJSONArray("alignIndexLst");
-            ((b) localObject2).dm = new int[localJSONArray.length()];
+            ((DstickerDataBeanExt) localObject2).dm = new int[localJSONArray.length()];
             for (int i = 0; i < localJSONArray.length(); i++) {
-                ((b) localObject2).dm[i] = localJSONArray.getInt(i);
+                ((DstickerDataBeanExt) localObject2).dm[i] = localJSONArray.getInt(i);
             }
-            ((b) localObject2).dn = paramJSONObject.getInt("alignX");
-            ((b) localObject2).jdField_do = paramJSONObject.getInt("alignY");
-            ((b) localObject2).scaleWidth = paramJSONObject.getInt("scaleWidth");
-            ((b) localObject2).dp = paramJSONObject.getInt("leftIndex");
-            ((b) localObject2).dq = paramJSONObject.getInt("rightIndex");
+            ((DstickerDataBeanExt) localObject2).dn = paramJSONObject.getInt("alignX");
+            ((DstickerDataBeanExt) localObject2).jdField_do = paramJSONObject.getInt("alignY");
+            ((DstickerDataBeanExt) localObject2).scaleWidth = paramJSONObject.getInt("scaleWidth");
+            ((DstickerDataBeanExt) localObject2).dp = paramJSONObject.getInt("leftIndex");
+            ((DstickerDataBeanExt) localObject2).dq = paramJSONObject.getInt("rightIndex");
         } else if ("V".equals(str)) {
-            localObject2 = new c();
+            localObject2 = new DStickerVignetteBean();
             localObject1 = localObject2;
-            ((c) localObject2).dr = (paramJSONObject.getInt("showTop") == 1);
+            ((DStickerVignetteBean) localObject2).dr = (paramJSONObject.getInt("showTop") == 1);
         }
         localObject1.width = paramJSONObject.getInt("width");
         localObject1.height = paramJSONObject.getInt("height");

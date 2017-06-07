@@ -228,10 +228,8 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
                     mOutputWidth, mOutputHeight);
         }
 
-        long timestamp = 0;
         if (null != mSurfaceTexture) {
             mSurfaceTexture.updateTexImage();
-            timestamp = mSurfaceTexture.getTimestamp();
         }
 
         // 坐标已经规范到了屏幕范围内了
