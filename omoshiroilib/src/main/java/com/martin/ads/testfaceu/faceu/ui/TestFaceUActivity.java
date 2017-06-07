@@ -3,9 +3,11 @@ package com.martin.ads.testfaceu.faceu.ui;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.FilterFactory;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
@@ -79,6 +81,18 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
             }
         });
         effectListView.bringToFront();
+        findViewById(R.id.test_native).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mGPUVideoView.getFilter().addTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        JniEntry.testInitFilter();
+                    }
+                });
+            }
+        });
+        findViewById(R.id.test_native).bringToFront();
     }
 
 

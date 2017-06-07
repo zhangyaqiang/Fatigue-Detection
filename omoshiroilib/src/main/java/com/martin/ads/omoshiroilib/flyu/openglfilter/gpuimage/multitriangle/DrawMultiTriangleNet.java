@@ -3,6 +3,7 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.multitriangle;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterE;

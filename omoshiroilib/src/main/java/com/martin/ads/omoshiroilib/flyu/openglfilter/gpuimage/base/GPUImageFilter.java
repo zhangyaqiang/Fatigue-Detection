@@ -282,7 +282,7 @@ public class GPUImageFilter {
         return Math.sqrt((paramFloat1 - paramFloat3) * (paramFloat1 - paramFloat3) + (paramFloat2 - paramFloat4) * (paramFloat2 - paramFloat4));
     }
 
-    protected void addTask(Runnable paramRunnable)
+    public void addTask(Runnable paramRunnable)
     {
         synchronized (this.aL)
         {

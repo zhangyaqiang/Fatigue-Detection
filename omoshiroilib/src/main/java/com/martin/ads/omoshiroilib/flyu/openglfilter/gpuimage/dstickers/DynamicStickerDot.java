@@ -2,6 +2,7 @@ package com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers;
 
 import android.graphics.Matrix;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterCompat;
@@ -39,7 +40,8 @@ public class DynamicStickerDot extends DynamicStickerBase
 
     protected int k()
     {
-        return JniEntry.LoadDStickerDotFilter(FilterCompat.useXiaomiCompatFilter);
+        Log.d("lalala", "k: LoadDStickerDotFilter");
+        return JniEntry.loadDStickerDotFilterJava(FilterCompat.useXiaomiCompatFilter);
     }
 
     public void l()

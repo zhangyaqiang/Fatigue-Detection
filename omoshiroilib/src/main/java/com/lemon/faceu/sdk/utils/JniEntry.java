@@ -3,6 +3,9 @@ package com.lemon.faceu.sdk.utils;
 import android.content.Context;
 import android.util.*;
 
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
+import com.martin.ads.omoshiroilib.util.ShaderUtils;
+
 /**
  * Created by Ads on 2017/6/6.
  */
@@ -25,8 +28,10 @@ public class JniEntry {
     public static native void YUVtoARBG(byte[] var0, int var1, int var2, int[] var3);
 
     public static void YuvToGrayAndScaleJava(byte[] var0, int var1, int var2, int var3, boolean var4, byte[] var5, int var6, int var7){
-        android.util.Log.d(TAG, "YuvToGrayAndScaleJava: ");
+        //about 24ms
+        //Log.d(TAG, "YuvToGrayAndScaleJava: start");
         YuvToGrayAndScale(var0, var1,  var2, var3, var4, var5, var6,var7);
+        //Log.d(TAG, "YuvToGrayAndScaleJava: end");
     }
 
     public static native void YuvToGrayAndScale(byte[] var0, int var1, int var2, int var3, boolean var4, byte[] var5, int var6, int var7);
@@ -47,7 +52,14 @@ public class JniEntry {
 
     public static native int LoadDrawFaceFilter();
 
-    public static native int LoadDStickerDotFilter(boolean var0);
+
+    public static int testInitFilter(){
+        int ret=ShaderUtils.createProgram(
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));
+        Log.d(TAG, "testInitFilter: "+ret);
+        return ret;
+    }
 
     public static native int LoadDStickerVignetteFilter();
 
@@ -65,9 +77,18 @@ public class JniEntry {
 
     public static native int LoadMakeUpFilter();
 
+
     public static native int LoadDrawMultiTrangleFilter();
 
     static {
         System.loadLibrary("fucommon");
+    }
+
+    public static int loadDStickerDotFilterJava(boolean useXM){
+        int ret=ShaderUtils.createProgram(
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/vsh/fu/no_filter.glsl"),
+                ShaderUtils.readAssetsTextFile(GlobalConfig.context,"filter/fsh/fu/DStickerDotFilter.glsl"));
+        Log.d(TAG, "loadDStickerDotFilterJava: "+ret);
+        return ret;
     }
 }
