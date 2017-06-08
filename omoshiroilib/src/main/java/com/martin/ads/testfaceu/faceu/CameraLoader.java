@@ -7,9 +7,9 @@ import android.os.Build;
 import android.view.Surface;
 
 import com.martin.ads.omoshiroilib.camera.CameraEngine;
-import com.martin.ads.omoshiroilib.flyu.ApiLevel;
-import com.martin.ads.testfaceu.faceu.fake.Logger;
-import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.hardcode.ApiLevel;
+import com.martin.ads.omoshiroilib.flyu.fake.Logger;
+import com.martin.ads.omoshiroilib.flyu.fake.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Comparator;

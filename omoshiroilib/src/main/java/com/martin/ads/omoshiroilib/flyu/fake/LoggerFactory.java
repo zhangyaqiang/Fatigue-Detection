@@ -1,4 +1,4 @@
-package com.martin.ads.testfaceu.faceu.fake;
+package com.martin.ads.omoshiroilib.flyu.fake;
 
 /**
  * Created by Ads on 2017/4/4.

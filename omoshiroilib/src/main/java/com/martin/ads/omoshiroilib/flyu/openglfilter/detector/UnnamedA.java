@@ -6,7 +6,7 @@ import android.graphics.PointF;
  * Created by Ads on 2017/6/6.
  */
 
-public class a {
+public class UnnamedA {
     public int h = 0;
     public PointF[][] i = (PointF[][])null;
     double j = 0.0D;

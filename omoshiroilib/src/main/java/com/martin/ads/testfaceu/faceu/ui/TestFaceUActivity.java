@@ -1,13 +1,14 @@
 package com.martin.ads.testfaceu.faceu.ui;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.lemon.faceu.sdk.utils.JniEntry;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.FilterFactory;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
@@ -25,27 +26,26 @@ import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface.SwitchF
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface.SwitchFaceNet;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
 import com.martin.ads.omoshiroilib.flyu.sdk.mediaplayer.AudioFocusCore;
-import com.martin.ads.omoshiroilib.flyu.sdk.mediaplayer.AudioFocusRequest;
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.EffectAdapter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterConstants;
-import com.martin.ads.omoshiroilib.flyu.ysj.OmoshiroiNative;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
-import com.martin.ads.testfaceu.faceu.DemoConstants;
+import com.martin.ads.omoshiroilib.flyu.hardcode.DemoConstants;
 import com.martin.ads.testfaceu.faceu.GPUImageRenderer;
 import com.martin.ads.testfaceu.faceu.GPUVideoViewDecorator;
-import com.martin.ads.testfaceu.faceu.HardCodeData;
-import com.martin.ads.testfaceu.faceu.fake.Logger;
-import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.hardcode.HardCodeData;
+import com.martin.ads.omoshiroilib.flyu.fake.Logger;
+import com.martin.ads.omoshiroilib.flyu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.hardcode.HardCodeHelper;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 
 
-public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGroupBase.IGroupStateChanged {
+public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilterGroupBase.IGroupStateChanged {
 
     private final static Logger log = LoggerFactory.getLogger();
 
@@ -55,6 +55,11 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HardCodeHelper.decompressAllResource(this);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getSupportActionBar().hide();
+
         initUIandEvent();
         setContentView(R.layout.debug_test_faceu);
         RelativeLayout.LayoutParams layoutParams =
@@ -235,6 +240,11 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
 
 
     @Override
+    protected void onDestroy() {
+        deInitUIandEvent();
+        super.onDestroy();
+    }
+
     protected void deInitUIandEvent() {
         deinitVDM();
     }

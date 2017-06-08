@@ -29,9 +29,9 @@ import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilte
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.ObjectCache;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
-import com.martin.ads.testfaceu.faceu.detect.SenseTimeDetector;
-import com.martin.ads.testfaceu.faceu.fake.Logger;
-import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.detect.SenseTimeDetector;
+import com.martin.ads.omoshiroilib.flyu.fake.Logger;
+import com.martin.ads.omoshiroilib.flyu.fake.LoggerFactory;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

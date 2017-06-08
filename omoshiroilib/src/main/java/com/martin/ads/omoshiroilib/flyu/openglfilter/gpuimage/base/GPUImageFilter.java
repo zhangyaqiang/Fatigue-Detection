@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
-import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.a;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.UnnamedA;
 import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
 /**
@@ -28,7 +28,7 @@ public class GPUImageFilter {
     public int aS;
     public int aT;
     private boolean aU;
-    protected a aV = new a();
+    protected UnnamedA aV = new UnnamedA();
     protected int aW;
     protected int aX;
     protected boolean aY = false;
@@ -305,6 +305,6 @@ public class GPUImageFilter {
 
     public void a(int paramInt1, int paramInt2, int paramInt3)
     {
-        addTask(new d(this, paramInt1, paramInt2, paramInt3));
+        addTask(new UnnamedD(this, paramInt1, paramInt2, paramInt3));
     }
 }

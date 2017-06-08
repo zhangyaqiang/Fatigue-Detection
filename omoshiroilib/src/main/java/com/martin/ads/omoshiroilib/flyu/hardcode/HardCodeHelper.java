@@ -1,19 +1,13 @@
-package com.martin.ads.testfaceu.faceu.ui;
+package com.martin.ads.omoshiroilib.flyu.hardcode;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.WindowManager;
 
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.MResFileReaderBase;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.MiscUtils;
-import com.martin.ads.testfaceu.faceu.DemoConstants;
-import com.martin.ads.testfaceu.faceu.HardCodeData;
-import com.martin.ads.testfaceu.faceu.fake.Logger;
-import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.fake.Logger;
+import com.martin.ads.omoshiroilib.flyu.fake.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,36 +15,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Created by Ads on 2017/6/8.
+ */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public class HardCodeHelper {
     private final static Logger log = LoggerFactory.getLogger();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public static void decompressAllResource(Context context) {
         mkdirs(DemoConstants.APPDIR);
         makeNoMediaFile(DemoConstants.APPDIR);
 
         HardCodeData.initHardCodeData();
         for (HardCodeData.EffectItem item : HardCodeData.itemList) {
             if(item.type>=0)
-                uncompressAsset(this, item.zipFilePath, item.unzipPath);
+                uncompressAsset(context, item.zipFilePath, item.unzipPath);
         }
-
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        getSupportActionBar().hide();
-    }
-    protected abstract void deInitUIandEvent();
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-    }
-    @Override
-    protected void onDestroy() {
-        deInitUIandEvent();
-        super.onDestroy();
     }
 
     public static void uncompressAsset(Context context, String assetName, String unzipDirName) {

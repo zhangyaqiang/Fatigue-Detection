@@ -12,8 +12,8 @@ import android.view.ScaleGestureDetector;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
-import com.martin.ads.testfaceu.faceu.fake.Logger;
-import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.fake.Logger;
+import com.martin.ads.omoshiroilib.flyu.fake.LoggerFactory;
 import com.martin.ads.testfaceu.faceu.ui.VideoViewDecorator;
 
 public class GPUVideoViewDecorator extends VideoViewDecorator {

@@ -1,4 +1,4 @@
-package com.martin.ads.testfaceu.faceu.detect;
+package com.martin.ads.omoshiroilib.flyu.detect;
 
 import android.content.Context;
 import android.graphics.PointF;
