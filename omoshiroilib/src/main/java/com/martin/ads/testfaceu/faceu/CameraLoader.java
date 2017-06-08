@@ -24,8 +24,8 @@ public class CameraLoader {
 
     public final static int MAX_FRAME_RATE = 30;
 
-    final static int HIGH_PHONE_WIDTH = 720;
-    final static int HIGH_PHONE_HEIGH = 1280;
+    final static int HIGH_PHONE_WIDTH = 1080;
+    final static int HIGH_PHONE_HEIGH = 1920;
 
     // 分辨率系数，选取摄像头预览和图片大小的时候，需要与预期值进行比例和差距加权求出差异值，然后取差异最小的
     final static double COEFFICIENT = 1000.0d;

@@ -1,6 +1,7 @@
 package com.martin.ads.testfaceu.faceu.ui;
 
 import android.content.pm.ActivityInfo;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,9 +50,9 @@ public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilt
 
     private final static Logger log = LoggerFactory.getLogger();
 
-    protected boolean mUseFrontFace = true;
+    protected boolean mUseFrontFace = false;
     private RecyclerView effectListView;
-    int pos=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,16 +60,9 @@ public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilt
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getSupportActionBar().hide();
+        setContentView(R.layout.debug_test_faceu);
 
         initUIandEvent();
-        setContentView(R.layout.debug_test_faceu);
-        RelativeLayout.LayoutParams layoutParams =
-                new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT);
-        mGPUVideoView.setLayoutParams(layoutParams);
-        RelativeLayout relativeLayout= (RelativeLayout) findViewById(R.id.root_view);
-        relativeLayout.addView(mGPUVideoView);
 
         effectListView= (RecyclerView) findViewById(R.id.effect_list);
 
@@ -86,9 +80,7 @@ public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilt
                     mCameraLoader.getCamera().autoFocus(null);
             }
         });
-        effectListView.bringToFront();
     }
-
 
     protected DirectionDetector mDirectionDetector;
 
@@ -98,37 +90,6 @@ public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilt
     private int mMaxFaceCount = 1;
 
     private GPUVideoViewDecorator mGPUVideoView;
-
-    private void initVDM() {
-        if (null != mCameraLoader) {
-            return;
-        }
-
-        if (null == mDirectionDetector) {
-            mDirectionDetector = new DirectionDetector(this,false);
-            mDirectionDetector.start();
-        }
-
-        log.info("init camera start");
-        mCameraLoader = new CameraLoader(this, mUseFrontFace);
-        boolean ret = mCameraLoader.initCamera();
-
-        if (!ret) {
-            log.error("init camera failed");
-            return;
-        }
-        log.info("init camera done");
-
-        // GPUVideoViewDecorator 是先做的翻转，再做的旋转
-        mGPUVideoView = new GPUVideoViewDecorator(getBaseContext());
-        mGPUVideoView.setDirectionDetector(mDirectionDetector);
-
-        mGPUVideoView.getGPUImage().setUpCamera(mCameraLoader.getCamera(), mCameraLoader.getDisplayRotate(),
-                mCameraLoader.isUseFrontFace(), false);
-
-        doUpdateFilter(HardCodeData.itemList.get(0));
-        doUpdateFaceDetector();
-    }
 
     private void deinitVDM() {
         if (null != mDirectionDetector) {
@@ -234,8 +195,35 @@ public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilt
         AudioFocusCore.initialize(GlobalConfig.context);
         mCurrentFilter = new GPUImageFilterGroup();
         mCurrentFilter.addFilter(new GPUImageFilter());
-        // SETUP SurfaceView
-        initVDM();
+
+        if (null != mCameraLoader) {
+            return;
+        }
+
+        if (null == mDirectionDetector) {
+            mDirectionDetector = new DirectionDetector(this,false);
+            mDirectionDetector.start();
+        }
+
+        log.info("init camera start");
+        mCameraLoader = new CameraLoader(this, mUseFrontFace);
+        boolean ret = mCameraLoader.initCamera();
+
+        if (!ret) {
+            log.error("init camera failed");
+            return;
+        }
+        log.info("init camera done");
+
+        // GPUVideoViewDecorator 是先做的翻转，再做的旋转
+        mGPUVideoView = new GPUVideoViewDecorator(this, (GLSurfaceView) findViewById(R.id.test_camera_view));
+        mGPUVideoView.setDirectionDetector(mDirectionDetector);
+
+        mGPUVideoView.getGPUImage().setUpCamera(mCameraLoader.getCamera(), mCameraLoader.getDisplayRotate(),
+                mCameraLoader.isUseFrontFace(), false);
+
+        doUpdateFilter(HardCodeData.itemList.get(0));
+        doUpdateFaceDetector();
     }
 
 

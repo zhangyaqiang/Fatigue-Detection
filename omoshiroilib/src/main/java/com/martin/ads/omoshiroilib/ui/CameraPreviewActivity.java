@@ -89,6 +89,7 @@ public class CameraPreviewActivity extends AppCompatActivity {
         init();
     }
 
+    //TODO:change touch logic
     private void init(){
         GlobalConfig.context=this;
         if(DEBUG)
