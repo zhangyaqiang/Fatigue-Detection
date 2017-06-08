@@ -16,22 +16,22 @@ import android.os.Build;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
-import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
-import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
 import com.lemon.faceu.sdk.utils.JniEntry;
 
 import com.martin.ads.omoshiroilib.constant.GLEtc;
 import com.martin.ads.omoshiroilib.constant.Rotation;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
-import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
-import com.martin.ads.omoshiroilib.flyu.FilterConstants;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterConstants;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
-import com.martin.ads.omoshiroilib.flyu.ObjectCache;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
+import com.martin.ads.omoshiroilib.flyu.sdk.utils.ObjectCache;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
-import com.martin.ads.testfaceu.faceu.detect.SenseTimeDetector;
-import com.martin.ads.testfaceu.faceu.fake.Logger;
-import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.detect.SenseTimeDetector;
+import com.martin.ads.omoshiroilib.flyu.fake.Logger;
+import com.martin.ads.omoshiroilib.flyu.fake.LoggerFactory;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -228,10 +228,8 @@ public class GPUImageRenderer implements Renderer, PreviewCallback, IFaceDetecto
                     mOutputWidth, mOutputHeight);
         }
 
-        long timestamp = 0;
         if (null != mSurfaceTexture) {
             mSurfaceTexture.updateTexImage();
-            timestamp = mSurfaceTexture.getTimestamp();
         }
 
         // 坐标已经规范到了屏幕范围内了

@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.util.EffectUtils;
-import com.martin.ads.testfaceu.faceu.HardCodeData;
+import com.martin.ads.omoshiroilib.flyu.hardcode.HardCodeData;
 
 import java.util.List;
 

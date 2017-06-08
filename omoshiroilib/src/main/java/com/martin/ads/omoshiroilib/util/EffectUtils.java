@@ -3,10 +3,7 @@ package com.martin.ads.omoshiroilib.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.martin.ads.omoshiroilib.filter.helper.FilterType;
-import com.martin.ads.testfaceu.faceu.HardCodeData;
-
-import java.io.File;
+import com.martin.ads.omoshiroilib.flyu.hardcode.HardCodeData;
 
 /**
  * Created by Ads on 2017/6/5.

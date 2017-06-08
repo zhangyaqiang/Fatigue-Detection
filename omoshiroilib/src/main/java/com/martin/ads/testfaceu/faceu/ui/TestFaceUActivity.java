@@ -1,47 +1,52 @@
 package com.martin.ads.testfaceu.faceu.ui;
 
+import android.content.pm.ActivityInfo;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.lemon.faceu.openglfilter.gpuimage.base.FilterFactory;
-import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilter;
-import com.lemon.faceu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
-import com.lemon.faceu.openglfilter.gpuimage.changeface.ChangeFaceInfo;
-import com.lemon.faceu.openglfilter.gpuimage.changeface.ChangeFaceNet;
-import com.lemon.faceu.openglfilter.gpuimage.dstickers.DynamicStickerData;
-import com.lemon.faceu.openglfilter.gpuimage.dstickers.DynamicStickerMulti;
-import com.lemon.faceu.openglfilter.gpuimage.filtergroup.GPUImageFilterGroup;
-import com.lemon.faceu.openglfilter.gpuimage.filtergroup.GPUImageMultiSectionGroup;
-import com.lemon.faceu.openglfilter.gpuimage.filtergroup.MultiSectionInfo;
-import com.lemon.faceu.openglfilter.gpuimage.multitriangle.DrawMultiTriangleNet;
-import com.lemon.faceu.openglfilter.gpuimage.multitriangle.MultiTriangleInfo;
-import com.lemon.faceu.openglfilter.gpuimage.switchface.CloneFaceFilter;
-import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceInfo;
-import com.lemon.faceu.openglfilter.gpuimage.switchface.SwitchFaceNet;
-import com.lemon.faceu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
-import com.lemon.faceu.sdk.mediaplayer.AudioFocusCore;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.FilterFactory;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilter;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilterGroupBase;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.changeface.ChangeFaceInfo;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.changeface.ChangeFaceNet;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DynamicStickerData;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.dstickers.DynamicStickerMulti;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.GPUImageFilterGroup;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.GPUImageMultiSectionGroup;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.MultiSectionInfo;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.multitriangle.DrawMultiTriangleNet;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.multitriangle.MultiTriangleInfo;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface.CloneFaceFilter;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface.SwitchFaceInfo;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface.SwitchFaceNet;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.switchface.TwoPeopleSwitch;
+import com.martin.ads.omoshiroilib.flyu.sdk.mediaplayer.AudioFocusCore;
 import com.martin.ads.omoshiroilib.R;
 import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
-import com.martin.ads.omoshiroilib.flyu.DirectionDetector;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.detector.DirectionDetector;
 import com.martin.ads.omoshiroilib.flyu.EffectAdapter;
-import com.martin.ads.omoshiroilib.flyu.FilterConstants;
+import com.martin.ads.omoshiroilib.flyu.openglfilter.common.FilterConstants;
 import com.martin.ads.testfaceu.faceu.CameraLoader;
-import com.martin.ads.testfaceu.faceu.DemoConstants;
+import com.martin.ads.omoshiroilib.flyu.hardcode.DemoConstants;
 import com.martin.ads.testfaceu.faceu.GPUImageRenderer;
 import com.martin.ads.testfaceu.faceu.GPUVideoViewDecorator;
-import com.martin.ads.testfaceu.faceu.HardCodeData;
-import com.martin.ads.testfaceu.faceu.fake.Logger;
-import com.martin.ads.testfaceu.faceu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.hardcode.HardCodeData;
+import com.martin.ads.omoshiroilib.flyu.fake.Logger;
+import com.martin.ads.omoshiroilib.flyu.fake.LoggerFactory;
+import com.martin.ads.omoshiroilib.flyu.hardcode.HardCodeHelper;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 
 
-public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGroupBase.IGroupStateChanged {
+public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilterGroupBase.IGroupStateChanged {
 
     private final static Logger log = LoggerFactory.getLogger();
 
@@ -51,15 +56,13 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initUIandEvent();
+        HardCodeHelper.decompressAllResource(this);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        getSupportActionBar().hide();
         setContentView(R.layout.debug_test_faceu);
-        RelativeLayout.LayoutParams layoutParams =
-                new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT);
-        mGPUVideoView.setLayoutParams(layoutParams);
-        RelativeLayout relativeLayout= (RelativeLayout) findViewById(R.id.root_view);
-        relativeLayout.addView(mGPUVideoView);
+
+        initUIandEvent();
 
         effectListView= (RecyclerView) findViewById(R.id.effect_list);
 
@@ -77,9 +80,7 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
                     mCameraLoader.getCamera().autoFocus(null);
             }
         });
-        effectListView.bringToFront();
     }
-
 
     protected DirectionDetector mDirectionDetector;
 
@@ -89,37 +90,6 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
     private int mMaxFaceCount = 1;
 
     private GPUVideoViewDecorator mGPUVideoView;
-
-    private void initVDM() {
-        if (null != mCameraLoader) {
-            return;
-        }
-
-        if (null == mDirectionDetector) {
-            mDirectionDetector = new DirectionDetector(this,false);
-            mDirectionDetector.start();
-        }
-
-        log.info("init camera start");
-        mCameraLoader = new CameraLoader(this, mUseFrontFace);
-        boolean ret = mCameraLoader.initCamera();
-
-        if (!ret) {
-            log.error("init camera failed");
-            return;
-        }
-        log.info("init camera done");
-
-        // GPUVideoViewDecorator 是先做的翻转，再做的旋转
-        mGPUVideoView = new GPUVideoViewDecorator(getBaseContext());
-        mGPUVideoView.setDirectionDetector(mDirectionDetector);
-
-        mGPUVideoView.getGPUImage().setUpCamera(mCameraLoader.getCamera(), mCameraLoader.getDisplayRotate(),
-                mCameraLoader.isUseFrontFace(), false);
-
-        doUpdateFilter(HardCodeData.itemList.get(0));
-        doUpdateFaceDetector();
-    }
 
     private void deinitVDM() {
         if (null != mDirectionDetector) {
@@ -221,16 +191,48 @@ public class TestFaceUActivity extends BaseActivity implements GPUImageFilterGro
 
     protected void initUIandEvent() {
         // init faceu related
-        GlobalConfig.context=getApplicationContext();
-        AudioFocusCore.initialize(getApplicationContext());
+        GlobalConfig.context=this;
+        AudioFocusCore.initialize(GlobalConfig.context);
         mCurrentFilter = new GPUImageFilterGroup();
         mCurrentFilter.addFilter(new GPUImageFilter());
-        // SETUP SurfaceView
-        initVDM();
+
+        if (null != mCameraLoader) {
+            return;
+        }
+
+        if (null == mDirectionDetector) {
+            mDirectionDetector = new DirectionDetector(this,false);
+            mDirectionDetector.start();
+        }
+
+        log.info("init camera start");
+        mCameraLoader = new CameraLoader(this, mUseFrontFace);
+        boolean ret = mCameraLoader.initCamera();
+
+        if (!ret) {
+            log.error("init camera failed");
+            return;
+        }
+        log.info("init camera done");
+
+        // GPUVideoViewDecorator 是先做的翻转，再做的旋转
+        mGPUVideoView = new GPUVideoViewDecorator(this, (GLSurfaceView) findViewById(R.id.test_camera_view));
+        mGPUVideoView.setDirectionDetector(mDirectionDetector);
+
+        mGPUVideoView.getGPUImage().setUpCamera(mCameraLoader.getCamera(), mCameraLoader.getDisplayRotate(),
+                mCameraLoader.isUseFrontFace(), false);
+
+        doUpdateFilter(HardCodeData.itemList.get(0));
+        doUpdateFaceDetector();
     }
 
 
     @Override
+    protected void onDestroy() {
+        deInitUIandEvent();
+        super.onDestroy();
+    }
+
     protected void deInitUIandEvent() {
         deinitVDM();
     }

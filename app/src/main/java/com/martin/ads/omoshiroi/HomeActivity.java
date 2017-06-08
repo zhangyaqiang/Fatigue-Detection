@@ -31,7 +31,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             init();
     }
 
-    public static final boolean DEBUG=true;
+    public static final boolean DEBUG=false;
     private void init(){
         if(DEBUG){
             setContentView(R.layout.home_content);

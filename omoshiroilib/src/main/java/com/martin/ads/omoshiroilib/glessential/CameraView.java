@@ -125,7 +125,7 @@ public class CameraView{
             }
         });
 
-
+        cameraEngine.setGlRender(glRender);
     }
 
     public void onPause(){
