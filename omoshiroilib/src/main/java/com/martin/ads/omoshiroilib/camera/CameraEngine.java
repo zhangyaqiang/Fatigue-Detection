@@ -212,9 +212,7 @@ public class CameraEngine
             mFrameChain[mChainIdx].putData(data);
             mCameraFrameReady = true;
 
-            byte[] tmp=new byte[data.length];
-            System.arraycopy(data,0,tmp,0,data.length);
-            glRender.runOnDraw(GLRender.CMD_PROCESS_FRAME, tmp, camera);
+            glRender.runOnDraw(GLRender.CMD_PROCESS_FRAME, mFrameChain[mChainIdx].getFrame(), camera);
 
             camera.addCallbackBuffer(mBuffer);
             this.notify();

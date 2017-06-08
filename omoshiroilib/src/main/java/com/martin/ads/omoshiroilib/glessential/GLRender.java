@@ -409,7 +409,10 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
         mOutputWidth = width;
         mOutputHeight = height;
 
-        setUpCamera(cameraEngine.getDisplayRotate(),
+        if(!isCameraFacingFront)
+            setUpCamera(cameraEngine.getDisplayRotate(),
+                    isCameraFacingFront, true);
+        else setUpCamera(cameraEngine.getDisplayRotate(),
                 isCameraFacingFront, false);
         mGroupBase.onOutputSizeChanged(width, height);
 
