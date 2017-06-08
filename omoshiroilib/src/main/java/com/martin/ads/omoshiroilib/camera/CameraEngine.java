@@ -1,5 +1,6 @@
 package com.martin.ads.omoshiroilib.camera;
 
+import android.app.Activity;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -9,7 +10,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Surface;
 
+import com.martin.ads.omoshiroilib.debug.removeit.GlobalConfig;
 import com.martin.ads.omoshiroilib.glessential.CameraView;
 import com.martin.ads.omoshiroilib.glessential.GLRender;
 import com.martin.ads.omoshiroilib.util.FileUtils;
@@ -61,6 +64,8 @@ public class CameraEngine
     private double lastZoomValueRec;
     private int lastZoomValue;
 
+    private GLRender glRender;
+
     public CameraEngine() {
         frameWidth=480; frameHeight=640;
         cameraOpened=false;
@@ -88,6 +93,7 @@ public class CameraEngine
             currentCameraId=getCameraIdWithFacing(facing);
             camera = Camera.open(currentCameraId);
             camera.setPreviewCallbackWithBuffer(this);
+            initRotateDegree(currentCameraId);
             if (camera != null) {
                 mParams = camera.getParameters();
                 List<Camera.Size> supportedPictureSizesList=mParams.getSupportedPictureSizes();
@@ -201,10 +207,15 @@ public class CameraEngine
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        //Log.d(TAG, "onPreviewFrame: ");
+        Log.d(TAG, "onPreviewFrame: ");
         synchronized (this) {
             mFrameChain[mChainIdx].putData(data);
             mCameraFrameReady = true;
+
+            byte[] tmp=new byte[data.length];
+            System.arraycopy(data,0,tmp,0,data.length);
+            glRender.runOnDraw(GLRender.CMD_PROCESS_FRAME, tmp, camera);
+
             camera.addCallbackBuffer(mBuffer);
             this.notify();
         }
@@ -483,5 +494,41 @@ public class CameraEngine
 
     public SurfaceTexture getSurfaceTexture() {
         return mSurfaceTexture;
+    }
+
+    int displayRotate;
+    void initRotateDegree(int cameraId) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(cameraId, info);
+        Log.d(TAG,"cameraId: " + cameraId + ", rotation: " + info.orientation);
+        int rotation = ((Activity)GlobalConfig.context).getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+        displayRotate = (info.orientation - degrees + 360) % 360;
+    }
+
+    public int getDisplayRotate() {
+        return displayRotate;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setGlRender(GLRender glRender) {
+        this.glRender = glRender;
     }
 }

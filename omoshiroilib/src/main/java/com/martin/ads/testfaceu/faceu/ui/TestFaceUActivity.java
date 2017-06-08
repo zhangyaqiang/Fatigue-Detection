@@ -50,7 +50,7 @@ public class TestFaceUActivity extends AppCompatActivity implements GPUImageFilt
 
     private final static Logger log = LoggerFactory.getLogger();
 
-    protected boolean mUseFrontFace = false;
+    protected boolean mUseFrontFace = true;
     private RecyclerView effectListView;
 
     @Override

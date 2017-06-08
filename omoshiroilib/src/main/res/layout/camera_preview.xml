@@ -186,8 +186,17 @@
         android:background="#88000000"
         android:padding="5.0dip"
         android:scrollbars="none"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/effect_list"
+        android:layout_width="match_parent"
+        android:layout_height="76.0dip"
+        android:layout_alignParentBottom="true"
+        android:background="#88000000"
+        android:padding="5.0dip"
+        android:visibility="gone"
+        android:scrollbars="none"/>
 
     <LinearLayout
         android:id="@+id/test_layout"
