@@ -94,6 +94,10 @@ public abstract class AbsFilter {
         return surfaceHeight;
     }
 
+    public Plane getPlane() {
+        return plane;
+    }
+
     //TODO:remove it
     public AbsFilter resetPlane(boolean inGroup){
         plane.resetTextureCoordinateBuffer(inGroup);

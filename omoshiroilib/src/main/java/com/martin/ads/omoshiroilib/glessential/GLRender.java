@@ -33,6 +33,7 @@ import com.martin.ads.omoshiroilib.filter.base.FilterGroup;
 import com.martin.ads.omoshiroilib.filter.base.OESFilter;
 import com.martin.ads.omoshiroilib.filter.base.OrthoFilter;
 import com.martin.ads.omoshiroilib.filter.base.PassThroughFilter;
+import com.martin.ads.omoshiroilib.filter.base.Rotate2DFilter;
 import com.martin.ads.omoshiroilib.filter.helper.FilterFactory;
 import com.martin.ads.omoshiroilib.filter.helper.FilterType;
 import com.martin.ads.omoshiroilib.flyu.IFaceDetector;
@@ -46,6 +47,7 @@ import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.base.GPUImageFilte
 import com.martin.ads.omoshiroilib.flyu.openglfilter.gpuimage.filtergroup.GPUImageFilterGroup;
 import com.martin.ads.omoshiroilib.flyu.sdk.utils.ObjectCache;
 import com.martin.ads.omoshiroilib.util.BitmapUtils;
+import com.martin.ads.omoshiroilib.util.BufferUtils;
 import com.martin.ads.omoshiroilib.util.FileUtils;
 import com.martin.ads.omoshiroilib.util.PlaneTextureRotationUtils;
 import com.martin.ads.omoshiroilib.util.TextureUtils;
@@ -76,6 +78,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDetectorListener{
     private static final String TAG = "GLRender";
+    public static final boolean USE_OES_TEXTURE=true;
 
     private final static Logger log = LoggerFactory.getLogger();
 
@@ -153,6 +156,9 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
     long mFirstFrameTick = -1;
     long mFrameCount = 0;
 
+    int mGLTextureId;
+    ByteBuffer mGLRgbBuffer;
+
     public void setDirectionDetector(DirectionDetector detector) {
         mDirectionDetector = detector;
     }
@@ -193,13 +199,20 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
 
     private MediaVideoEncoder mVideoEncoder;
 
+    private Rotate2DFilter rotate2DFilter;
+
     public GLRender(final Context context, CameraEngine cameraEngine) {
         this.context=context;
         this.cameraEngine=cameraEngine;
         filterGroup=new FilterGroup();
         postProcessFilters=new FilterGroup();
         oesFilter=new OESFilter(context);
-        filterGroup.addFilter(oesFilter);
+        rotate2DFilter =new Rotate2DFilter(context);
+        if(USE_OES_TEXTURE)
+            filterGroup.addFilter(oesFilter);
+        else{
+            filterGroup.addFilter(rotate2DFilter);
+        }
         orthoFilter=new OrthoFilter(context);
         if(GlobalConfig.FULL_SCREEN)
             filterGroup.addFilter(orthoFilter);
@@ -349,14 +362,21 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
 
     @Override
     public void onDrawFrame(GL10 glUnused) {
+
         long timeStamp=cameraEngine.doTextureUpdate(oesFilter.getSTMatrix());
-        filterGroup.onDrawFrame(oesFilter.getGlOESTexture().getTextureId());
+        runAll(mRunOnDraw);
+        Log.d(TAG, "onDrawFrame mGLTextureId: " +mGLTextureId);
+        if(USE_OES_TEXTURE){
+            filterGroup.onDrawFrame(oesFilter.getGlOESTexture().getTextureId());
+        }else {
+            System.arraycopy(oesFilter.getSTMatrix(),0,rotate2DFilter.getSTMatrix(),0,oesFilter.getSTMatrix().length);
+            filterGroup.onDrawFrame(mGLTextureId);
+        }
+
         if(mVideoEncoder!=null){
             Log.d(TAG, "onDrawFrame: "+mVideoEncoder.toString());
             mVideoEncoder.frameAvailableSoon();
         }
-
-        runAll(mRunOnDraw);
 
         synchronized (mFaceDetectorLock) {
             mFaceCount = mFaceDetector.getFaceDetectResult(mFaceDetectResultLst, mImageScaleWidth, mImageScaleHeight,
@@ -436,6 +456,7 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
     }
 
     public void switchCamera(){
+        mGLTextureId=GLEtc.NO_TEXTURE;
         isCameraFacingFront=!isCameraFacingFront;
         cameraEngine.switchCamera(isCameraFacingFront);
         if(!isCameraFacingFront)
@@ -656,6 +677,16 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
                 mFaceDetector.onFrameAvailable(mCachePrevSize.x, mCachePrevSize.y, mRotation, mFlipVertical,
                         data, mDirectionDetector.getDirection());
             }
+        }
+
+        if(!USE_OES_TEXTURE){
+            if (mGLRgbBuffer == null || mGLRgbBuffer.capacity() != mCachePrevSize.x * mCachePrevSize.y * 4) {
+                mGLRgbBuffer = ByteBuffer.allocate(mCachePrevSize.x * mCachePrevSize.y * 4);
+            }
+            JniEntry.YUVtoRBGA(data, mCachePrevSize.x, mCachePrevSize.y, mGLRgbBuffer.array());
+            mGLTextureId = TextureUtils.getTextureFromByteBufferWithOldTexId(
+                    mGLRgbBuffer,mCachePrevSize.x,mCachePrevSize.y,mGLTextureId);
+            mGLRgbBuffer.clear();
         }
     }
 

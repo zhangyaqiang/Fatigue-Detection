@@ -42,7 +42,7 @@ public class CameraOverlapFragment extends Fragment {
 	final int PREVIEW_WIDTH=640;
 	final int PREVIEW_HEIGHT=480;
 	
-	int CameraFacing = CameraInfo.CAMERA_FACING_FRONT;
+	int CameraFacing = CameraInfo.CAMERA_FACING_BACK;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

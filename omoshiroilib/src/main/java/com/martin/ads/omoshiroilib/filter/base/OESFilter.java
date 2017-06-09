@@ -20,7 +20,8 @@ public class OESFilter extends AbsFilter{
     private GLOESTexture glOESTexture;
     private GLOESProgram glOESProgram;
 
-    private static final float TRIANGLES_DATA_CAMERA[] = {
+    //Rotate 90 CW
+    public static final float TRIANGLES_DATA_CAMERA[] = {
             -1.0f, 1.0f, 0f,
             -1.0f, -1.0f, 0f,
             1.0f, 1.0f, 0f,
