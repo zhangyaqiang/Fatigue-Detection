@@ -78,7 +78,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDetectorListener{
     private static final String TAG = "GLRender";
-    public static final boolean USE_OES_TEXTURE=true;
+    public static final boolean USE_OES_TEXTURE=false;
 
     private final static Logger log = LoggerFactory.getLogger();
 
@@ -363,8 +363,8 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
     @Override
     public void onDrawFrame(GL10 glUnused) {
 
-        long timeStamp=cameraEngine.doTextureUpdate(oesFilter.getSTMatrix());
         runAll(mRunOnDraw);
+        long timeStamp=cameraEngine.doTextureUpdate(oesFilter.getSTMatrix());
         Log.d(TAG, "onDrawFrame mGLTextureId: " +mGLTextureId);
         if(USE_OES_TEXTURE){
             filterGroup.onDrawFrame(oesFilter.getGlOESTexture().getTextureId());
@@ -456,14 +456,19 @@ public class GLRender implements GLSurfaceView.Renderer , IFaceDetector.FaceDete
     }
 
     public void switchCamera(){
-        mGLTextureId=GLEtc.NO_TEXTURE;
-        isCameraFacingFront=!isCameraFacingFront;
-        cameraEngine.switchCamera(isCameraFacingFront);
-        if(!isCameraFacingFront)
-            setUpCamera(cameraEngine.getDisplayRotate(),
-                isCameraFacingFront, true);
-        else setUpCamera(cameraEngine.getDisplayRotate(),
-                isCameraFacingFront, false);
+        filterGroup.addPreDrawTask(new Runnable() {
+            @Override
+            public void run() {
+                isCameraFacingFront=!isCameraFacingFront;
+                mGLTextureId = GLEtc.NO_TEXTURE;
+                cameraEngine.switchCamera(isCameraFacingFront);
+                if(!isCameraFacingFront)
+                    setUpCamera(cameraEngine.getDisplayRotate(),
+                            isCameraFacingFront, true);
+                else setUpCamera(cameraEngine.getDisplayRotate(),
+                        isCameraFacingFront, false);
+            }
+        });
     }
 
     public interface PictureTakenCallBack{

@@ -2,6 +2,7 @@ package com.martin.ads.omoshiroilib.glessential.program;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.martin.ads.omoshiroilib.util.ShaderUtils;
 
@@ -13,7 +14,7 @@ import com.martin.ads.omoshiroilib.util.ShaderUtils;
  * with STM/OES
  */
 public class GL2DSTProgram extends GLAbsProgram{
-
+    private static final String TAG = "GL2DSTProgram";
     private int muSTMatrixHandle;
     private int uTextureSamplerHandle;
 

@@ -367,6 +367,8 @@ public class CameraEngine
     private static Camera.Size choosePreferredSize(List<Camera.Size> sizes,double aspectRatio) {
         List<Camera.Size> options = new ArrayList<>();
         for (Camera.Size option : sizes) {
+            if(option.width==1280 && option.height==720)
+                return option;
             if (Math.abs((int)(option.height * aspectRatio)-option.width)<10) {
                 options.add(option);
             }
