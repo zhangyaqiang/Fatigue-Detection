@@ -3,27 +3,32 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--<Button-->
+        <!--android:id="@+id/camera_view_btn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Main_APP"/>-->
     <Button
-        android:id="@+id/camera_view_btn"
+        android:id="@+id/face_collect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Main_APP"/>
+        android:text="疲劳驾驶检测"/>
+    <!--<Button-->
+        <!--android:id="@+id/face_detect_test_btn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Face_Detect"/>-->
 
-    <Button
-        android:id="@+id/face_detect_test_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Face_Detect"/>
+    <!--<Button-->
+        <!--android:id="@+id/test_faceu_btn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Test_FaceU"/>-->
 
-    <Button
-        android:id="@+id/test_faceu_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Test_FaceU"/>
+    <!--<Button-->
+        <!--android:id="@+id/debug_btn"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Debug"/>-->
 
-    <Button
-        android:id="@+id/debug_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Debug"/>
 </LinearLayout>

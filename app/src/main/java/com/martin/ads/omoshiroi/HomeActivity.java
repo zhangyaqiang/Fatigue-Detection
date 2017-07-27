@@ -11,10 +11,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.martin.ads.omoshiroilib.debug.lab.FilterThumbActivity;
+import com.martin.ads.omoshiroilib.debug.teststmobile.FaceCollectActivity;
 import com.martin.ads.omoshiroilib.ui.CameraPreviewActivity;
-import com.martin.ads.testfaceu.faceu.ui.TestFaceUActivity;
-import com.martin.ads.omoshiroilib.debug.teststmobile.MultitrackerActivity;
+
+/*
+ *疲劳驾驶检测
+ */
 
 /**
  * Created by Ads on 2017/4/3.
@@ -36,10 +38,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         if(DEBUG){
             setContentView(R.layout.home_content);
             intent=new Intent();
-            findViewById(R.id.camera_view_btn).setOnClickListener(this);
-            findViewById(R.id.face_detect_test_btn).setOnClickListener(this);
-            findViewById(R.id.test_faceu_btn).setOnClickListener(this);
-            findViewById(R.id.debug_btn).setOnClickListener(this);
+//            findViewById(R.id.camera_view_btn).setOnClickListener(this);
+//            findViewById(R.id.face_detect_test_btn).setOnClickListener(this);
+//            findViewById(R.id.test_faceu_btn).setOnClickListener(this);
+//            findViewById(R.id.debug_btn).setOnClickListener(this);
+
+            findViewById(R.id.face_collect).setOnClickListener(this);
         }else {
             startActivity(new Intent(this,CameraPreviewActivity.class));
             finish();
@@ -54,18 +58,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.camera_view_btn:
-                intent.setClass(HomeActivity.this, CameraPreviewActivity.class);
+//            case R.id.camera_view_btn:
+//                intent.setClass(HomeActivity.this, CameraPreviewActivity.class);
+//                break;
+//            case R.id.face_detect_test_btn:
+//                intent.setClass(HomeActivity.this, MultitrackerActivity.class);
+//                break;
+            case R.id.face_collect:
+                intent.setClass(HomeActivity.this, FaceCollectActivity.class);
                 break;
-            case R.id.face_detect_test_btn:
-                intent.setClass(HomeActivity.this, MultitrackerActivity.class);
-                break;
-            case R.id.debug_btn:
-                intent.setClass(HomeActivity.this, FilterThumbActivity.class);
-                break;
-            case R.id.test_faceu_btn:
-                intent.setClass(HomeActivity.this, TestFaceUActivity.class);
-                break;
+//            case R.id.debug_btn:
+//                intent.setClass(HomeActivity.this, FilterThumbActivity.class);
+//                break;
+//            case R.id.test_faceu_btn:
+//                intent.setClass(HomeActivity.this, TestFaceUActivity.class);
+//                break;
+
         }
         start();
     }

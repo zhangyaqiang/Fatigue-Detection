@@ -4,18 +4,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import com.sensetime.stmobileapi.STMobileApiBridge.ResultCode;
 import com.sensetime.stmobileapi.STMobileApiBridge.st_mobile_106_t;
 import com.sensetime.stmobileapi.STMobileApiBridge.st_mobile_face_action_t;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class STMobileMultiTrack106 {
 	private Pointer trackHandle;
@@ -262,6 +262,7 @@ public class STMobileMultiTrack106 {
 	 * @param width Image width
 	 * @param height Image height
 	 * @return CvFace action array, each one in array is Detected by SDK native API
+	 * 人脸实时监测入口
 	 * */
 	public STMobileFaceAction[] trackFaceAction(byte[] image, int orientation, int width, int height) {
 		Log.d("ST_mobile", "track: "+width+" "+height+" "+orientation);

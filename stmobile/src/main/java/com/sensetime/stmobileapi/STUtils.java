@@ -190,16 +190,22 @@ public class STUtils {
 
 		Paint paint = new Paint();
 		paint.setColor(Color.rgb(57, 138, 243));
+//		int strokeWidth = 1;
 		int strokeWidth = Math.max(width / 240, 2);
 		paint.setStrokeWidth(strokeWidth);
 		paint.setStyle(Style.STROKE);
 
+//		标注出数字
+//		int i=1;
 		for (PointF point : points) {
 			PointF p = point;
 			if(frontCamera) {
 				p.x = width - p.x;
 			}
 			canvas.drawPoint(p.x, p.y, paint);
+//			String s = String.valueOf(i);
+//			canvas.drawText(s, p.x, p.y, paint);
+//			i++;
 		}
 	}
 
