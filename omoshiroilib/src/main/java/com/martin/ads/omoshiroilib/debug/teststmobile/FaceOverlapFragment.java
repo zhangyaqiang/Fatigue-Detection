@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sensetime.stmobileapi.STMobile106;
 import com.sensetime.stmobileapi.STMobileFaceAction;
 import com.sensetime.stmobileapi.STMobileMultiTrack106;
 import com.sensetime.stmobileapi.STUtils;
@@ -87,7 +88,8 @@ public class FaceOverlapFragment extends CameraOverlapFragment {
 //			int config = 0; //default config
 			int config = ST_MOBILE_TRACKING_ENABLE_FACE_ACTION;
 			tracker = new STMobileMultiTrack106(getActivity(), config);
-			int max = 40;
+//			最大识别人脸数
+			int max = 1;
 			tracker.setMaxDetectableFaces(max);
 			long end_init = System.currentTimeMillis();
 			Log.i("track106", "init cost "+(end_init - start_init) +" ms");
@@ -150,9 +152,11 @@ public class FaceOverlapFragment extends CameraOverlapFragment {
 						Log.i(TAG, "-->> faceActions: faceActions[0].face="+faceActions[0].face.rect.toString()+", pitch = "+faceActions[0].face.pitch+", roll="+faceActions[0].face.roll+", yaw="
 								+faceActions[0].face.yaw+", face_action = "+faceActions[0].face_action+", face_count = "+faceActions.length);
 //						mListener.onTrackdetected(fps, faces[0].pitch, faces[0].roll, faces[0].yaw);
+//						通过listener获取每一帧的人脸检测结果，最后一个参数faceActions[0].getFace()是通过人脸检测核心所获取的数据,
+// 						在package com.sensetime.stmobileapi.STMobileFaceAction中有具体的函数
 						mListener.onTrackdetected(fps,  faceActions[0].face.pitch, faceActions[0].face.roll, faceActions[0].face.yaw, faceActions[0].face.eye_dist, faceActions[0].face.ID,
 								checkFlag(faceActions[0].face_action, ST_MOBILE_EYE_BLINK), checkFlag(faceActions[0].face_action, ST_MOBILE_MOUTH_AH), checkFlag(faceActions[0].face_action, ST_MOBILE_HEAD_YAW),
-								checkFlag(faceActions[0].face_action, ST_MOBILE_HEAD_PITCH), checkFlag(faceActions[0].face_action, ST_MOBILE_BROW_JUMP));
+								checkFlag(faceActions[0].face_action, ST_MOBILE_HEAD_PITCH), checkFlag(faceActions[0].face_action, ST_MOBILE_BROW_JUMP), faceActions[0].getFace());
 					} catch(Exception e) {
 						e.printStackTrace();
 					}
@@ -247,7 +251,8 @@ public class FaceOverlapFragment extends CameraOverlapFragment {
 
 	public interface TrackCallBack {
 		public void onTrackdetected(int value, float pitch, float roll, float yaw, int eye_dist,
-                                    int id, int eyeBlink, int mouthAh, int headYaw, int headPitch, int browJump);
+                                    int id, int eyeBlink, int mouthAh, int headYaw, int headPitch, int browJump,
+									STMobile106 faceLandmarks);
 	}
 
 	private int checkFlag(int action, int flag) {

@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.martin.ads.omoshiroilib.R;
+import com.sensetime.stmobileapi.STMobile106;
 
 /**
  * 
@@ -31,7 +32,9 @@ public class MultitrackerActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		显示方向
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN
 				| WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -65,11 +68,11 @@ public class MultitrackerActivity extends Activity {
 			
 			@Override
 			public void onTrackdetected(final int value, final float pitch, final float roll, final float yaw, final int eye_dist,
-										final int id, final int eyeBlink, final int mouthAh, final int headYaw, final int headPitch, final int browJump) {
+										final int id, final int eyeBlink, final int mouthAh, final int headYaw, final int headPitch, final int browJump, STMobile106 landmarks) {
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						fpstText.setText("FPS: " + value+"\nPITCH: "+pitch+"\nROLL: "+roll+"\nYAW: "+yaw+"\nEYE_DIST:"+eye_dist);
+						fpstText.setText("hahhahahahFPS: " + value+"\nPITCH: "+pitch+"\nROLL: "+roll+"\nYAW: "+yaw+"\nEYE_DIST:"+eye_dist);
 						actionText.setText("ID:"+id+"\nEYE_BLINK:"+eyeBlink+"\nMOUTH_AH:"+mouthAh+"\nHEAD_YAW:"+headYaw+"\nHEADPITCH:"+headPitch+"\nBROWJUMP:"+browJump);
 					}
 				});
